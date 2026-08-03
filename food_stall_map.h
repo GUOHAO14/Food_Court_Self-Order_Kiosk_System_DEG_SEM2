@@ -3,6 +3,10 @@
 
 using namespace std;
 
+// a struct to represent the mapping between food items and stalls
+// this is because one food can be prepared by one or more stalls
+// many-to-many relationship
+
 struct food_stall_map {
     int food_id;
     int stall_id;
@@ -14,6 +18,8 @@ struct food_stall_map {
         this->next = nullptr;
     }
 };
+
+// a linked list to store the mapping between food items and 
 
 class Food_Stall_Map_Linked_List {
 private:

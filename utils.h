@@ -8,10 +8,13 @@
 
 using namespace std;
 
+// define function prototypes
 void loadFoodFromCSV(Food_Linked_List* food, string fileName);
 void loadStallFromCSV(Stall_Linked_List* stall, string fileName);
 void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName);
 
+// define function implementations
+// retrieve food data from csv file, store in linked list
 void loadFoodFromCSV(Food_Linked_List* food, string fileName) {
 	ifstream file(fileName);
 
@@ -34,6 +37,7 @@ void loadFoodFromCSV(Food_Linked_List* food, string fileName) {
 		getline(ss, name, ',');
 		getline(ss, food_price, ',');
 
+		// convert id and price to int and double
 		int id = stoi(food_id);
 		double price = stod(food_price);
 
@@ -43,6 +47,7 @@ void loadFoodFromCSV(Food_Linked_List* food, string fileName) {
 	file.close();
 };
 
+// retrieve stall data from csv file, store in linked list
 void loadStallFromCSV(Stall_Linked_List* stall, string fileName) {
 	ifstream file(fileName);
 
@@ -64,6 +69,7 @@ void loadStallFromCSV(Stall_Linked_List* stall, string fileName) {
 		getline(ss, stall_id, ',');
 		getline(ss, name, ',');
 
+		// convert id to int
 		int id = stoi(stall_id);
 
 		stall->insertRear(id, name);
@@ -72,6 +78,7 @@ void loadStallFromCSV(Stall_Linked_List* stall, string fileName) {
 	file.close();
 };
 
+// retrieve food stall mapping data from csv file, store in linked list
 void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName) {
 	ifstream file(fileName);
 
@@ -93,7 +100,7 @@ void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName) {
 		getline(ss, food_id, ',');
 		getline(ss, stall_id, ',');
 
-
+		// convert id from string to int
 		int food_id_int = stoi(food_id);
 		int stall_id_int = stoi(stall_id);
 

@@ -3,12 +3,13 @@
 
 using namespace std;
 
+// a struct to represent a food item
 struct food {
     int id;
     string name;
     double price;
     int quantity;
-    struct food* next;
+	struct food* next; // pointer to next food item
 
     food(int id, string name, double price) {
         this->id = id;
@@ -19,6 +20,7 @@ struct food {
     }
 };
 
+// a linked list to store chaining food items
 class Food_Linked_List {
 private:
     struct food* head;

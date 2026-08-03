@@ -3,10 +3,11 @@
 
 using namespace std;
 
+// a struct to represent a stall
 struct stall {
     int id;
     string name;
-    struct stall* next;
+	struct stall* next; // pointer to next stall
 
     stall(int id, string name) {
         this->id = id;
@@ -15,7 +16,7 @@ struct stall {
     }
 };
 
-
+// a linked list to store chaining stalls
 class Stall_Linked_List {
 private:
     struct stall* head;
