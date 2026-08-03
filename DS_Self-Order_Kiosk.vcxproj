@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="task1.cpp" />
+    <ClCompile Include="task4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="task1.hpp" />
