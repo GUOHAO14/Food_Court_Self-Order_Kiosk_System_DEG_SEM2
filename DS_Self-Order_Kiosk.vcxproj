@@ -23,6 +23,12 @@
     <None Include="food_items.csv" />
     <None Include="stall.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="task1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="task1.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

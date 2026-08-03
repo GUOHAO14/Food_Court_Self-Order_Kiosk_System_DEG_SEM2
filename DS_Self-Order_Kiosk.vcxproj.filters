@@ -19,4 +19,14 @@
     <None Include="stall.csv" />
     <None Include="food-stall_mapping.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="task1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="task1.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
