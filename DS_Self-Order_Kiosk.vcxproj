@@ -24,6 +24,12 @@
     <None Include="stall.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="task1.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="task1.hpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="food.h" />
     <ClInclude Include="food_stall_map.h" />
     <ClInclude Include="stall.h" />
