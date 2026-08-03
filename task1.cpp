@@ -6,27 +6,23 @@ using namespace std;
 
 int main()
 {
-    LinkedList queue;
+    Queue pending;
+	Queue completed;
 
-    queue.enqueue(Order("O001", "TP076357", "Chicken Rice"));
-    queue.enqueue(Order("O002", "TP076358", "Nasi Lemak"));
-    queue.enqueue(Order("O003", "TP076359", "Burger"));
+    pending.addQueue(Order("O001", "TP076357", "Chicken Rice"));
+    pending.addQueue(Order("O002", "TP076358", "Nasi Lemak"));
+    pending.addQueue(Order("O003", "TP076359", "Burger"));
 
-    cout << "Queue:\n";
-    queue.display();
+    cout << "Pending Queue:\n";
+    pending.displayQueue();
 
-    cout << "\nFront Order: "
-        << queue.front().getOrderID() << endl;
-
-    cout << "Rear Order: "
-        << queue.rear().getOrderID() << endl;
+    cout << "\nQueue Size: " << pending.queueNum() << endl;
 
     cout << "\nDequeue one order...\n";
-    queue.dequeue();
-
-    queue.display();
-
-    cout << "\nQueue Size: " << queue.size() << endl;
+    completed.addQueue(pending.delQueue());
+    pending.displayQueue();
+    cout << "\nCompleted Queue:\n";
+    completed.displayQueue();
 
     return 0;
 }

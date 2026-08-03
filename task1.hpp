@@ -47,41 +47,30 @@ class Node {
         }
 };
 
-class LinkedList {
+class Queue {
     private:
         Node* head;
         Node* tail;
 
     public:
-        LinkedList()
+        Queue()
         {
             head = nullptr;
             tail = nullptr;
         }
 
-        // Destructor
-        ~LinkedList()
-        {
-            while (!isEmpty())
-            {
-                dequeue();
-            }
-        }
-
-        // Check whether queue is empty
-        bool isEmpty()
+        bool emptyList()
         {
             return head == nullptr;
         }
 
-        // Enqueue
-        void enqueue(Order order)
+        void addQueue(Order order)
         {
             Node* newNode = new Node(order);
-
-            if (isEmpty())
+            if (emptyList())
             {
-                head = tail = newNode;
+                head = newNode;
+                tail = newNode;
             }
             else
             {
@@ -90,82 +79,53 @@ class LinkedList {
             }
         }
 
-        // Dequeue
-        void dequeue()
+        Order delQueue()
         {
-            if (isEmpty())
+            if (emptyList())
             {
-                cout << "Queue is empty.\n";
-                return;
+                cout << "The queue is curerntly empty";
+                return Order();
             }
 
             Node* temp = head;
             head = head->next;
-
             if (head == nullptr)
             {
                 tail = nullptr;
             }
-
+            Order order = temp->data;
             delete temp;
+            return order;
         }
 
-        // Peek front
-        Order front()
+        void displayQueue()
         {
-            if (isEmpty())
+            if (emptyList())
             {
-                throw runtime_error("Queue is empty.");
-            }
-
-            return head->data;
-        }
-
-        // Peek rear
-        Order rear()
-        {
-            if (isEmpty())
-            {
-                throw runtime_error("Queue is empty.");
-            }
-
-            return tail->data;
-        }
-
-        // Display queue
-        void display()
-        {
-            if (isEmpty())
-            {
-                cout << "Queue is empty.\n";
+                cout << "The queue is currently empty, nothing to display.";
                 return;
             }
 
-            Node* current = head;
-
-            while (current != nullptr)
+            Node* currentNode = head;
+            while (currentNode != nullptr)
             {
-                cout << "Order ID : " << current->data.getOrderID() << endl;
-                cout << "Student  : " << current->data.getStudentID() << endl;
-                cout << "Food     : " << current->data.getFoodItem() << endl;
+                cout << "Order ID : " << currentNode->data.getOrderID() << endl;
+                cout << "Student  : " << currentNode->data.getStudentID() << endl;
+                cout << "Food     : " << currentNode->data.getFoodItem() << endl;
                 cout << "------------------------" << endl;
-
-                current = current->next;
+                currentNode = currentNode->next;
             }
         }
 
-        // Number of nodes
-        int size()
+        int queueNum()
         {
             int count = 0;
-            Node* current = head;
-
-            while (current != nullptr)
+            Node* currentNode = head;
+            while (currentNode != nullptr)
             {
                 count++;
-                current = current->next;
+                currentNode = currentNode->next;
             }
-
             return count;
         }
 };
