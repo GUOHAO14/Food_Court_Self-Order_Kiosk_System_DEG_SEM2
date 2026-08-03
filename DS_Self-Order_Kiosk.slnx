@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="DS_Self-Order_Kiosk.vcxproj" Id="b266446e-3dcd-41d5-964d-97e00bc8633d" />
+</Solution>
