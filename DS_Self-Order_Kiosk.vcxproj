@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="food-stall_mapping.csv" />
+    <None Include="food_stall_map.csv" />
     <None Include="food_items.csv" />
     <None Include="stall.csv" />
   </ItemGroup>
@@ -28,6 +28,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="task1.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="food.h" />
+    <ClInclude Include="food_stall_map.h" />
+    <ClInclude Include="stall.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

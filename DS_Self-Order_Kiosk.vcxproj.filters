@@ -17,7 +17,21 @@
   <ItemGroup>
     <None Include="food_items.csv" />
     <None Include="stall.csv" />
-    <None Include="food-stall_mapping.csv" />
+    <None Include="food_stall_map.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="food.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="food_stall_map.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="task1.cpp">
