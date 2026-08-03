@@ -17,5 +17,6 @@
   <ItemGroup>
     <None Include="food_items.csv" />
     <None Include="stall.csv" />
+    <None Include="food-stall_mapping.csv" />
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="food-stall_mapping.csv" />
     <None Include="food_items.csv" />
     <None Include="stall.csv" />
   </ItemGroup>
