@@ -44,6 +44,19 @@ public:
         }
     }
 
+	void insertRear(food Food) {
+		struct food* newFood = new food(Food.id, Food.name, Food.price);
+
+		if (head == nullptr) {
+			head = newFood;
+			tail = newFood;
+		}
+		else {
+			tail->next = newFood;
+			tail = newFood;
+		}
+	}
+
 	// search for a food item by its ID
 	struct food* searchFoodById(int id) {
 		struct food* trav = head;
