@@ -2,14 +2,12 @@
 #include <iostream>
 using namespace std;
 
-// different from order assignment
-// this class is circular queue for the stall itself
-// max orders intake is 6. So 6 orders in queue indicate that the stall is busy
-// this class also allows stall owner/staff to mark an order as complete
-// hence dequeueing and freeing up the stall for new orders
-class Stall_Orders_Circular_Queue {
-	int queue[6];
-	int maxOrders = 6, front = -1, rear = -1;
+// circular queue for checking all stalls
+// check whether they can prepare the food, they are free, and they are open
+// also ensure order workload is balanced between stalls
+class Order_Assignment_Circular_Queue {
+	int queue[5];
+	int maxStalls = 5, front = -1, rear = -1;
 
 public:
 	bool isEmpty()
@@ -24,7 +22,7 @@ public:
 		if (front == -1) {
 			front = 0; // front initialisation
 		}
-		rear = (rear + 1) % maxOrders; // flow back to front if rear reaches maxOrders
+		rear = (rear + 1) % maxStalls; // flow back to front if rear reaches maxOrders
 		queue[rear] = data;
 	}
 
@@ -41,7 +39,7 @@ public:
 		}
 		else {
 			queue[front] = NULL; // remove element in the front
-			front = (front + 1) % maxOrders;
+			front = (front + 1) % maxStalls;
 		}
 	}
 
@@ -53,7 +51,7 @@ public:
 
 		cout << " Items: ";
 
-		for (int i = 0; i < maxOrders; i++)
+		for (int i = 0; i < maxStalls; i++)
 		{
 			if (queue[i] != NULL)
 				cout << queue[i] << " , ";
