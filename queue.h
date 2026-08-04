@@ -1,6 +1,6 @@
+#pragma once
 #include <iostream>
-#include <string>
-#include "utils.h"
+#include "food.h"
 
 using namespace std;
 

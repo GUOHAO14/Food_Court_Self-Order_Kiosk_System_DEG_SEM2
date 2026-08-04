@@ -5,7 +5,6 @@
 #include "food_stall_map.h"
 #include "utils.h"
 #include "stall_interface.h"
-#include "order_map_food.h"
 #include "stall_assignment.h"
 
 using namespace std;
@@ -58,7 +57,7 @@ int main(){
 			// enter order page, Isaac part
             // remove bottom
 			Order * hello = new Order(1, 123456, time);
-            stallAndOrderAssignment(&hello);
+            stallAndOrderAssignment(hello);
             // remove above
 			break;
         case 2: 

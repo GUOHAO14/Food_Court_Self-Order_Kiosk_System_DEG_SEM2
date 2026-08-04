@@ -31,6 +31,7 @@
     <ClCompile Include="stall_interface.cpp" />
     <ClCompile Include="task1.cpp" />
     <ClCompile Include="task4.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="order_assignment_circular_queue.h" />

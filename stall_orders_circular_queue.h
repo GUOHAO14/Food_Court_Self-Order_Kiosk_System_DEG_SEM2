@@ -9,6 +9,7 @@ using namespace std;
 // this class also allows stall owner/staff to mark an order as complete
 // hence dequeueing and freeing up the stall for new orders
 class Stall_Orders_Circular_Queue {
+private:
 	Order* queue[6];
 	int maxOrders = 6, front = -1, rear = -1;
 
@@ -92,7 +93,7 @@ public:
 				cout << "Order ID: " << queue[i]->getOrderID() << endl;
 				cout << "Student ID: " << queue[i]->getStudentID() << endl;
 				cout << "Order Time: " << queue[i]->getOrderTime() << endl;
-				queue[i]->getFoodList().displayFood();
+				queue[i]->getFoodList().displayAllFood();
 				cout << "------------------------" << endl;
 			}
 		}

@@ -8,6 +8,7 @@ using namespace std;
 // check whether they can prepare the food, they are free, and they are open
 // also ensure order workload is balanced between stalls
 class Order_Assignment_Circular_Queue {
+private:
 	struct stall* queue[5];
 	int maxStalls = 5, front = -1, rear = -1;
 
