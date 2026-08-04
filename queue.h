@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "utils.h"
+#include "food.h"
 
 using namespace std;
 
@@ -112,6 +112,18 @@ class Queue {
             Order order = temp->data;
             delete temp;
             return order;
+        }
+
+        Order* searchOrderById(int id) {
+            Node* currentNode = head;
+            while (currentNode != nullptr)
+            {
+                if (currentNode->data.getOrderID() == id) {
+                    return &currentNode->data;
+                }
+                currentNode = currentNode->next;
+            }
+            return nullptr;
         }
 
         void displayQueue()
