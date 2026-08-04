@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "queue.h"
 using namespace std;
 
 // different from order assignment
@@ -8,7 +9,7 @@ using namespace std;
 // this class also allows stall owner/staff to mark an order as complete
 // hence dequeueing and freeing up the stall for new orders
 class Stall_Orders_Circular_Queue {
-	int queue[6];
+	Order* queue[6];
 	int maxOrders = 6, front = -1, rear = -1;
 
 public:
@@ -19,13 +20,13 @@ public:
 		return false;
 	}
 
-	void enqueueOrder(int data)
+	void enqueueOrder(Order* fullOrder)
 	{
 		if (front == -1) {
 			front = 0; // front initialisation
 		}
 		rear = (rear + 1) % maxOrders; // flow back to front if rear reaches maxOrders
-		queue[rear] = data;
+		queue[rear] = fullOrder;
 	}
 
 	void dequeueOrder()
@@ -43,25 +44,6 @@ public:
 			queue[front] = NULL; // remove element in the front
 			front = (front + 1) % maxOrders;
 		}
-	}
-
-	void displayAllOrders() {
-		if (isEmpty()) {
-			cout << "Queue is empty" << endl;
-			return;
-		}
-
-		cout << " Items: ";
-
-		for (int i = 0; i < maxOrders; i++)
-		{
-			if (queue[i] != NULL)
-				cout << queue[i] << " , ";
-			else
-				cout << "NULL , ";
-		}
-
-		cout << endl;
 	}
 
 	// header for stall display
@@ -102,5 +84,17 @@ public:
 			cout << queue[i] << " ";
 		}
 		cout << string(54, '=') << endl << endl;
+	}
+
+	void tempDisplay() {
+		for (int i = 0; i < maxOrders; i++) {
+			if (queue[i] != NULL) {
+				cout << "Order ID: " << queue[i]->getOrderID() << endl;
+				cout << "Student ID: " << queue[i]->getStudentID() << endl;
+				cout << "Order Time: " << queue[i]->getOrderTime() << endl;
+				queue[i]->getFoodList().displayFood();
+				cout << "------------------------" << endl;
+			}
+		}
 	}
 };

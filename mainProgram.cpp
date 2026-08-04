@@ -1,10 +1,12 @@
 #include <iostream>
+#include <ctime>
 #include "stall.h"
 #include "food.h"
 #include "food_stall_map.h"
 #include "utils.h"
 #include "stall_interface.h"
-#include "task1.hpp"
+#include "order_map_food.h"
+#include "stall_assignment.h"
 
 using namespace std;
 
@@ -46,9 +48,18 @@ int main(){
 
         cout << "Enter your choice (type integer): ";
         cin >> choice;
+
+        // remove bottom
+        time_t now = time(nullptr);
+        string time = ctime(&now);
+        //remove above
         switch (choice) {
 		case 1:
 			// enter order page, Isaac part
+            // remove bottom
+			Order * hello = new Order(1, 123456, time);
+            stallAndOrderAssignment(&hello);
+            // remove above
 			break;
         case 2: 
 			chooseStall(&stallList, &foodList, &foodStallMapList);

@@ -1,12 +1,14 @@
 #pragma once
 #include <iostream>
+#include "stall.h"
+
 using namespace std;
 
 // circular queue for checking all stalls
 // check whether they can prepare the food, they are free, and they are open
 // also ensure order workload is balanced between stalls
 class Order_Assignment_Circular_Queue {
-	int queue[5];
+	struct stall* queue[5];
 	int maxStalls = 5, front = -1, rear = -1;
 
 public:
@@ -17,16 +19,16 @@ public:
 		return false;
 	}
 
-	void enqueueOrder(int data)
+	void enqueueStall(struct stall* stall)
 	{
 		if (front == -1) {
 			front = 0; // front initialisation
 		}
 		rear = (rear + 1) % maxStalls; // flow back to front if rear reaches maxOrders
-		queue[rear] = data;
+		queue[rear] = stall;
 	}
 
-	void dequeueOrder()
+	void dequeueStall()
 	{
 		if (isEmpty()) {
 			cout << "Queue is empty" << endl;
@@ -96,7 +98,7 @@ public:
 	// display all stalls in a formatted table
 	void displayAllStalls() {
 		displayOrderQueueHeader();
-		for (int i = 0; i < maxOrders; i++) {
+		for (int i = 0; i < maxStalls; i++) {
 			cout << queue[i] << " ";
 		}
 		cout << string(54, '=') << endl << endl;
