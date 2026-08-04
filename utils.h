@@ -8,3 +8,7 @@
 void loadFoodFromCSV(Food_Linked_List* food, string fileName);
 void loadStallFromCSV(Stall_Linked_List* stall, string fileName);
 void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName);
+void loadPendingOrderFromCSV();
+void loadPendingOrderMapFoodFromCSV();
+void loadCompleteOrderFromCSV();
+void loadCompleteOrderMapFoodFromCSV();
