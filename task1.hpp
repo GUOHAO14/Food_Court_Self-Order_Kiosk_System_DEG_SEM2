@@ -35,16 +35,15 @@ class Order {
         }
 };
 
-class Node {
-    public:
-        Order data;
-        Node* next;
+struct Node {
+    Order data;
+    Node* next;
 
-        Node(Order order)
-        {
-            data = order;
-            next = nullptr;
-        }
+    Node(Order order)
+    {
+        data = order;
+        next = nullptr;
+    }
 };
 
 class Queue {
