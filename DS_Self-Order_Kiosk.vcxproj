@@ -21,8 +21,8 @@
   <ItemGroup>
     <None Include="food_stall_map.csv" />
     <None Include="food.csv" />
-    <None Include="order.csv" />
-    <None Include="order_map_food.csv" />
+    <None Include="pending_order.csv" />
+    <None Include="pending_order_map_food.csv" />
     <None Include="stall.csv" />
   </ItemGroup>
   <ItemGroup>
