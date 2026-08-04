@@ -2,6 +2,11 @@
 #include "food.h"
 #include "stall.h"
 #include "food_stall_map.h"
+#include "queue.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 
 // define function prototypes
 void loadFoodFromCSV(Food_Linked_List* food, string fileName);
