@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "order_map_food.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -9,7 +9,7 @@ class Order {
         int OrID;
         int StuID;
         string orderTime;
-        order_map_foodList foods;
+        Food_Linked_List foods;
 
     public:
         Order() 
@@ -41,12 +41,12 @@ class Order {
             return orderTime;
         }
 
-        void addFood(int foodID)
+        void addFood(food food)
         {
-            foods.addFood(foodID);
+            foods.insertRear(food);
         }
 
-        order_map_foodList& getFoodList()
+        Food_Linked_List& getFoodList()
         {
             return foods;
         }
@@ -128,7 +128,7 @@ class Queue {
                 cout << "Order ID : " << currentNode->data.getOrderID() << endl;
                 cout << "Student  : " << currentNode->data.getStudentID() << endl;
                 cout << "Time     : " << currentNode->data.getOrderTime() << endl;
-                currentNode->data.getFoodList().displayFood();
+                currentNode->data.getFoodList().displayAllFood();
                 cout << "------------------------" << endl;
                 currentNode = currentNode->next;
             }
