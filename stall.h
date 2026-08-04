@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
-#include "order_assigned_circular_queue.h"
+#include "stall_orders_circular_queue.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ struct stall {
 	bool isOpen; // stall status is open / close
 	bool isBusy; // stall status is busy / free (determined by order queue)
 	struct stall* next; // pointer to next stall
-	Order_Assigned_Circular_Queue orderQueue;
+	Stall_Orders_Circular_Queue orderQueue;
 
     stall(int id, string name, bool isOpen) {
         this->id = id;
@@ -20,7 +20,7 @@ struct stall {
         this->isOpen = isOpen;
         this->isBusy = false;
         this->next = nullptr;
-        this->orderQueue = Order_Assigned_Circular_Queue();
+        this->orderQueue = Stall_Orders_Circular_Queue();
     }
 };
 

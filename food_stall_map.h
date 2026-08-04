@@ -20,7 +20,6 @@ struct food_stall_map {
 };
 
 // a linked list to store the mapping between food items and 
-
 class Food_Stall_Map_Linked_List {
 private:
     struct food_stall_map* head;
@@ -43,4 +42,6 @@ public:
             tail = newMap;
         }
     }
+
+
 };

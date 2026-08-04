@@ -21,6 +21,8 @@
   <ItemGroup>
     <None Include="food_stall_map.csv" />
     <None Include="food.csv" />
+    <None Include="order.csv" />
+    <None Include="order_map_food.csv" />
     <None Include="stall.csv" />
   </ItemGroup>
   <ItemGroup>
@@ -31,7 +33,7 @@
     <ClCompile Include="task4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="order_assigned_circular_queue.h" />
+    <ClInclude Include="stall_orders_circular_queue.h" />
     <ClInclude Include="stall_interface.h" />
     <ClInclude Include="task1.hpp" />
   </ItemGroup>

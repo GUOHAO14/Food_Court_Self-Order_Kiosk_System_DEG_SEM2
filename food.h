@@ -43,4 +43,59 @@ public:
             tail = newFood;
         }
     }
+
+	// search for a food item by its ID
+	struct food* searchFoodById(int id) {
+		struct food* trav = head;
+
+		while (trav != nullptr) {
+			if (trav->id == id) {
+				return trav;
+			}
+			trav = trav->next;
+		}
+		return nullptr; // return nullptr if food not found
+	}
+
+	// header for food display
+	void displayFoodHeader() {
+		cout << string(54, '=') << endl;
+		cout << "| ";
+		cout << left << setw(3) << "No.";
+		cout << " | ";
+		cout << left << setw(8) << "Food ID";
+		cout << " | ";
+		cout << left << setw(30) << "Food Name";
+		cout << " | ";
+		cout << left << setw(10) << "Price";
+		cout << " | ";
+		cout << endl;
+		cout << string(54, '=') << endl;
+	}
+
+	// actual display for food data
+	void displayFoodFormat(int count, struct food* food) {
+		cout << "| ";
+		cout << left << setw(3) << count;
+		cout << " | ";
+		cout << left << setw(8) << food->id;
+		cout << " | ";
+		cout << left << setw(30) << food->name;
+		cout << " | ";
+		cout << left << setw(10) << food->price;
+		cout << " |" << endl;
+	}
+
+	// display all food in a formatted table
+	void displayAllFood() {
+		struct food* trav = head;
+		int count = 0;
+		displayFoodHeader();
+		while (trav != nullptr) {
+			count++;
+			displayFoodFormat(count, trav);
+			trav = trav->next;
+		}
+		cout << string(54, '=') << endl << endl;
+	}
 };
