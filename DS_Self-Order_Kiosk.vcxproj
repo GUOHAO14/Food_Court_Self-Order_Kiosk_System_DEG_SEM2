@@ -20,15 +20,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="food_stall_map.csv" />
-    <None Include="food_items.csv" />
+    <None Include="food.csv" />
     <None Include="stall.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="mainProgram.cpp" />
     <ClCompile Include="stall_assignment.cpp" />
+    <ClCompile Include="stall_interface.cpp" />
     <ClCompile Include="task1.cpp" />
     <ClCompile Include="task4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="order_assigned_circular_queue.h" />
+    <ClInclude Include="stall_interface.h" />
     <ClInclude Include="task1.hpp" />
   </ItemGroup>
   <ItemGroup>

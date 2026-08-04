@@ -64,15 +64,19 @@ void loadStallFromCSV(Stall_Linked_List* stall, string fileName) {
 	{
 		stringstream ss(line);
 
-		string stall_id, name;
+		string stall_id, name, is_open;
 
 		getline(ss, stall_id, ',');
 		getline(ss, name, ',');
+		getline(ss, is_open, ',');
 
 		// convert id to int
 		int id = stoi(stall_id);
 
-		stall->insertRear(id, name);
+		// convert is_open to boolean
+		bool isOpen = (is_open == "true");
+
+		stall->insertRear(id, name, isOpen);
 	}
 
 	file.close();
