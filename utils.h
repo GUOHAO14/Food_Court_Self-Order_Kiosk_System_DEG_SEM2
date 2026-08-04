@@ -2,7 +2,6 @@
 #include "food.h"
 #include "stall.h"
 #include "food_stall_map.h"
-#include <iostream>
 
 // define function prototypes
 void loadFoodFromCSV(Food_Linked_List* food, string fileName);

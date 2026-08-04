@@ -50,13 +50,19 @@ int main(){
 
         // remove bottom
         time_t now = time(nullptr);
-        string time = ctime(&now);
+
+        char buffer[26];
+
+        ctime_s(buffer, sizeof(buffer), &now);
+
+        string currentTime = buffer;
+        Order* hello;
         //remove above
         switch (choice) {
 		case 1:
 			// enter order page, Isaac part
             // remove bottom
-			Order * hello = new Order(1, 123456, time);
+			hello = new Order(1, 123456, currentTime);
             stallAndOrderAssignment(hello);
             // remove above
 			break;
