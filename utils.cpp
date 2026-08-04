@@ -1,14 +1,9 @@
-#pragma once
-#include "food.h"
-#include "stall.h"
-#include "food_stall_map.h"
+#include "utils.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
-// define function prototypes
-void loadFoodFromCSV(Food_Linked_List* food, string fileName);
-void loadStallFromCSV(Stall_Linked_List* stall, string fileName);
-void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName);
-void loadOrderFromCSV(Queue* queue, Food_Linked_List* foodList, string orderFile, string mapfoodFile);
-
+using namespace std;
 
 // define function implementations
 // retrieve food data from csv file, store in linked list
@@ -108,57 +103,5 @@ void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName) {
 		map->insertRear(food_id_int, stall_id_int);
 	}
 
-	file.close();
-};
-
-void loadOrderFromCSV(Queue* queue, Food_Linked_List* foodList, string orderFile, string mapfoodFile) {
-	//Load Order Details
-	ifstream file(orderFile);
-	if (!file.is_open())
-	{
-		cout << "Failed to open \"" << orderFile << "\"" << endl;
-		return;
-	}
-
-	string line;
-	getline(file, line);
-	while (getline(file, line))
-	{
-		stringstream ss(line);
-		string order_id, stu_id, order_time;
-		getline(ss, order_id, ',');
-		getline(ss, stu_id, ',');
-		getline(ss, order_time, ',');
-		int id = stoi(order_id);
-		int student_id = stoi(stu_id);
-
-		queue->addQueue(Order(id, student_id, order_time));
-	}
-	file.close();
-
-	//Load Foods in the Order
-	ifstream file(mapfoodFile);
-	if (!file.is_open())
-	{
-		cout << "Failed to open \"" << mapfoodFile << "\"" << endl;
-		return;
-	}
-
-	string line;
-	getline(file, line);
-	while (getline(file, line))
-	{
-		stringstream ss(line);
-
-		string order_id, food_id;
-		getline(ss, order_id, ',');
-		getline(ss, food_id, ',');
-		int o_id = stoi(order_id);
-		int f_id = stoi(food_id);
-
-		food* selectedFood = foodList->searchFoodById(f_id);
-		Order* selectedOrder = queue->searchOrderById(o_id);
-		selectedOrder->addFood(*selectedFood);
-	}
 	file.close();
 };
