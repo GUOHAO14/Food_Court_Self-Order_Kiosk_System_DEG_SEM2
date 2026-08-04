@@ -9,6 +9,8 @@ struct stall {
     string name;
 	struct stall* next; // pointer to next stall
 
+
+
     stall(int id, string name) {
         this->id = id;
         this->name = name;

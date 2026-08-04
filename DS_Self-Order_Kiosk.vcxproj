@@ -24,6 +24,7 @@
     <None Include="stall.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="stall_assignment.cpp" />
     <ClCompile Include="task1.cpp" />
   </ItemGroup>
   <ItemGroup>
