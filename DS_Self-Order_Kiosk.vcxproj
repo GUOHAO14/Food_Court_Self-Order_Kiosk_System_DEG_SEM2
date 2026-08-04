@@ -33,10 +33,11 @@
     <ClCompile Include="task4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="order_map_food.h" />
     <ClInclude Include="order_assignment_circular_queue.h" />
     <ClInclude Include="stall_orders_circular_queue.h" />
     <ClInclude Include="stall_interface.h" />
-    <ClInclude Include="task1.hpp" />
+    <ClInclude Include="queue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="food.h" />

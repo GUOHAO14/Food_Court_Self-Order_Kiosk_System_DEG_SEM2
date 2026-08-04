@@ -1,35 +1,52 @@
 #include <iostream>
 #include <string>
+#include "order_map_food.h"
 
 using namespace std;
 
 class Order {
     private:
-        string OrID;
-        string StuID;
-        string foods;
+        int OrID;
+        int StuID;
+        string orderTime;
+        order_map_foodList foods;
 
     public:
-        Order() {}
+        Order() 
+        {
+            OrID = 0;
+            StuID = 0;
+            orderTime = "";
+        }
 
-        Order(string OrID, string StuID, string foods)
+        Order(int OrID, int StuID, string orderTime)
         {
             this->OrID = OrID;
             this->StuID = StuID;
-            this->foods = foods;
+            this->orderTime = orderTime;
         }
 
-        string getOrderID()
+        int getOrderID()
         {
             return OrID;
         }
 
-        string getStudentID()
+        int getStudentID()
         {
             return StuID;
         }
 
-        string getFoodItem()
+        string getOrderTime()
+        {
+            return orderTime;
+        }
+
+        void addFood(int foodID)
+        {
+            foods.addFood(foodID);
+        }
+
+        order_map_foodList& getFoodList()
         {
             return foods;
         }
@@ -110,7 +127,8 @@ class Queue {
             {
                 cout << "Order ID : " << currentNode->data.getOrderID() << endl;
                 cout << "Student  : " << currentNode->data.getStudentID() << endl;
-                cout << "Food     : " << currentNode->data.getFoodItem() << endl;
+                cout << "Time     : " << currentNode->data.getOrderTime() << endl;
+                currentNode->data.getFoodList().displayFood();
                 cout << "------------------------" << endl;
                 currentNode = currentNode->next;
             }
