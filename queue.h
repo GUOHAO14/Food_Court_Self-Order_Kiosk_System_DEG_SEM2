@@ -8,6 +8,7 @@ class Order {
     private:
         int OrID;
         int StuID;
+        string orderStatus;
         string orderTime;
         Food_Linked_List foods;
 
@@ -17,13 +18,15 @@ class Order {
             OrID = 0;
             StuID = 0;
             orderTime = "";
+            orderStatus = "";
         }
 
-        Order(int OrID, int StuID, string orderTime)
+        Order(int OrID, int StuID, string orderTime, string orderStatus)
         {
             this->OrID = OrID;
             this->StuID = StuID;
             this->orderTime = orderTime;
+            this->orderStatus = orderStatus;
         }
 
         int getOrderID()
@@ -39,6 +42,11 @@ class Order {
         string getOrderTime()
         {
             return orderTime;
+        }
+
+        string getOrderStatus()
+        {
+            return orderStatus;
         }
 
         void addFood(food food)
@@ -140,6 +148,7 @@ class Queue {
                 cout << "Order ID : " << currentNode->data.getOrderID() << endl;
                 cout << "Student  : " << currentNode->data.getStudentID() << endl;
                 cout << "Time     : " << currentNode->data.getOrderTime() << endl;
+				cout << "Status   : " << currentNode->data.getOrderStatus() << endl;
                 currentNode->data.getFoodList().displayAllFood(true);
                 cout << "------------------------" << endl;
                 currentNode = currentNode->next;
