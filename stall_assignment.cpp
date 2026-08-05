@@ -10,7 +10,6 @@ void stallAndOrderAssignment(Order * order) {
 	stallCircularQueue = Order_Assignment_Circular_Queue(); 
 	// Reset the circular queue for each new order to be assigned
 
-	order->getFoodList().displayAllFood(true); // Display the food items in the order
 	stallCircularQueue.displayQueue();
 
 	// queue status
@@ -21,12 +20,15 @@ void stallAndOrderAssignment(Order * order) {
 
 		if (currentStall != nullptr) {
 
-			if (currentStall->isOpen && !currentStall->orderQueue.isFull()) {
+			if (currentStall->isOpen && !currentStall->foodQueue.isFull()) {
 				cout << currentStall->name << " stall is open and not busy. Assigning order to this stall." << endl;
 				assigned = true;
-
 				// assign order to the stall
-				currentStall->orderQueue.enqueueOrder(order);
+				currentStall->foodQueue.enqueueFood(order);
+
+				currentStall->foodQueue.displayAllOrders(); // Display the orders in the stall's queue
+
+				cout << "Count: " << currentStall->foodQueue.getCount() << endl;
 
 				// then dequeue the stall in order assignment
 				stallCircularQueue.dequeueStall();
@@ -48,6 +50,5 @@ void stallAndOrderAssignment(Order * order) {
 		cout << "All stalls are either closed or busy. Cannot assign order at this time." << endl;
 	}
 
-	order->getFoodList().displayAllFood(true); // Display the food items in the order
 	stallCircularQueue.displayQueue();
 };
