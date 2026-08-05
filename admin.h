@@ -1,11 +1,9 @@
 #pragma once
-
 #include "stall.h"
 #include "food.h"
 #include "food_stall_map.h"
 
-void adminPage(); // <-- ADD THIS LINE
-
+void adminPage();
 void addMenuItem();
 void removeMenuItem();
 void updateMenuItem();
@@ -23,7 +21,6 @@ struct FoodTreeNode {
     }
 };
 
-// 2. BST Class Wrapper
 class FoodBST {
 private:
     FoodTreeNode* root;
@@ -51,13 +48,12 @@ private:
         }
     }
 
-    // Helper: In-order traversal to search by partial name
+    // Helper: In-order traversal to search by partial food name
     void searchByNameRecursive(FoodTreeNode* node, const string& searchKeyword, int& matchCount) {
         if (node == nullptr) return;
 
         searchByNameRecursive(node->left, searchKeyword, matchCount);
 
-        // Case-insensitive name match check
         string foodNameLower = node->name;
         transform(foodNameLower.begin(), foodNameLower.end(), foodNameLower.begin(), ::tolower);
 
@@ -67,6 +63,55 @@ private:
         }
 
         searchByNameRecursive(node->right, searchKeyword, matchCount);
+    }
+
+    // Helper: In-order traversal to search food items mapped to a specific Stall ID
+    void searchByStallIdRecursive(FoodTreeNode* node, int targetStallId, int& matchCount) {
+        if (node == nullptr) return;
+
+        searchByStallIdRecursive(node->left, targetStallId, matchCount);
+
+        // Check if current food item is mapped to targetStallId
+        if (foodStallMapList.checkFoodStallMapping(node->id, targetStallId)) {
+            matchCount++;
+            displayNodeRow(node);
+        }
+
+        searchByStallIdRecursive(node->right, targetStallId, matchCount);
+    }
+
+    // Helper: In-order traversal to search food items mapped to a partial Stall Name
+    void searchByStallNameRecursive(FoodTreeNode* node, const string& stallNameKeyword, int& matchCount) {
+        if (node == nullptr) return;
+
+        searchByStallNameRecursive(node->left, stallNameKeyword, matchCount);
+
+        // Check all stall mappings for this food node
+        bool isMatch = false;
+        struct food_stall_map* currentMap = foodStallMapList.getHead();
+        while (currentMap != nullptr) {
+            if (currentMap->food_id == node->id) {
+                // Find stall details from stallList
+                struct stall* foundStall = stallList.searchStallById(currentMap->stall_id);
+                if (foundStall != nullptr) {
+                    string stallNameLower = foundStall->name;
+                    transform(stallNameLower.begin(), stallNameLower.end(), stallNameLower.begin(), ::tolower);
+
+                    if (stallNameLower.find(stallNameKeyword) != string::npos) {
+                        isMatch = true;
+                        break;
+                    }
+                }
+            }
+            currentMap = currentMap->next;
+        }
+
+        if (isMatch) {
+            matchCount++;
+            displayNodeRow(node);
+        }
+
+        searchByStallNameRecursive(node->right, stallNameKeyword, matchCount);
     }
 
 public:
@@ -90,7 +135,7 @@ public:
         FoodTreeNode* current = root;
         while (current != nullptr) {
             if (id == current->id) {
-                return current; // Found
+                return current;
             }
             if (id < current->id) {
                 current = current->left;
@@ -99,12 +144,22 @@ public:
                 current = current->right;
             }
         }
-        return nullptr; // Not found
+        return nullptr;
     }
 
-    // Search by partial name
+    // Search by partial food name
     void searchByName(const string& searchKeyword, int& matchCount) {
         searchByNameRecursive(root, searchKeyword, matchCount);
+    }
+
+    // Search food items by Stall ID
+    void searchByStallId(int stallId, int& matchCount) {
+        searchByStallIdRecursive(root, stallId, matchCount);
+    }
+
+    // Search food items by Stall Name
+    void searchByStallName(const string& stallNameKeyword, int& matchCount) {
+        searchByStallNameRecursive(root, stallNameKeyword, matchCount);
     }
 
     // Display formatted row for a single node
