@@ -85,9 +85,6 @@
     <ClCompile Include="utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="order_interface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="self_order_interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
