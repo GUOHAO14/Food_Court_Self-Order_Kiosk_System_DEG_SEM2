@@ -28,7 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainProgram.cpp" />
-    <ClCompile Include="order_interface.cpp" />
     <ClCompile Include="self_order_interface.cpp" />
     <ClCompile Include="stall_assignment.cpp" />
     <ClCompile Include="stall_interface.cpp" />
