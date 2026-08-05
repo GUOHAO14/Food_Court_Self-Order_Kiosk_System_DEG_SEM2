@@ -271,6 +271,7 @@ public:
         displayFoodHeader(length);
     }
 
+
     // Row formatting
     void displayFoodFormat(int count, struct food* food) {
         cout << "| ";
@@ -316,7 +317,7 @@ public:
     void saveOrderMapFood(ofstream& out, int orderID) {
         food* current = head;
         while (current != nullptr) {
-            out << orderID << "," << current->id << endl;
+            out << orderID << "," << current->id << "," << current->status << endl;
             current = current->next;
         }
     }

@@ -123,7 +123,7 @@ void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName) {
 	file.close();
 };
 
-void loadOrderFromCSV(Queue* pending, Queue* completed, Food_Linked_List* foodList, string orderFile, string mapfoodFile) {
+void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_Linked_List* foodList, string orderFile, string mapfoodFile) {
 	//Load Order Details
 	ifstream file(orderFile);
 	if (!file.is_open())
@@ -147,6 +147,8 @@ void loadOrderFromCSV(Queue* pending, Queue* completed, Food_Linked_List* foodLi
 
 		if (order_status == "Pending")
 			pending->addQueue(Order(id, student_id, order_time, order_status));
+		else if (order_status == "Processing")
+			processing->addQueue(Order(id, student_id, order_time, order_status));
 		else if (order_status == "Completed")
 			completed->addQueue(Order(id, student_id, order_time, order_status));
 	}
@@ -184,7 +186,7 @@ void loadOrderFromCSV(Queue* pending, Queue* completed, Food_Linked_List* foodLi
 	newfile.close();
 };
 
-void saveOrderToCSV(Queue* pending, Queue* completed, string orderFile, string mapfoodFile) {
+void saveOrderToCSV(Queue* pending, Queue* processing, Queue* completed, string orderFile, string mapfoodFile) {
 	ofstream orderOut(orderFile);
 	ofstream mapOut(mapfoodFile);
 	if (!orderOut.is_open())
@@ -203,6 +205,7 @@ void saveOrderToCSV(Queue* pending, Queue* completed, string orderFile, string m
 	mapOut << "order_id,food_id\n";
 
 	pending->saveOrders(orderOut, mapOut);
+	processing->saveOrders(orderOut, mapOut);
 	completed->saveOrders(orderOut, mapOut);
 
 	orderOut.close();

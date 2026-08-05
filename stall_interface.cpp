@@ -88,8 +88,9 @@ void printManageStallInt() {
         cout << endl << "=============== Stall Management ===============" << endl;
         cout << "Hello, you are stall " << selectedStall->name << " (ID: " << selectedStall->id << ")." << endl;
         cout << "1. Set Stall Status" << endl;
-        cout << "2. Manage Order Status" << endl;
-        cout << "3. Back" << endl;
+        cout << "2. Display Processing Food Queue" << endl;
+        cout << "3. Mark Food as Complete" << endl;
+        cout << "4. Back" << endl;
 
         cout << "Enter your choice (type integer): ";
         cin >> choice;
@@ -99,29 +100,38 @@ void printManageStallInt() {
             printSetStallStatusInt();
             break;
         case 2:
+            cout << "===== Food To Be Prepared =====" << endl;
+            selectedStall->foodQueue.displayFoodQueue();
             break;
         case 3:
+            markFoodAsComplete();
+            break;
+        case 4:
             break;
         default:
             cout << "Invalid input. Please try again." << endl;
         }
 
-    } while (choice != 3);
+    } while (choice != 4);
 }
 
 void printSetStallStatusInt() {
     int choice;
     do {
-        cout << endl << "=============== Set Stall Status ===============" << endl;
+        cout << endl << "===== Set Stall Status =====" << endl;
         cout << "1. Open Stall" << endl;
         cout << "2. Close Stall" << endl;
         cout << "3. Back" << endl;
-        cout << "Enter your choice (1 for Open, 2 for Close, 3 for Back): ";
+        cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
         case 1:
             stallList.setStallStatus(selectedStall, true);
+
+            // check whether food waiting queue can be resolved
+            checkAndAssignUnassignedFood();
+
             break;
         case 2:
             stallList.setStallStatus(selectedStall, false);
@@ -135,3 +145,23 @@ void printSetStallStatusInt() {
     } while (choice != 3);
 }
 
+void markFoodAsComplete() {
+    int choice;
+    cout << endl << "===== Mark Food As Complete =====" << endl;
+    selectedStall->foodQueue.displayFoodQueue();
+        
+    cout << "Choose food to mark as complete. Enter Number (based on No. column): ";
+    cin >> choice;
+    selectedStall->foodQueue.markComplete(choice);
+
+    // update processing queue
+    Node* order = processingOrdersQueue.getHead();
+    while (order != nullptr) {
+        order->data.updateOrderStatus();
+        order = order->next;
+    }
+    saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+
+    // check whether food waiting queue can be resolved
+    checkAndAssignUnassignedFood();
+}

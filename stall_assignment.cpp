@@ -4,15 +4,12 @@
 
 using namespace std;
 
-void stallAndOrderAssignment(Order * order) {
-	// Reset the circular queue for each new order to be assigned
+void stallAndOrderAssignment(Order order) {
 
-	stallCircularQueue.displayQueue();
+	struct food* currentFood = order.getFoodList()->getHead();
 
-	struct food* currentFood = order->getFoodList()->getHead();
-
-	for (int i = 0; i < order->getFoodList()->getCount(); i++) {
-		// process each food item in the order
+	// process each food item in the order
+	for (int i = 0; i < order.getFoodList()->getCount(); i++) {
 		if (currentFood == nullptr) {
 			cout << "No food items in the order." << endl;
 			break;
@@ -23,6 +20,14 @@ void stallAndOrderAssignment(Order * order) {
 		stallCircularQueue.displayQueue();
 		currentFood = currentFood->next;
 	}
+
+	// refresh order status
+	order.updateOrderStatus();
+	order.displayOrder();
+
+	if (order.getOrderStatus() == "Processing") {
+		swapPendingToProcessingQueue(&order);
+	}
 };
 
 void assignFoodToStall(food* currentFood) {
@@ -32,11 +37,18 @@ void assignFoodToStall(food* currentFood) {
 	// queue status
 	bool hasSuitableStall = false;
 	bool assigned = false;
+	int stallNum = stallCircularQueue.getMaxStalls();
 
-	for (int k = 0; k < stallCircularQueue.getMaxStalls(); k++) {
-		struct stall* currentStall = stallCircularQueue.getQueue()[k];
+	for (int k = 0; k < stallNum; k++) { // go through five stalls
+		struct stall* currentStall = stallCircularQueue.getQueue()[stallCircularQueue.getFront() % stallNum];
 
 		if (currentStall != nullptr) {
+			// STALL ASSIGNMENT CIRCULAR QUEUE
+			// then dequeue the stall in order assignment
+			stallCircularQueue.dequeueStall();
+			// re-enqueue the stall to the end of the circular queue 
+			// to achieve rotate mechanism for load balancing
+			stallCircularQueue.enqueueStall(currentStall);
 
 			// stall not suitable for this food
 			if (!foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
@@ -61,13 +73,7 @@ void assignFoodToStall(food* currentFood) {
 				cout << "This stall is currently preparing " << currentStall->foodQueue.getCount() << " orders." << endl;
 
 				// display those specific orders
-				currentStall->foodQueue.displayAllOrders(); 
-
-				// then dequeue the stall in order assignment
-				stallCircularQueue.dequeueStall();
-				// re-enqueue the stall to the end of the circular queue 
-				// to achieve rotate mechanism for load balancing
-				stallCircularQueue.enqueueStall(currentStall);
+				currentStall->foodQueue.displayFoodQueue(); 
 
 				break; // Exit after assigning the order
 			}
@@ -111,9 +117,9 @@ void assignFoodToStall(food* currentFood) {
 	}
 }
 
+// check if unassigned food in the waiting queue can be assigned
+// used when a stall mark food as done (free), or when a stall changes status to open
 void checkAndAssignUnassignedFood() {
-	// check if unassigned food in the waiting queue can be assigned
-	// used when a stall mark food as done (free), or when a stall changes status to open
 	if (unassignedFoodQueue.getCount() > 0) {
 		cout << "Checking unassigned food items in the waiting queue..." << endl;
 		struct food* currentFood = unassignedFoodQueue.getHead();
@@ -124,5 +130,27 @@ void checkAndAssignUnassignedFood() {
 	}
 	else {
 		cout << "No unassigned food items in the waiting queue." << endl;
+	}
+}
+
+void swapPendingToProcessingQueue(Order * order) {
+	if (order->getOrderStatus() == "Processing") {
+		Order temp = pendingOrdersQueue.delQueue();
+
+		processingOrdersQueue.addQueue(temp);
+	}
+	else {
+		cout << "Swap failed. Order status does not indicate Processing." << endl;
+	}
+}
+
+void swapProcessingToCompletedQueue(Order* order) {
+	if (order->getOrderStatus() == "Completed") {
+		Order temp = processingOrdersQueue.delQueue();
+
+		completedOrdersQueue.addQueue(temp);
+	}
+	else {
+		cout << "Swap failed. Order status does not indicate Completed." << endl;
 	}
 }

@@ -65,8 +65,10 @@ int main(){
         ctime_s(buffer, sizeof(buffer), &now);
 
         string currentTime = buffer;
-        Order* hello;
 		struct food * selectedFood;
+        Order hello = Order(1, 123456, currentTime, "Pending");
+        selectedFood = foodList.searchFoodById(1);
+        hello.addFood(food(selectedFood->id, selectedFood->name, selectedFood->price));
         //remove above
         switch (choice) {
 		case 1: {
@@ -86,9 +88,6 @@ int main(){
             break;
         case 4: 
             // remove bottom
-            hello = new Order(1, 123456, currentTime, "Pending");
-            selectedFood = foodList.searchFoodById(1);
-            hello->addFood(food(selectedFood->id, selectedFood->name, selectedFood->price));
 
             // go stall assignment cpp
             stallAndOrderAssignment(hello);

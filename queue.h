@@ -73,6 +73,58 @@ class Order {
 		{
 			return &foods;
 		}
+
+        void updateOrderStatus()
+        {
+            if (this == nullptr)
+            {
+                cout << "Order ID " << this->OrID << " not found in the queue." << endl;
+                return;
+            }
+
+            if (this->getFoodList()->getCount() == 0) {
+                cout << "Order ID " << this->OrID << " does not have a food item." << endl;
+                return;
+            }
+
+            //start to go through the food list of the order to count the status of each food item
+            struct food* currentFood = this->getFoodList()->getHead();
+
+            int pending = 0;
+            int processing = 0; // pending and processing (in stall queue) are mixed
+            int completed = 0;
+
+            while (currentFood != nullptr) {
+                string status = currentFood->status;
+
+                if (status == "Pending") {
+                    pending++;
+                }
+                else if (status == "Processing") {
+                    processing++;
+                }
+                else if (status == "Completed") {
+                    completed++;
+                }
+
+                currentFood = currentFood->next;
+            }
+
+            if (pending == 0 && processing == 0 && completed > 0) {
+                this->orderStatus = "Completed";
+            }
+            else if (processing > 0) {
+                this->orderStatus = "Processing";
+            }
+            else if (processing == 0 && completed == 0 && pending > 0) {
+                this->orderStatus = "Pending";
+            }
+            else {
+                this->orderStatus = "Pending";
+            }
+
+
+        }
 };
 
 struct Node {
@@ -96,6 +148,10 @@ class Queue {
         {
             head = nullptr;
             tail = nullptr;
+        }
+
+        Node* getHead() {
+            return head;
         }
 
         bool emptyList()
@@ -185,60 +241,10 @@ class Queue {
                 Order& order = currentNode->data;
 
                 orderOut << order.getOrderID() << "," << order.getStudentID() << "," << order.getOrderTime() << "," << order.getOrderStatus() << endl;
+
                 order.getFoodList()->saveOrderMapFood(mapOut, order.getOrderID());
 
                 currentNode = currentNode->next;
             }
         }
-
-		void updateOrderStatus(int orderId)
-		{
-			Order* currentOrder = searchOrderById(orderId); // locate actual order
-			if (currentOrder == nullptr)
-			{
-				cout << "Order ID " << orderId << " not found in the queue." << endl;
-				return;
-			}
-
-            if (currentOrder->getFoodList()->getCount() == 0) {
-                cout << "Order ID " << orderId << " does not have a food item." << endl;
-                return;
-            }
-
-			//start to go through the food list of the order to count the status of each food item
-            struct food* currentFood = currentOrder->getFoodList()->getHead();
-
-            int pending = 0;
-			int processing = 0; // pending and processing (in stall queue) are mixed
-            int completed = 0;
-
-			while (currentFood != nullptr) {
-                string status = currentFood->status;
-				
-				if (status == "Pending") {
-                    pending++;
-				}
-				else if (status == "Processing") {
-                    processing++;
-				}
-				else if (status == "Completed") {
-					completed++;
-				}
-
-				currentFood = currentFood->next;
-			}
-
-            if (pending == 0 && processing == 0 && completed > 0) {
-				currentOrder->setOrderStatus("Completed");
-			}
-			else if (processing > 0) {
-				currentOrder->setOrderStatus("Processing");
-			}
-			else if (processing == 0 && completed == 0 && pending > 0) {
-				currentOrder->setOrderStatus("Pending");
-			}
-			else {
-				currentOrder->setOrderStatus("Pending");
-			}
-		}
 };

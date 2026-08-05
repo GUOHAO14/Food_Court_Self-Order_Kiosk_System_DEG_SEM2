@@ -10,8 +10,11 @@ using namespace std;
 const int MAX_ORDER_ITEMS = 8;
 
 // Static tracking for queue and order IDs
-static Queue pendingOrdersQueue;
-static Queue completedOrdersQueue;
+//static Queue pendingOrdersQueue;
+//static Queue processingOrdersQueue;
+//static Queue completedOrdersQueue;
+
+// ^^ moved to globals file
 
 static int nextOrderId = 101;
 
@@ -325,8 +328,14 @@ void processFinalCheckout(Session* session) {
     cout << "=============================================" << endl;
     placedOrder->displayOrder();
 
-    pendingOrdersQueue.addQueue(*placedOrder);
-    saveOrderToCSV(&pendingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+    Order order = *placedOrder; // create new copy of order, to be added into queue and assigned
+
+    pendingOrdersQueue.addQueue(order);
+    
+    // from pending queue, order will be transferred to stall assignment
+    stallAndOrderAssignment(order);
+
+    saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
     delete placedOrder;
 
     cout << "\nYour order has been placed into the system queue!" << endl;

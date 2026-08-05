@@ -40,13 +40,13 @@ public:
 		return false;
 	}
 
-	//int getFront() {
-	//	return front;
-	//}
+	int getFront() {
+		return front;
+	}
 
-	//int getRear() {
-	//	return rear;
-	//}
+	int getRear() {
+		return rear;
+	}
 
 	bool isEmpty()
 	{

@@ -33,7 +33,6 @@
     <ClCompile Include="stall_assignment.cpp" />
     <ClCompile Include="stall_interface.cpp" />
     <ClCompile Include="student_auth.cpp" />
-    <ClCompile Include="task1.cpp" />
     <ClCompile Include="admin_interface.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>

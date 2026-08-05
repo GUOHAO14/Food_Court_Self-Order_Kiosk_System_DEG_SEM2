@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include "queue.h"
+#include "food.h"
+#include "food_stall_map.h"
 using namespace std;
 
 // different from order assignment
@@ -59,50 +61,26 @@ public:
 		count--;
 	}
 
-	// header for stall display
-	void displayOrderQueueHeader() {
-		cout << string(54, '=') << endl;
-		cout << "| ";
-		cout << left << setw(3) << "No.";
-		cout << " | ";
-		cout << left << setw(8) << "Order ID";
-		cout << " | ";
-		cout << left << setw(8) << "Food ID";
-		cout << " | ";
-		cout << left << setw(20) << "Food Name";
-		cout << " | ";
-		cout << left << setw(10) << "Status";
-		cout << " | ";
-		cout << endl;
-		cout << string(54, '=') << endl;
+	void markComplete(int queueIndex) {
+		if (queueIndex < 0 || queueIndex > count) {
+			cout << "Invalid food. Index out of bound." << endl;
+			return;
+		}
+		queue[queueIndex]->status = "Completed";
+		cout << "Food marked as completed" << endl;
 	}
 
-	// actual display for stall data
-	//void displayStallsFormat(int count, struct food* f) {
-	//	cout << "| ";
-	//	cout << left << setw(3) << count;
-	//	cout << " | ";
-	//	cout << left << setw(8) << f->id;
-	//	cout << " | ";
-	//	cout << left << setw(20) << s->name;
-	//	cout << " | ";
-	//	cout << left << setw(10) << (s->isOpen ? "Open" : "Closed");
-	//	cout << " |" << endl;
-	//}
-
 	// display all stalls in a formatted table
-	void displayAllOrders() {
+	void displayFoodQueue() {
 		if (isEmpty()) {
 			cout << "No orders to show. Circular queue is empty!" << endl;
 			return;
 		}
-		//for (int i = 0; i < count; i++) {
-		//	cout << "Order ID : " << queue[i]->getOrderID() << endl;
-		//	cout << "Student  : " << queue[i]->getStudentID() << endl;
-		//	cout << "Time     : " << queue[i]->getOrderTime() << endl;
-
-		//	queue[i]->getFoodList().displayAllFood(true);
-		//}
-		//cout << string(54, '=') << endl << endl;
+		int length = 64;
+		Food_Linked_List().displayFoodHeader(length);
+		for (int i = 0; i < count; i++) {
+			Food_Linked_List().displayFoodFormat(i+1, queue[i]);
+		}
+		cout << string(length, '=') << endl << endl;
 	}
 };
