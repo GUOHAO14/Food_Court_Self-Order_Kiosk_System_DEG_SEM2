@@ -2,29 +2,32 @@
 #include <iostream>
 #include <iomanip>
 #include "stall.h"
-#include "globals.h"
 
 using namespace std;
 
 // circular queue for checking all stalls
 // check whether they can prepare the food, they are free, and they are open
 // also ensure order workload is balanced between stalls
-class Order_Assignment_Circular_Queue {
+class Stall_Assignment_Circular_Queue {
 private:
 	struct stall* queue[5];
 	int maxStalls = 5, front = -1, rear = -1, count = 0;
 
 public:
-	Order_Assignment_Circular_Queue() {
-		enqueueStall(stallList.searchStallById(1));
-		enqueueStall(stallList.searchStallById(2));
-		enqueueStall(stallList.searchStallById(3));
-		enqueueStall(stallList.searchStallById(4));
-		enqueueStall(stallList.searchStallById(5));
+	Stall_Assignment_Circular_Queue() {
+
 	}
 
 	stall** getQueue() {
 		return queue;
+	}
+
+	void setFront(int f) {
+		front = f;
+	}
+
+	void setRear(int r) {
+		rear = r;
 	}
 
 	int getMaxStalls() {
@@ -151,5 +154,11 @@ public:
 			}
 		}
 		cout << endl;
+	}
+
+	// for loading circular queue from CSV
+	void insertStallAtPosition(stall* stall, int position)
+	{
+		queue[position] = stall;
 	}
 };
