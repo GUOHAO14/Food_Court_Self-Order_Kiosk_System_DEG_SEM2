@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "stall.h"
+
 using namespace std;
 
 // a struct to represent the mapping between food items and stalls
@@ -28,6 +29,16 @@ public:
         tail = nullptr;
     }
 
+    // --- ADDED GETTERS FOR COMPATIBILITY ---
+    struct food_stall_map* getHead() {
+        return head;
+    }
+
+    struct food_stall_map* getTail() {
+        return tail;
+    }
+
+    // --- UNCHANGED ORIGINAL METHODS ---
     void insertRear(int food_id, int stall_id) {
         struct food_stall_map* newMap = new food_stall_map(food_id, stall_id);
 
@@ -78,6 +89,34 @@ public:
         delete current;
         return true;
     }
+
+    // --- ADDED FOR BULK DELETION IN ADMIN PAGE ---
+    void deleteByFoodId(int targetFoodId) {
+        struct food_stall_map* current = head;
+        struct food_stall_map* prev = nullptr;
+
+        while (current != nullptr) {
+            if (current->food_id == targetFoodId) {
+                struct food_stall_map* temp = current;
+                if (current == head) {
+                    head = head->next;
+                    current = head;
+                    if (head == nullptr) tail = nullptr;
+                }
+                else {
+                    prev->next = current->next;
+                    if (current == tail) tail = prev;
+                    current = current->next;
+                }
+                delete temp;
+            }
+            else {
+                prev = current;
+                current = current->next;
+            }
+        }
+    }
+
     bool isFoodUsedByAnyStall(int food_id) {
         struct food_stall_map* trav = head;
         while (trav != nullptr) {

@@ -9,6 +9,7 @@
 #include "stall_assignment.h"
 #include "self_order_interface.h"
 #include "stall_assignment_circular_queue.h"
+#include "admin.h"
 
 using namespace std;
 
@@ -48,8 +49,9 @@ int main(){
         cout << endl << "===== Campus Self-Order System =====" << endl;
         cout << "1. Enter Self-Order Kiosk" << endl;
         cout << "2. Stall Management Page" << endl;
-        cout << "3. TESTING ORDER ASSIGNMENT" << endl;
-        cout << "4. Exit Program" << endl;
+        cout << "3. Admin Page" << endl;
+        cout << "4. TESTING ORDER ASSIGNMENT" << endl;
+        cout << "5. Exit Program" << endl;
 
         cout << "Enter your choice (type integer): ";
         cin >> choice;
@@ -73,7 +75,10 @@ int main(){
         case 2: 
 			chooseStall();
 			break;
-        case 3: 
+        case 3:
+            adminPage();
+            break;
+        case 4: 
             // remove bottom
             hello = new Order(1, 123456, currentTime, "Pending");
             selectedFood = foodList.searchFoodById(1);
@@ -83,11 +88,11 @@ int main(){
             stallAndOrderAssignment(hello);
             // remove above
             break;
-        case 4: 
+        case 5: 
             return 0;
             break;
         default: 
 			cout << "Invalid choice input. Please try again." << endl;
         }
-    } while (choice != 4);
+    } while (choice != 5);
 }

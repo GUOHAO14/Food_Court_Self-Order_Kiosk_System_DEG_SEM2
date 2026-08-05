@@ -32,10 +32,11 @@
     <ClCompile Include="stall_assignment.cpp" />
     <ClCompile Include="stall_interface.cpp" />
     <ClCompile Include="task1.cpp" />
-    <ClCompile Include="task4.cpp" />
+    <ClCompile Include="admin_interface.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="admin.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="stall_assignment_circular_queue.h" />
     <ClInclude Include="order_interface.h" />
