@@ -49,6 +49,21 @@ class Order {
 			return OrID;
 		}
 
+        int getStudentID()
+        {
+            return StuID;
+        }
+
+        string getOrderTime()
+        {
+            return orderTime;
+        }
+
+        string getOrderStatus()
+        {
+            return orderStatus;
+        }
+
 		Food_Linked_List* getFoodList()
 		{
 			return &foods;
@@ -155,5 +170,19 @@ class Queue {
                 currentNode = currentNode->next;
             }
             return count;
+        }
+
+        void saveOrders(ofstream& orderOut, ofstream& mapOut)
+        {
+            Node* currentNode = head;
+            while (currentNode != nullptr)
+            {
+                Order& order = currentNode->data;
+
+                orderOut << order.getOrderID() << "," << order.getStudentID() << "," << order.getOrderTime() << "," << order.getOrderStatus() << endl;
+                order.getFoodList()->saveOrderMapFood(mapOut, order.getOrderID());
+
+                currentNode = currentNode->next;
+            }
         }
 };
