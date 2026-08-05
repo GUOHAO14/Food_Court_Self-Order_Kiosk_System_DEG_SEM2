@@ -10,6 +10,7 @@
 #include "self_order_interface.h"
 #include "stall_assignment_circular_queue.h"
 #include "admin.h"
+#include "student_auth.h"
 
 using namespace std;
 
@@ -68,10 +69,15 @@ int main(){
 		struct food * selectedFood;
         //remove above
         switch (choice) {
-		case 1:
-			// enter order page, Isaac part
-            printSelfOrderInt(76267);
-			break;
+		case 1: {
+            // enter order page, Isaac part
+            int studentId = studentAuthMenu();
+
+            if (studentId != -1) {
+                printSelfOrderInt(studentId);
+            }
+            break;
+        }
         case 2: 
 			chooseStall();
 			break;

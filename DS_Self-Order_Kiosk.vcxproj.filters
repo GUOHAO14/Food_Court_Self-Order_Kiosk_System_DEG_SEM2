@@ -20,6 +20,7 @@
     <None Include="food.csv" />
     <None Include="order.csv" />
     <None Include="order_map_food.csv" />
+    <None Include="students.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">
@@ -61,12 +62,15 @@
     <ClInclude Include="stall_internal_food_circular_queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="admin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="student_auth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="task1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="task4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mainProgram.cpp">
@@ -85,6 +89,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="self_order_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="admin_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="student_auth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
