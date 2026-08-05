@@ -91,6 +91,14 @@ public:
 		return count;
 	}
 
+	struct food* getHead() {
+		return head;
+	}
+
+	struct food* getTail() {
+		return tail;
+	}
+
 	// search for a food item by its ID
 	struct food* searchFoodById(int id) {
 		struct food* trav = head;

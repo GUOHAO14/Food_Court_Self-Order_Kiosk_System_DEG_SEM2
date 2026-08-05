@@ -57,4 +57,15 @@ public:
 	//		cout << "No stalls found for this food item." << endl;
 	//	}
 	//}
+
+	bool checkFoodStallMapping(int food_id, int stall_id) {
+		struct food_stall_map* trav = head;
+		while (trav != nullptr) {
+			if (trav->food_id == food_id && trav->stall_id == stall_id) {
+				return true; // mapping exists
+			}
+			trav = trav->next;
+		}
+		return false; // mapping does not exist
+	}
 };
