@@ -87,6 +87,10 @@ public:
 		count++;
 	}
 
+	int getCount() {
+		return count;
+	}
+
 	// search for a food item by its ID
 	struct food* searchFoodById(int id) {
 		struct food* trav = head;
