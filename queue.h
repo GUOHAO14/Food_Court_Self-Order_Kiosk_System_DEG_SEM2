@@ -29,35 +29,25 @@ class Order {
             this->orderStatus = orderStatus;
         }
 
-        int getOrderID()
-        {
-            return OrID;
-        }
-
-        int getStudentID()
-        {
-            return StuID;
-        }
-
-        string getOrderTime()
-        {
-            return orderTime;
-        }
-
-        string getOrderStatus()
-        {
-            return orderStatus;
-        }
-
         void addFood(food food)
         {
             foods.insertRear(food);
         }
 
-        Food_Linked_List& getFoodList()
-        {
-            return foods;
-        }
+		void displayOrder()
+		{
+			cout << "Order ID : " << OrID << endl;
+			cout << "Student  : " << StuID << endl;
+			cout << "Time     : " << orderTime << endl;
+			cout << "Status   : " << orderStatus << endl;
+			foods.displayAllFood(true);
+            cout << "------------------------" << endl;
+		}
+
+		int getOrderID()
+		{
+			return OrID;
+		}
 };
 
 struct Node {
@@ -145,12 +135,7 @@ class Queue {
             Node* currentNode = head;
             while (currentNode != nullptr)
             {
-                cout << "Order ID : " << currentNode->data.getOrderID() << endl;
-                cout << "Student  : " << currentNode->data.getStudentID() << endl;
-                cout << "Time     : " << currentNode->data.getOrderTime() << endl;
-				cout << "Status   : " << currentNode->data.getOrderStatus() << endl;
-                currentNode->data.getFoodList().displayAllFood(true);
-                cout << "------------------------" << endl;
+                currentNode->data.displayOrder();
                 currentNode = currentNode->next;
             }
         }
