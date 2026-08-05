@@ -258,15 +258,15 @@ Order* orderInterface(Queue* pendingQueuePtr, Food_Linked_List* foodListPtr, Sta
 	double orderTotal = 0.0;
 	SessionStep cartItems[Stack::MAX_HISTORY_SIZE];
 	int cartItemCount = sessionHistoryPtr->getActiveCartItemsForStudent(studentIdStr, cartItems);
-	for (int i = 0; i < cartItemCount; i++) {
-		SessionStep& item = cartItems[i];
-		for (int q = 0; q < item.getQuantity(); q++) {
-			newOrder.addFood(food(item.getFoodId(), item.getFoodName(), item.getPrice()));
-		}
-		orderTotal += item.getPrice() * item.getQuantity();
-	}
+	//for (int i = 0; i < cartItemCount; i++) {
+	//	SessionStep& item = cartItems[i];
+	//	for (int q = 0; q < item.getQuantity(); q++) {
+	//		newOrder.addFood(food(item.getFoodId(), item.getFoodName(), item.getPrice()));
+	//	}
+	//	orderTotal += item.getPrice() * item.getQuantity();
+	//}
 
-	pendingQueuePtr->addQueue(newOrder);
+	//pendingQueuePtr->addQueue(newOrder);
 	Order* placedOrder = pendingQueuePtr->searchOrderById(orderId);
 
 	logStep(sessionHistoryPtr, studentIdStr, "Order Placed (Order ID: " + formatOrderId(orderId) + ")");
