@@ -41,7 +41,7 @@ void displayAllMenuItems() {
 
     struct food* currentFood = head;
     while (currentFood != nullptr) {
-        // Collect assigned stall IDs for the current food item
+        // Collect the assigned stall IDs for the current food item
         string stallIdsStr = "";
         struct food_stall_map* currentMap = foodStallMapList.getHead();
         while (currentMap != nullptr) {
@@ -83,8 +83,8 @@ void displayAvailableStalls() {
 }
 
 // Rewrite memory data back to CSV files
-void persistAllData() {
-    // 1. Rewrite food.csv
+void rewriteCSV() {
+    // Rewrite food.csv
     ofstream foodFile("food.csv", ios::out | ios::trunc);
     if (foodFile.is_open()) {
         foodFile << "food_id,food_name,price\n";
@@ -99,7 +99,7 @@ void persistAllData() {
         cout << "Warning: Unable to update food.csv." << endl;
     }
 
-    // 2. Rewrite food_stall_map.csv
+    // Rewrite food_stall_map.csv
     ofstream mapFile("food_stall_map.csv", ios::out | ios::trunc);
     if (mapFile.is_open()) {
         mapFile << "food_id,stall_id\n";
@@ -128,7 +128,7 @@ void adminPage() {
         cout << "Enter your choice (type integer): ";
 
         if (!(cin >> choice)) {
-            cout << "Invalid input. Please enter a valid integer." << endl;
+            cout << "Invalid input" << endl;
             clearInputBuffer();
             continue;
         }
@@ -149,7 +149,7 @@ void adminPage() {
         case 5:
             break;
         default:
-            cout << "Invalid choice. Please select between 1 and 5." << endl;
+            cout << "Invalid choice" << endl;
         }
 
     } while (choice != 5);
@@ -160,46 +160,45 @@ void addMenuItem() {
     double price;
 
     cout << "\n================ Add Menu Item ================" << endl;
-    cout << "(Note: Type 'cancel' or '0' at any prompt to cancel)\n" << endl;
 
     clearInputBuffer();
 
-    // 1. Prompt Food Name
+    // Prompt Food Name
     while (true) {
-        cout << "Enter food name: ";
+        cout << "Enter food name (or type 'c' to cancel): ";
         getline(cin, name);
 
-        if (name == "cancel" || name == "0") {
-            cout << "Operation cancelled. Returning to admin menu..." << endl;
+        if (name == "c" || name == "C") {
+            cout << "Operation cancelled" << endl;
             return;
         }
 
         if (name.empty()) {
-            cout << "Food name cannot be empty. Please enter a valid name." << endl;
+            cout << "Food name cannot be empty" << endl;
             continue;
         }
 
         if (foodList.isFoodNameExists(name)) {
-            cout << "Error: A menu item with the name \"" << name << "\" already exists.\n" << endl;
+            cout << "A menu item with the name \"" << name << "\" already exists.\n" << endl;
         }
         else {
             break;
         }
     }
 
-    // 2. Prompt Food Price
+    // Prompt Food Price
     cout << "Enter food price (RM) [or type 0 to cancel]: ";
     while (!(cin >> price) || price < 0) {
-        cout << "Invalid price. Please enter a positive number (or 0 to cancel): ";
+        cout << "Invalid price (or 0 to cancel): ";
         clearInputBuffer();
     }
 
     if (price == 0) {
-        cout << "Operation cancelled. Returning to admin menu..." << endl;
+        cout << "Operation cancelled" << endl;
         return;
     }
 
-    // 3. Auto-generate Next Food ID
+    // Auto-generate Food ID
     int maxId = 0;
     struct food* currentFood = foodList.getHead();
     while (currentFood != nullptr) {
@@ -210,54 +209,94 @@ void addMenuItem() {
     }
     int newFoodId = maxId + 1;
 
-    // 4. Stall Assignment
+    // Stall Assignment
     if (stallList.getHead() == nullptr) {
-        cout << "Error: No stalls available in system to assign food items!" << endl;
+        cout << "No stalls available" << endl;
         return;
     }
 
     displayAvailableStalls();
 
     int assignedCount = 0;
-    char addMore = 'y';
+    string inputStr;
 
-    while (tolower(addMore) == 'y') {
-        int stallId;
-        cout << "Enter Stall ID to assign (or 0 to skip/cancel entry): ";
-        if (!(cin >> stallId)) {
-            cout << "Invalid input. Please enter a numerical Stall ID." << endl;
+    while (true) {
+        if (assignedCount == 0) {
+            cout << "\nEnter Stall ID to assign (c to cancel menu creation): ";
+        }
+        else {
+            cout << "\nEnter Stall ID to assign (s to save, c to cancel menu creation): ";
+        }
+
+        if (!(cin >> inputStr)) {
+            cout << "Invalid input" << endl;
             clearInputBuffer();
             continue;
         }
 
-        if (stallId == 0) {
-            cout << "Stall entry skipped." << endl;
-        }
-        else if (stallList.searchStallById(stallId) == nullptr) {
-            cout << "Error: Stall ID " << stallId << " does not exist. Please try again." << endl;
-            continue;
-        }
-        else if (foodStallMapList.checkFoodStallMapping(newFoodId, stallId)) {
-            cout << "This food item is already assigned to Stall ID " << stallId << "." << endl;
-        }
-        else {
-            foodStallMapList.insertRear(newFoodId, stallId);
-            assignedCount++;
-            cout << "Assigned to Stall ID " << stallId << " successfully." << endl;
-        }
-
-        cout << "Assign to another stall? (y/n, or c to cancel menu creation): ";
-        cin >> addMore;
-
-        if (tolower(addMore) == 'c') {
+        // Handle string control keys
+        if (inputStr == "c" || inputStr == "C") {
             cout << "Menu creation cancelled." << endl;
             if (assignedCount > 0) {
-                foodStallMapList.deleteByFoodId(newFoodId);
+                foodStallMapList.deleteByFoodId(newFoodId); // Rollback changes
             }
             return;
         }
+
+        if (assignedCount > 0 && (inputStr == "s" || inputStr == "S")) {
+            cout << "Stall assignment completed." << endl;
+            break;
+        }
+
+        // Convert string input to integer ID safely
+        int stallId;
+        try {
+            stallId = stoi(inputStr);
+        }
+        catch (...) {
+            cout << "Invalid input" << endl;
+            continue;
+        }
+
+        // Validation checks
+        if (stallList.searchStallById(stallId) == nullptr) {
+            cout << "Error: Stall ID " << stallId << " does not exist. Please try again." << endl;
+            continue;
+        }
+
+        if (foodStallMapList.checkFoodStallMapping(newFoodId, stallId)) {
+            cout << "This food item is already assigned to Stall ID " << stallId << "." << endl;
+            continue;
+        }
+
+        // Successful Mapping
+        foodStallMapList.insertRear(newFoodId, stallId);
+        assignedCount++;
+        cout << "Assigned to Stall ID " << stallId << " successfully." << endl;
+
+        // Prompt user to continue or exit
+        char choice;
+        cout << "Assign to another stall? (y/n, c to cancel menu creation): ";
+        cin >> choice;
+
+        if (tolower(choice) == 'n') {
+            cout << "Stall assignment completed." << endl;
+            break;
+        }
+        else if (tolower(choice) == 'c') {
+            cout << "Menu creation cancelled." << endl;
+            if (assignedCount > 0) {
+                foodStallMapList.deleteByFoodId(newFoodId); // Rollback changes
+            }
+            return;
+        }
+        else if (tolower(choice) != 'y') {
+            cout << "Invalid choice. Saving stall assignments..." << endl;
+            break;
+        }
     }
 
+    // Final enforcement guard
     if (assignedCount == 0) {
         cout << "No stalls assigned. Menu item creation aborted." << endl;
         return;
@@ -265,7 +304,7 @@ void addMenuItem() {
 
     // 5. Commit Changes to Linked Lists & Files
     foodList.insertRear(newFoodId, name, price);
-    persistAllData();
+    rewriteCSV();
 
     cout << "\n[SUCCESS] Menu item \"" << name << "\" (ID: " << newFoodId
         << ") added and assigned to " << assignedCount << " stall(s)!" << endl;
@@ -316,7 +355,7 @@ void removeMenuItem() {
     foodStallMapList.deleteByFoodId(targetId);
 
     // Save updated state to files
-    persistAllData();
+    rewriteCSV();
 
     cout << "\n[SUCCESS] Menu item \"" << deletedName << "\" (ID: " << targetId
         << ") and its stall mappings were deleted successfully!" << endl;
@@ -473,7 +512,7 @@ void updateMenuItem() {
 
     // Save changes if modified
     if (modified) {
-        persistAllData();
+        rewriteCSV();
         cout << "\n[SUCCESS] Menu item ID " << targetId << " updated successfully!" << endl;
     }
     else {
@@ -492,12 +531,14 @@ void searchMenuItem() {
     foodTree.populateFromLinkedList(foodList.getHead());
 
     cout << "\n================ Search Menu Item (BST) ================" << endl;
-    cout << "1. Search by Food ID (BST Binary Search)" << endl;
-    cout << "2. Search by Food Name (BST In-Order Traversal)" << endl;
-    cout << "Enter search mode choice (1-2): ";
+    cout << "1. Search by Food ID" << endl;
+    cout << "2. Search by Food Name" << endl;
+    cout << "3. Search by Stall ID" << endl;
+    cout << "4. Search by Stall Name" << endl;
+    cout << "Enter search mode choice (1-4): ";
 
     int mode;
-    if (!(cin >> mode) || (mode != 1 && mode != 2)) {
+    if (!(cin >> mode) || mode < 1 || mode > 4) {
         cout << "Invalid choice. Returning to admin menu..." << endl;
         clearInputBuffer();
         return;
@@ -508,15 +549,6 @@ void searchMenuItem() {
     int matchCount = 0;
     int length = 75;
 
-    // Header formatting
-    cout << "\nSearch Results:" << endl;
-    cout << string(length, '=') << endl;
-    cout << "| " << left << setw(8) << "Food ID"
-        << " | " << left << setw(28) << "Food Name"
-        << " | " << left << setw(10) << "Price (RM)"
-        << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
-    cout << string(length, '=') << endl;
-
     if (mode == 1) {
         int searchId;
         cout << "Enter Food ID to search: ";
@@ -526,6 +558,15 @@ void searchMenuItem() {
             return;
         }
 
+        // Header formatting
+        cout << "\nSearch Results:" << endl;
+        cout << string(length, '=') << endl;
+        cout << "| " << left << setw(8) << "Food ID"
+            << " | " << left << setw(28) << "Food Name"
+            << " | " << left << setw(10) << "Price (RM)"
+            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
+        cout << string(length, '=') << endl;
+
         // Search in O(log n) time
         FoodTreeNode* result = foodTree.searchById(searchId);
         if (result != nullptr) {
@@ -533,15 +574,69 @@ void searchMenuItem() {
             FoodBST::displayNodeRow(result);
         }
     }
-    else {
+    else if (mode == 2) {
         string searchKeyword;
         cout << "Enter Food Name (or partial name): ";
         getline(cin, searchKeyword);
 
-        if (!searchKeyword.empty()) {
-            transform(searchKeyword.begin(), searchKeyword.end(), searchKeyword.begin(), ::tolower);
-            foodTree.searchByName(searchKeyword, matchCount);
+        if (searchKeyword.empty()) {
+            cout << "Search keyword cannot be empty." << endl;
+            return;
         }
+
+        // Header formatting
+        cout << "\nSearch Results:" << endl;
+        cout << string(length, '=') << endl;
+        cout << "| " << left << setw(8) << "Food ID"
+            << " | " << left << setw(28) << "Food Name"
+            << " | " << left << setw(10) << "Price (RM)"
+            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
+        cout << string(length, '=') << endl;
+
+        transform(searchKeyword.begin(), searchKeyword.end(), searchKeyword.begin(), ::tolower);
+        foodTree.searchByName(searchKeyword, matchCount);
+    }
+    else if (mode == 3) {
+        int stallId;
+        cout << "Enter Stall ID to search assigned food items: ";
+        if (!(cin >> stallId)) {
+            cout << "Invalid Stall ID entered." << endl;
+            clearInputBuffer();
+            return;
+        }
+
+        // Header formatting
+        cout << "\nSearch Results:" << endl;
+        cout << string(length, '=') << endl;
+        cout << "| " << left << setw(8) << "Food ID"
+            << " | " << left << setw(28) << "Food Name"
+            << " | " << left << setw(10) << "Price (RM)"
+            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
+        cout << string(length, '=') << endl;
+
+        foodTree.searchByStallId(stallId, matchCount);
+    }
+    else if (mode == 4) {
+        string stallNameKeyword;
+        cout << "Enter Stall Name (or partial stall name): ";
+        getline(cin, stallNameKeyword);
+
+        if (stallNameKeyword.empty()) {
+            cout << "Search keyword cannot be empty." << endl;
+            return;
+        }
+
+        // Header formatting
+        cout << "\nSearch Results:" << endl;
+        cout << string(length, '=') << endl;
+        cout << "| " << left << setw(8) << "Food ID"
+            << " | " << left << setw(28) << "Food Name"
+            << " | " << left << setw(10) << "Price (RM)"
+            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
+        cout << string(length, '=') << endl;
+
+        transform(stallNameKeyword.begin(), stallNameKeyword.end(), stallNameKeyword.begin(), ::tolower);
+        foodTree.searchByStallName(stallNameKeyword, matchCount);
     }
 
     cout << string(length, '=') << endl;
