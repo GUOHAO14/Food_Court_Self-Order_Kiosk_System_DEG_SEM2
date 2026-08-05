@@ -39,6 +39,7 @@ public:
     Food_Linked_List() {
         head = nullptr;
         tail = nullptr;
+		count = 0;
     }
 
     void insertRear(int id, string name, double price) {
