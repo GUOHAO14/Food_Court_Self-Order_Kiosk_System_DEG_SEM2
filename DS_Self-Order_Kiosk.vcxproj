@@ -29,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainProgram.cpp" />
+    <ClCompile Include="order_interface.cpp" />
     <ClCompile Include="stall_assignment.cpp" />
     <ClCompile Include="stall_interface.cpp" />
     <ClCompile Include="task1.cpp" />
@@ -38,6 +39,8 @@
   <ItemGroup>
     <ClInclude Include="globals.h" />
     <ClInclude Include="order_assignment_circular_queue.h" />
+    <ClInclude Include="order_interface.h" />
+    <ClInclude Include="order_session_stack.h" />
     <ClInclude Include="stall_assignment.h" />
     <ClInclude Include="stall_orders_circular_queue.h" />
     <ClInclude Include="stall_interface.h" />

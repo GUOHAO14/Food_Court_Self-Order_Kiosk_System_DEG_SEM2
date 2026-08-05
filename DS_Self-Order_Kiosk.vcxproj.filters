@@ -15,9 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="food_items.csv" />
     <None Include="stall.csv" />
     <None Include="food_stall_map.csv" />
+    <None Include="completed_order.csv" />
+    <None Include="completed_order_map_food.csv" />
+    <None Include="food.csv" />
+    <None Include="pending_order.csv" />
+    <None Include="pending_order_map_food.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">
@@ -32,6 +36,30 @@
     <ClInclude Include="food_stall_map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="globals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="order_assignment_circular_queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stall_assignment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stall_orders_circular_queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stall_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="queue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="order_interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="order_session_stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="task1.cpp">
@@ -40,10 +68,20 @@
     <ClCompile Include="task4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="task1.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="mainProgram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stall_assignment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stall_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="order_interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
