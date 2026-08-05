@@ -13,7 +13,7 @@ void printSelfOrderInt(int stuId) {
 	do {
 		cout << endl << "=============== Self-Order Kiosk ===============" << endl;
 		cout << "Hello, you are student TP" << stuId << "." << endl;
-		cout << "1. WIP" << endl;
+		cout << "1. Display Circular Queue" << endl;
 		cout << "2. Display Stall Status" << endl;
 		cout << "3. Back" << endl;
 
@@ -22,7 +22,7 @@ void printSelfOrderInt(int stuId) {
 
 		switch (choice) {
 		case 1:
-			
+			stallCircularQueue.displayQueue();
 			break;
 		case 2:
 			stallList.displayAllStalls();

@@ -8,7 +8,7 @@ using namespace std;
 // max orders intake is 6. So 6 orders in queue indicate that the stall is busy
 // this class also allows stall owner/staff to mark an order as complete
 // hence dequeueing and freeing up the stall for new orders
-class Stall_Food_Orders_Circular_Queue {
+class Stall_Internal_Food_Circular_Queue {
 private:
 	food* queue[6];
 	int maxFoodOrder = 6, front = -1, rear = -1, count = 0;

@@ -52,15 +52,19 @@ void loadStallFromCSV(Stall_Linked_List* stall, string fileName) {
 	string line;
 	getline(file, line); //skip first row (header) of csv
 
+	// int var used for circular queue position (array)
+	int position = 0;
+
 	while (getline(file, line))
 	{
 		stringstream ss(line);
 
-		string stall_id, name, is_open;
+		string stall_id, name, is_open, circular_queue_position;
 
 		getline(ss, stall_id, ',');
 		getline(ss, name, ',');
 		getline(ss, is_open, ',');
+		getline(ss, circular_queue_position, ',');
 
 		// convert id to int
 		int id = stoi(stall_id);
@@ -69,6 +73,19 @@ void loadStallFromCSV(Stall_Linked_List* stall, string fileName) {
 		bool isOpen = (is_open == "true");
 
 		stall->insertRear(id, name, isOpen);
+
+		// build back stall circular queue for food assignment
+		// stallCircularQueue already decalred in globals.h, defined before this function execute in main
+		stallCircularQueue.insertStallAtPosition(stall->searchStallById(id), position);
+
+		if (circular_queue_position == "rear") {
+			stallCircularQueue.setRear(position);
+		} 
+		else if (circular_queue_position == "front") {
+			stallCircularQueue.setFront(position);
+		}
+
+		position++;
 	}
 
 	file.close();

@@ -8,6 +8,7 @@
 #include "stall_interface.h"
 #include "stall_assignment.h"
 #include "self_order_interface.h"
+#include "stall_assignment_circular_queue.h"
 
 using namespace std;
 
@@ -30,10 +31,14 @@ int main(){
     //pending.displayQueue();
     //cout << "\nCompleted Queue:\n";
     //completed.displayQueue();
+
+    // INITIALISATION OF GLOBAL VARIABLES
+    // USABLE BY ANY FILES, SINCE ALREADY DECLARED IN globals.h file
     stallList = Stall_Linked_List();
     foodList = Food_Linked_List();
     foodStallMapList = Food_Stall_Map_Linked_List();
     unassignedFoodQueue = Food_Linked_List();
+    stallCircularQueue = Stall_Assignment_Circular_Queue();
 
     loadStallFromCSV(&stallList, "stall.csv");
     loadFoodFromCSV(&foodList, "food.csv");

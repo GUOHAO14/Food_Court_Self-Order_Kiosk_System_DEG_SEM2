@@ -3,6 +3,8 @@
 #include "stall.h"
 #include "food_stall_map.h"
 #include "queue.h"
+#include "stall_assignment_circular_queue.h"
+#include "globals.h"
 
 
 // define function prototypes
