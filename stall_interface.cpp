@@ -52,8 +52,11 @@ void printManageStallInt() {
 		cout << "Hello, you are stall " << selectedStall->name << " (ID: " << selectedStall->id << ")." << endl;
 		cout << "1. Set Stall Status" << endl;
 		cout << "2. Manage Order Status" << endl;
-		cout << "3. Display Assigned Orders" << endl;
-		cout << "4. Back" << endl;
+		cout << "3. Add Menu Item" << endl;
+		cout << "4. Remove Menu Item" << endl;
+		cout << "5. Update Menu Item" << endl;
+		cout << "6. Search Menu Item" << endl;
+		cout << "7. Back" << endl;
 
 		cout << "Enter your choice (type integer): ";
 		cin >> choice;
@@ -66,16 +69,25 @@ void printManageStallInt() {
 			// Call function to manage order status
 			break;
 		case 3:
-			selectedStall->foodQueue.displayAllOrders();
+			addMenuItem();
 			break;
 		case 4:
+			removeMenuItem();
+			break;
+		case 5:
+			updateMenuItem();
+			break;
+		case 6:
+			searchMenuItem();
+			break;
+		case 7:
 			// Return to main menu
 			break;
 		default: 
 			cout << "Invalid input. Please try again." << endl;
 		}
 
-	} while (choice != 4);
+	} while (choice != 7);
 }
 
 void printSetStallStatusInt() {
@@ -104,4 +116,8 @@ void printSetStallStatusInt() {
 		}
 
 	} while (choice != 3);
+}
+
+void addMenuItem() {
+
 }

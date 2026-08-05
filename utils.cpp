@@ -166,3 +166,28 @@ void loadOrderFromCSV(Queue* pending, Queue* completed, Food_Linked_List* foodLi
 	}
 	newfile.close();
 };
+
+void saveOrderToCSV(Queue* pending, Queue* completed, string orderFile, string mapfoodFile) {
+	ofstream orderOut(orderFile);
+	ofstream mapOut(mapfoodFile);
+	if (!orderOut.is_open())
+	{
+		cout << "Failed to open \"" << orderFile << "\"" << endl;
+		return;
+	}
+	if (!mapOut.is_open())
+	{
+		cout << "Failed to open \"" << mapfoodFile << "\"" << endl;
+		orderOut.close();
+		return;
+	}
+
+	orderOut << "order_id,student_id,order_time,order_status\n";
+	mapOut << "order_id,food_id\n";
+
+	pending->saveOrders(orderOut, mapOut);
+	completed->saveOrders(orderOut, mapOut);
+
+	orderOut.close();
+	mapOut.close();
+}

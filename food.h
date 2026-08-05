@@ -169,4 +169,14 @@ public:
 		}
 		cout << string(length, '=') << endl << endl;
 	}
+
+	void saveOrderMapFood(ofstream& out, int orderID)
+	{
+		food* current = head;
+		while (current != nullptr)
+		{
+			out << orderID << "," << current->id << endl;
+			current = current->next;
+		}
+	}
 };
