@@ -1,21 +1,17 @@
 #include <iostream>
 #include <iomanip>
+#include "globals.h"
 #include "stall_interface.h"
 
 using namespace std;
 
-// global variables
-Stall_Linked_List stallList;
-Food_Linked_List foodList;
-Food_Stall_Map_Linked_List foodStallMapList;
+// global stall variables
 struct stall* selectedStall = nullptr;
+// stallList, foodList, foodStallMapList are already defined in globals.h
 
-void chooseStall(Stall_Linked_List* stallListPtr, Food_Linked_List* foodListPtr, Food_Stall_Map_Linked_List* foodStallMapListPtr) {
+void chooseStall() {
 	// function to identify which stall
 	int choice;
-	stallList = *stallListPtr;
-	foodList = *foodListPtr;
-	foodStallMapList = *foodStallMapListPtr;
 
 	bool endLoop = false;
 	do {

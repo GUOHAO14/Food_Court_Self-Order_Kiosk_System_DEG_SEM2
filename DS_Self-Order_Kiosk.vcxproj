@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="completed_order.csv" />
+    <None Include="completed_order_map_food.csv" />
     <None Include="food_stall_map.csv" />
     <None Include="food.csv" />
     <None Include="pending_order.csv" />
@@ -34,6 +36,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="globals.h" />
     <ClInclude Include="order_assignment_circular_queue.h" />
     <ClInclude Include="stall_assignment.h" />
     <ClInclude Include="stall_orders_circular_queue.h" />

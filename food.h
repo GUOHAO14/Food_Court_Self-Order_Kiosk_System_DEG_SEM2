@@ -72,8 +72,8 @@ public:
 	}
 
 	// header for food display
-	void displayFoodHeader() {
-		cout << string(54, '=') << endl;
+	void displayFoodHeader(bool withQuantity, int length) {
+		cout << string(length, '=') << endl;
 		cout << "| ";
 		cout << left << setw(3) << "No.";
 		cout << " | ";
@@ -81,14 +81,18 @@ public:
 		cout << " | ";
 		cout << left << setw(30) << "Food Name";
 		cout << " | ";
-		cout << left << setw(10) << "Price";
+		if (withQuantity) {
+			cout << left << setw(8) << "Quantity";
+			cout << " | ";
+		}
+		cout << left << setw(10) << "Price (RM)";
 		cout << " | ";
 		cout << endl;
-		cout << string(54, '=') << endl;
+		cout << string(length, '=') << endl;
 	}
 
 	// actual display for food data
-	void displayFoodFormat(int count, struct food* food) {
+	void displayFoodFormat(int count, struct food* food, bool withQuantity) {
 		cout << "| ";
 		cout << left << setw(3) << count;
 		cout << " | ";
@@ -96,20 +100,32 @@ public:
 		cout << " | ";
 		cout << left << setw(30) << food->name;
 		cout << " | ";
-		cout << left << setw(10) << food->price;
-		cout << " |" << endl;
+		if (withQuantity) {
+			cout << left << setw(8) << food->quantity;
+			cout << " | ";
+			cout << left << setw(10) << food->price * food->quantity;
+			cout << " |" << endl;
+		}
+		else {
+			cout << left << setw(10) << food->price;
+			cout << " |" << endl;
+		}
 	}
 
 	// display all food in a formatted table
-	void displayAllFood() {
+	void displayAllFood(bool withQuantity) {
+		int length = 64;
+		if (withQuantity) {
+			length = 75;
+		}
 		struct food* trav = head;
 		int count = 0;
-		displayFoodHeader();
+		displayFoodHeader(withQuantity, length);
 		while (trav != nullptr) {
 			count++;
-			displayFoodFormat(count, trav);
+			displayFoodFormat(count, trav, withQuantity);
 			trav = trav->next;
 		}
-		cout << string(54, '=') << endl << endl;
+		cout << string(length, '=') << endl << endl;
 	}
 };

@@ -105,3 +105,55 @@ void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName) {
 
 	file.close();
 };
+
+void loadOrderFromCSV(Queue* queue, Food_Linked_List* foodList, string orderFile, string mapfoodFile) {
+	//Load Order Details
+	ifstream file(orderFile);
+	if (!file.is_open())
+	{
+		cout << "Failed to open \"" << orderFile << "\"" << endl;
+		return;
+	}
+
+	string line;
+	getline(file, line);
+	while (getline(file, line))
+	{
+		stringstream ss(line);
+		string order_id, stu_id, order_time;
+		getline(ss, order_id, ',');
+		getline(ss, stu_id, ',');
+		getline(ss, order_time, ',');
+		int id = stoi(order_id);
+		int student_id = stoi(stu_id);
+
+		queue->addQueue(Order(id, student_id, order_time));
+	}
+	file.close();
+
+	//Load Foods in the Order
+	ifstream newfile(mapfoodFile);
+	if (!newfile.is_open())
+	{
+		cout << "Failed to open \"" << mapfoodFile << "\"" << endl;
+		return;
+	}
+
+	string newline;
+	getline(newfile, newline);
+	while (getline(newfile, newline))
+	{
+		stringstream ss(newline);
+
+		string order_id, food_id;
+		getline(ss, order_id, ',');
+		getline(ss, food_id, ',');
+		int o_id = stoi(order_id);
+		int f_id = stoi(food_id);
+
+		food* selectedFood = foodList->searchFoodById(f_id);
+		Order* selectedOrder = queue->searchOrderById(o_id);
+		selectedOrder->addFood(*selectedFood);
+	}
+	newfile.close();
+};

@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <iomanip>
 #include "stall.h"
 
 using namespace std;
@@ -10,9 +11,39 @@ using namespace std;
 class Order_Assignment_Circular_Queue {
 private:
 	struct stall* queue[5];
-	int maxStalls = 5, front = -1, rear = -1;
+	int maxStalls = 5, front = -1, rear = -1, count = 0;
 
 public:
+	Order_Assignment_Circular_Queue() {
+		enqueueStall(stallList.searchStallById(1));
+		enqueueStall(stallList.searchStallById(2));
+		enqueueStall(stallList.searchStallById(3));
+		enqueueStall(stallList.searchStallById(4));
+		enqueueStall(stallList.searchStallById(5));
+	}
+
+	stall** getQueue() {
+		return queue;
+	}
+
+	int getMaxStalls() {
+		return maxStalls;
+	}
+
+	bool isFull() {
+		if (count == maxStalls)
+			return true;
+		return false;
+	}
+
+	//int getFront() {
+	//	return front;
+	//}
+
+	//int getRear() {
+	//	return rear;
+	//}
+
 	bool isEmpty()
 	{
 		if (front == -1 && rear == -1)
@@ -27,6 +58,7 @@ public:
 		}
 		rear = (rear + 1) % maxStalls; // flow back to front if rear reaches maxOrders
 		queue[rear] = stall;
+		count++;
 	}
 
 	void dequeueStall()
@@ -44,6 +76,7 @@ public:
 			queue[front] = NULL; // remove element in the front
 			front = (front + 1) % maxStalls;
 		}
+		count--;
 	}
 
 	void displayAllOrders() {
@@ -97,11 +130,25 @@ public:
 	//}
 
 	// display all stalls in a formatted table
-	void displayAllStalls() {
-		displayOrderQueueHeader();
+	void displayQueue() {
+		cout << "^^ = front = " << front << endl;
+		cout << "^ = rear = " << rear << endl;
+
 		for (int i = 0; i < maxStalls; i++) {
-			cout << queue[i] << " ";
+			cout << setw(12) << queue[i]->name << " ";
 		}
-		cout << string(54, '=') << endl << endl;
+		cout << endl;
+		for (int i = 0; i < maxStalls; i++) {
+			if (i == front) {
+				cout << setw(13) << "^^";
+			}
+			else if (i == rear) {
+				cout << setw(13) << "^";
+			}
+			else {
+				cout << setw(13) << " ";
+			}
+		}
+		cout << endl;
 	}
 };

@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "stall.h"
 
 using namespace std;
 
@@ -43,5 +44,17 @@ public:
         }
     }
 
+ //   void searchStallsByFoodId(struct stall *circularQueue[], int food_id) {
+	//	struct food_stall_map* trav = head;
 
+	//	for (trav != nullptr) {
+	//		if (trav->food_id == food_id) {
+	//			found = true;
+	//		}
+	//		trav = trav->next;
+	//	}
+	//	if (!found) {
+	//		cout << "No stalls found for this food item." << endl;
+	//	}
+	//}
 };

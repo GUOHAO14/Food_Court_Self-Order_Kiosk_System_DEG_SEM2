@@ -140,7 +140,7 @@ class Queue {
                 cout << "Order ID : " << currentNode->data.getOrderID() << endl;
                 cout << "Student  : " << currentNode->data.getStudentID() << endl;
                 cout << "Time     : " << currentNode->data.getOrderTime() << endl;
-                currentNode->data.getFoodList().displayAllFood();
+                currentNode->data.getFoodList().displayAllFood(true);
                 cout << "------------------------" << endl;
                 currentNode = currentNode->next;
             }

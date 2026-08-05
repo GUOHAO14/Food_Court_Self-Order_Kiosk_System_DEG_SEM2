@@ -76,8 +76,8 @@ public:
 	}
 
 	// header for stall display
-	void displayStallsHeader() {
-		cout << string(54, '=') << endl;
+	void displayStallsHeader(int length) {
+		cout << string(length, '=') << endl;
 		cout << "| ";
 		cout << left << setw(3) << "No.";
 		cout << " | ";
@@ -87,33 +87,38 @@ public:
 		cout << " | ";
 		cout << left << setw(10) << "Status";
 		cout << " | ";
+		cout << left << setw(10) << "Availability";
+		cout << " | ";
 		cout << endl;
-		cout << string(54, '=') << endl;
+		cout << string(length, '=') << endl;
 	}
 
 	// actual display for stall data
-	void displayStallsFormat(int count, struct stall* s) {
+	void displayStallsFormat(int count, struct stall* stall) {
 		cout << "| ";
 		cout << left << setw(3) << count;
 		cout << " | ";
-		cout << left << setw(8) << s->id;
+		cout << left << setw(8) << stall->id;
 		cout << " | ";
-		cout << left << setw(20) << s->name;
+		cout << left << setw(20) << stall->name;
 		cout << " | ";
-		cout << left << setw(10) << (s->isOpen ? "Open" : "Closed");
+		cout << left << setw(10) << (stall->isOpen ? "Open" : "Closed");
+		cout << " |" << endl;
+		cout << left << setw(10) << (stall->orderQueue.isFull() ? "Busy" : "Not Busy");
 		cout << " |" << endl;
 	}
 
 	// display all stalls in a formatted table
 	void displayAllStalls() {
+		int length = 68;
 		struct stall* trav = head;
 		int count = 0;
-		displayStallsHeader();
+		displayStallsHeader(length);
 		while (trav != nullptr) {
 			count++;
 			displayStallsFormat(count, trav);
 			trav = trav->next;
 		}
-		cout << string(54, '=') << endl << endl;
+		cout << string(length, '=') << endl << endl;
 	}
 };

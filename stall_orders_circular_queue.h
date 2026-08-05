@@ -11,9 +11,14 @@ using namespace std;
 class Stall_Orders_Circular_Queue {
 private:
 	Order* queue[6];
-	int maxOrders = 6, front = -1, rear = -1;
+	int maxOrders = 6, front = -1, rear = -1, count = 0;
 
 public:
+	bool isFull() {
+		if (count == maxOrders)
+			return true;
+		return false;
+	}
 	bool isEmpty()
 	{
 		if (front == -1 && rear == -1)
@@ -28,6 +33,7 @@ public:
 		}
 		rear = (rear + 1) % maxOrders; // flow back to front if rear reaches maxOrders
 		queue[rear] = fullOrder;
+		count++;
 	}
 
 	void dequeueOrder()
@@ -45,6 +51,7 @@ public:
 			queue[front] = NULL; // remove element in the front
 			front = (front + 1) % maxOrders;
 		}
+		count--;
 	}
 
 	// header for stall display
@@ -93,7 +100,7 @@ public:
 				cout << "Order ID: " << queue[i]->getOrderID() << endl;
 				cout << "Student ID: " << queue[i]->getStudentID() << endl;
 				cout << "Order Time: " << queue[i]->getOrderTime() << endl;
-				queue[i]->getFoodList().displayAllFood();
+				queue[i]->getFoodList().displayAllFood(true);
 				cout << "------------------------" << endl;
 			}
 		}

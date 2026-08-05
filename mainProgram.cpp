@@ -1,5 +1,6 @@
 #include <iostream>
 #include <ctime>
+#include "globals.h"
 #include "stall.h"
 #include "food.h"
 #include "food_stall_map.h"
@@ -30,9 +31,9 @@ int main(){
     //completed.displayQueue();
 
     do {
-        Stall_Linked_List stallList = Stall_Linked_List();
-        Food_Linked_List foodList = Food_Linked_List();
-        Food_Stall_Map_Linked_List foodStallMapList = Food_Stall_Map_Linked_List();
+        stallList = Stall_Linked_List();
+        foodList = Food_Linked_List();
+        foodStallMapList = Food_Stall_Map_Linked_List();
 
 		loadStallFromCSV(&stallList, "stall.csv");
 		loadFoodFromCSV(&foodList, "food.csv");
@@ -57,17 +58,23 @@ int main(){
 
         string currentTime = buffer;
         Order* hello;
+		struct food * selectedFood;
+		struct food * newFood;
         //remove above
         switch (choice) {
 		case 1:
 			// enter order page, Isaac part
             // remove bottom
 			hello = new Order(1, 123456, currentTime);
+			selectedFood = foodList.searchFoodById(1);
+            hello->addFood(food(selectedFood->id, selectedFood->name, selectedFood->price));
+
+            // go stall assignment cpp
             stallAndOrderAssignment(hello);
             // remove above
 			break;
         case 2: 
-			chooseStall(&stallList, &foodList, &foodStallMapList);
+			chooseStall();
 			break;
         default: 
 			cout << "Invalid choice input. Please try again." << endl;
