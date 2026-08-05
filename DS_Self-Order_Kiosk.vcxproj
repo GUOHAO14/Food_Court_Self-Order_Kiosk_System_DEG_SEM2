@@ -39,7 +39,7 @@
     <ClInclude Include="admin.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="stall_assignment_circular_queue.h" />
-    <ClInclude Include="order_interface.h" />
+    <ClInclude Include="session.h" />
     <ClInclude Include="order_session_stack.h" />
     <ClInclude Include="self_order_interface.h" />
     <ClInclude Include="stall_assignment.h" />
