@@ -1,13 +1,9 @@
 #pragma once
 #include <iostream>
 #include "stall.h"
-
 using namespace std;
 
 // a struct to represent the mapping between food items and stalls
-// this is because one food can be prepared by one or more stalls
-// many-to-many relationship
-
 struct food_stall_map {
     int food_id;
     int stall_id;
@@ -20,11 +16,12 @@ struct food_stall_map {
     }
 };
 
-// a linked list to store the mapping between food items and 
+// a linked list to store the mapping between food items and stalls
 class Food_Stall_Map_Linked_List {
 private:
     struct food_stall_map* head;
     struct food_stall_map* tail;
+
 public:
     Food_Stall_Map_Linked_List() {
         head = nullptr;
@@ -44,28 +41,51 @@ public:
         }
     }
 
- //   void searchStallsByFoodId(struct stall *circularQueue[], int food_id) {
-	//	struct food_stall_map* trav = head;
+    bool checkFoodStallMapping(int food_id, int stall_id) {
+        struct food_stall_map* trav = head;
+        while (trav != nullptr) {
+            if (trav->food_id == food_id && trav->stall_id == stall_id) {
+                return true; // mapping exists
+            }
+            trav = trav->next;
+        }
+        return false; // mapping does not exist
+    }
 
-	//	for (trav != nullptr) {
-	//		if (trav->food_id == food_id) {
-	//			found = true;
-	//		}
-	//		trav = trav->next;
-	//	}
-	//	if (!found) {
-	//		cout << "No stalls found for this food item." << endl;
-	//	}
-	//}
+    // Remove mapping node when an item is deleted
+    bool deleteMap(int food_id, int stall_id) {
+        if (head == nullptr) return false;
 
-	bool checkFoodStallMapping(int food_id, int stall_id) {
-		struct food_stall_map* trav = head;
-		while (trav != nullptr) {
-			if (trav->food_id == food_id && trav->stall_id == stall_id) {
-				return true; // mapping exists
-			}
-			trav = trav->next;
-		}
-		return false; // mapping does not exist
-	}
+        struct food_stall_map* current = head;
+        struct food_stall_map* prev = nullptr;
+
+        while (current != nullptr && !(current->food_id == food_id && current->stall_id == stall_id)) {
+            prev = current;
+            current = current->next;
+        }
+
+        if (current == nullptr) return false;
+
+        if (current == head) {
+            head = head->next;
+            if (head == nullptr) tail = nullptr;
+        }
+        else {
+            prev->next = current->next;
+            if (current == tail) tail = prev;
+        }
+
+        delete current;
+        return true;
+    }
+    bool isFoodUsedByAnyStall(int food_id) {
+        struct food_stall_map* trav = head;
+        while (trav != nullptr) {
+            if (trav->food_id == food_id) {
+                return true; // Found at least one stall still selling this
+            }
+            trav = trav->next;
+        }
+        return false; // No stall sells this food anymore
+    }
 };

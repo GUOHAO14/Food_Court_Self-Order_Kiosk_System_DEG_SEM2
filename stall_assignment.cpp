@@ -67,7 +67,7 @@ void stallAndOrderAssignment(Order * order) {
 			cout << "All stalls are either closed or cannot prepare this food item." << endl;
 			cout << "Cannot assign this food item at this time." << endl;
 			cout << "Food item will be removed from order." << endl;
-			order->getFoodList()->getHead() = currentFood->next; // Remove the food item from the order
+			//order->getFoodList()->getHead() = currentFood->next; // Remove the food item from the order
 		}
 
 		if (!assigned) {
