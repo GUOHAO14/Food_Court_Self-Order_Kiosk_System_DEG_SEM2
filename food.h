@@ -19,16 +19,15 @@ inline bool isEqualIgnoreCase(const string& str1, const string& str2) {
         });
 }
 
-// A struct to represent a food item (merged fields from both versions)
+// A struct to represent a food item
 struct food {
     int id;
     string name;
     double price;
-    string status;   // From local version (Queue / Order status)
-    int quantity;    // From pulled version
-    struct food* next; // pointer to next food item
+    string status;   
+    int quantity;  
+    struct food* next; 
 
-    // Constructor 1: Standard ID, Name, Price (Defaults status to "Pending", quantity to 0)
     food(int id, string name, double price) {
         this->id = id;
         this->name = name;
@@ -38,7 +37,6 @@ struct food {
         this->next = nullptr;
     }
 
-    // Constructor 2: Includes Status (from local version)
     food(int id, string name, double price, string status) {
         this->id = id;
         this->name = name;
@@ -48,7 +46,6 @@ struct food {
         this->next = nullptr;
     }
 
-    // Constructor 3: Includes Quantity (from pulled version)
     food(int id, string name, double price, int quantity) {
         this->id = id;
         this->name = name;
@@ -58,7 +55,6 @@ struct food {
         this->next = nullptr;
     }
 
-    // Constructor 4: Includes both Quantity and Status
     food(int id, string name, double price, string status, int quantity) {
         this->id = id;
         this->name = name;
@@ -69,7 +65,7 @@ struct food {
     }
 };
 
-// Linked list to store chaining food items
+// a linked list to store chaining food items
 class Food_Linked_List {
 private:
     struct food* head;
@@ -82,8 +78,6 @@ public:
         tail = nullptr;
         count = 0;
     }
-
-    // --- INSERTION METHODS ---
 
     void insertRear(int id, string name, double price) {
         struct food* newFood = new food(id, name, price);
@@ -158,9 +152,6 @@ public:
         count++;
     }
 
-    // --- DELETION METHODS ---
-
-    // Deletes by ID with console outputs (from local version)
     void deleteById(int id) {
         if (head == nullptr) {
             cout << "Cannot delete from an empty list." << endl;
@@ -200,7 +191,7 @@ public:
         }
     }
 
-    // Silent boolean delete by ID (from pulled version - used by stall interface)
+    // Silent boolean delete by ID
     bool deleteFoodById(int id) {
         if (head == nullptr) {
             return false;
@@ -236,7 +227,7 @@ public:
         return true;
     }
 
-    // Used for food waiting queue (from local version)
+    // Used for food waiting queue
     void detachFront() {
         if (head == nullptr) {
             cout << "Cannot delete from an empty list." << endl;
@@ -255,7 +246,6 @@ public:
         count--;
     }
 
-    // --- ACCESSORS ---
 
     int getCount() {
         return count;
@@ -282,7 +272,7 @@ public:
         return nullptr;
     }
 
-    // Search for food by name (case-insensitive, from pulled version)
+    // Search for food by name 
     bool isFoodNameExists(const string& name) {
         struct food* trav = head;
         while (trav != nullptr) {
@@ -294,9 +284,7 @@ public:
         return false;
     }
 
-    // --- DISPLAY FUNCTIONS ---
 
-    // Standard header (from local version)
     void displayFoodHeader(int length) {
         cout << string(length, '=') << endl;
         cout << "| ";
@@ -312,7 +300,6 @@ public:
         cout << string(length, '=') << endl;
     }
 
-    // Header supporting Quantity toggle (from pulled version)
     void displayFoodHeader(bool withQuantity, int length) {
         cout << string(length, '=') << endl;
         cout << "| ";
@@ -332,7 +319,6 @@ public:
         cout << string(length, '=') << endl;
     }
 
-    // Standard row output (from local version)
     void displayFoodFormat(int count, struct food* food) {
         cout << "| ";
         cout << left << setw(3) << count;
@@ -345,7 +331,6 @@ public:
         cout << " |" << endl;
     }
 
-    // Row output supporting Quantity toggle (from pulled version)
     void displayFoodFormat(int count, struct food* food, bool withQuantity) {
         cout << "| ";
         cout << left << setw(3) << count;
@@ -366,7 +351,6 @@ public:
         }
     }
 
-    // Default display all food (from local version)
     void displayAllFood() {
         int length = 64;
         struct food* trav = head;
@@ -380,7 +364,6 @@ public:
         cout << string(length, '=') << endl << endl;
     }
 
-    // Overloaded display all food with Quantity toggle (from pulled version)
     void displayAllFood(bool withQuantity) {
         int length = withQuantity ? 75 : 64;
         struct food* trav = head;
@@ -394,12 +377,9 @@ public:
         cout << string(length, '=') << endl << endl;
     }
 
-    // --- EXTERNAL STALL INTERFACE MEMBER DECLARATIONS ---
-    // (Implementations defined in stall_interface.cpp)
     int displayFoodByStall(int stallId, Food_Stall_Map_Linked_List& mapList);
     int displayAvailableExistingFood(int currentStallId, Food_Stall_Map_Linked_List& mapList);
 
-    // --- FILE I/O ---
 
     void saveOrderMapFood(ofstream& out, int orderID) {
         food* current = head;

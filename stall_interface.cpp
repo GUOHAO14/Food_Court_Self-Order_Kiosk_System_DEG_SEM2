@@ -188,16 +188,13 @@ void addMenuItem() {
         cin.ignore();
     }
 
-    // =========================================================
-    // OPTION 1: ADD COMPLETELY NEW MENU ITEM
-    // =========================================================
+	//option 1 : add new menu item
     if (subChoice == 1) {
         string foodName;
         double foodPrice;
 
         cout << "\n--- Add New Menu Item for " << selectedStall->name << " ---" << endl;
 
-        // Loop for name input and duplicate checking
         while (true) {
             cout << "Enter Food Name (or type 'c' to exit): ";
             getline(cin, foodName);
@@ -219,7 +216,7 @@ void addMenuItem() {
                     << "If another stall sells this, please use Option 2 instead.\n\n";
             }
             else {
-                break; // Name is unique
+                break;
             }
         }
 
@@ -253,9 +250,7 @@ void addMenuItem() {
         cout << "New item '" << foodName << "' successfully added to stall " << selectedStall->name << "!" << endl;
     }
 
-    // =========================================================
-    // OPTION 2: ADD EXISTING ITEM FROM OTHER STALLS
-    // =========================================================
+    //option 2 : add existing menu item
     else if (subChoice == 2) {
         cout << "\n--- Available Existing Items for " << selectedStall->name << " ---" << endl;
 
