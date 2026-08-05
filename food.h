@@ -19,6 +19,14 @@ struct food {
         this->quantity = 0;
         this->next = nullptr;
     }
+
+	food(int id, string name, double price, int quantity) {
+		this->id = id;
+		this->name = name;
+		this->price = price;
+		this->quantity = quantity;
+		this->next = nullptr;
+	}
 };
 
 // a linked list to store chaining food items
@@ -26,6 +34,7 @@ class Food_Linked_List {
 private:
     struct food* head;
     struct food* tail;
+	int count;
 public:
     Food_Linked_List() {
         head = nullptr;
@@ -43,7 +52,24 @@ public:
             tail->next = newFood;
             tail = newFood;
         }
+
+		count++;
     }
+
+	void insertRear(int id, string name, double price, int quantity) {
+		struct food* newFood = new food(id, name, price, quantity);
+
+		if (head == nullptr) {
+			head = newFood;
+			tail = newFood;
+		}
+		else {
+			tail->next = newFood;
+			tail = newFood;
+		}
+
+		count++;
+	}
 
 	void insertRear(food Food) {
 		struct food* newFood = new food(Food.id, Food.name, Food.price);
@@ -56,6 +82,8 @@ public:
 			tail->next = newFood;
 			tail = newFood;
 		}
+
+		count++;
 	}
 
 	// search for a food item by its ID

@@ -15,6 +15,10 @@ void stallAndOrderAssignment(Order * order) {
 	// queue status
 	bool assigned = false;
 
+	for (int i = 0; i < order->getFoodList()->getCount(); i++) {
+		// Process each food item in the order
+	}
+
 	for (int i = 0; i < stallCircularQueue.getMaxStalls(); i++) {
 		struct stall* currentStall = stallCircularQueue.getQueue()[i];
 

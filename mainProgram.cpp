@@ -70,9 +70,9 @@ int main(){
 			break;
         case 3: 
             // remove bottom
-            hello = new Order(1, 123456, currentTime);
+            hello = new Order(1, 123456, currentTime, "Pending");
             selectedFood = foodList.searchFoodById(1);
-            hello->addFood(food(selectedFood->id, selectedFood->name, selectedFood->price));
+            hello->addFood(food(selectedFood->id, selectedFood->name, selectedFood->price, 2));
 
             // go stall assignment cpp
             stallAndOrderAssignment(hello);
