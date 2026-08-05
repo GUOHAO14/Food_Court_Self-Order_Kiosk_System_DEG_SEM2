@@ -24,6 +24,7 @@
     <None Include="order.csv" />
     <None Include="order_map_food.csv" />
     <None Include="stall.csv" />
+    <None Include="students.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainProgram.cpp" />
@@ -31,6 +32,7 @@
     <ClCompile Include="self_order_interface.cpp" />
     <ClCompile Include="stall_assignment.cpp" />
     <ClCompile Include="stall_interface.cpp" />
+    <ClCompile Include="student_auth.cpp" />
     <ClCompile Include="task1.cpp" />
     <ClCompile Include="admin_interface.cpp" />
     <ClCompile Include="utils.cpp" />
@@ -51,6 +53,7 @@
     <ClInclude Include="food.h" />
     <ClInclude Include="food_stall_map.h" />
     <ClInclude Include="stall.h" />
+    <ClInclude Include="student_auth.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
