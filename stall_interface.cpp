@@ -349,9 +349,9 @@ void removeMenuItem() {
 }
 
 void updateMenuItem() {
-    // TODO: Implementation for updating price or details
+    
 }
 
 void searchMenuItem() {
-    // TODO: Implementation for searching items within the stall
+    
 }
