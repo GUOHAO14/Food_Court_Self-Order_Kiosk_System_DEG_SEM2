@@ -49,7 +49,7 @@
     <ClInclude Include="queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="order_interface.h">
+    <ClInclude Include="session.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="order_session_stack.h">
