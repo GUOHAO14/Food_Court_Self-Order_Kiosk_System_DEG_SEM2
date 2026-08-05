@@ -72,13 +72,13 @@ void printManageStallInt() {
 			addMenuItem();
 			break;
 		case 4:
-			removeMenuItem();
+			//removeMenuItem();
 			break;
 		case 5:
-			updateMenuItem();
+			//updateMenuItem();
 			break;
 		case 6:
-			searchMenuItem();
+			//searchMenuItem();
 			break;
 		case 7:
 			// Return to main menu

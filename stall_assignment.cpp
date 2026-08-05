@@ -5,7 +5,6 @@
 using namespace std;
 
 Order_Assignment_Circular_Queue stallCircularQueue;
-Food_Linked_List* unassignedFoodQueue = new Food_Linked_List();
 
 void stallAndOrderAssignment(Order * order) {
 	stallCircularQueue = Order_Assignment_Circular_Queue(); 
@@ -14,7 +13,9 @@ void stallAndOrderAssignment(Order * order) {
 	stallCircularQueue.displayQueue();
 
 	// queue status
+	bool hasSuitableStall = false;
 	bool assigned = false;
+
 	struct food* currentFood = order->getFoodList()->getHead();
 
 	for (int i = 0; i < order->getFoodList()->getCount(); i++) {
@@ -23,19 +24,28 @@ void stallAndOrderAssignment(Order * order) {
 			cout << "No food items in the order." << endl;
 			break;
 		}
-
-		int impossibleToAssignCount = 0; 
+		
 		// if all stalls are either closed or cannot prepare the food, count as impossible to assign
 		// if all stalls impossible handle this food, this food will be dropped from order
 
-		for (int i = 0; i < stallCircularQueue.getMaxStalls(); i++) {
-			struct stall* currentStall = stallCircularQueue.getQueue()[i];
+		for (int k = 0; k < stallCircularQueue.getMaxStalls(); k++) {
+			struct stall* currentStall = stallCircularQueue.getQueue()[k];
 
 			if (currentStall != nullptr) {
 
-				if (currentStall->isOpen && !currentStall->foodQueue.isFull() && foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
-					cout << currentStall->name << " stall is open and not busy. Assigning order to this stall." << endl;
+				// stall not suitable for this food
+				if (!foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
+					continue;
+				}
+
+				// suitable stall is open and free
+				else if (currentStall->isOpen && !currentStall->foodQueue.isFull() && foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
+
+					hasSuitableStall = true;
 					assigned = true;
+
+					cout << currentStall->name << " stall is open and not busy. Assigning order to this stall." << endl;
+
 					// assign order to the stall
 					currentStall->foodQueue.enqueueFood(currentFood);
 
@@ -51,11 +61,21 @@ void stallAndOrderAssignment(Order * order) {
 
 					break; // Exit after assigning the order
 				}
-				else if (!currentStall->isOpen || !foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
-					impossibleToAssignCount++;
+
+				// suitable stall that is open but not free, or is closed
+				else if (foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id) && ((currentStall->isOpen && currentStall->foodQueue.isFull()) || !currentStall->isOpen)) {
+
+					hasSuitableStall = true;
+					assigned = false;
+
+					cout << currentStall->name << " stall is busy or closed. Moving to unassigned waiting queue." << endl;
+
+					unassignedFoodQueue.insertRear(currentFood);
+
 				}
+
 				else {
-					cout << currentStall->name << " stall is busy. Moving to the next stall." << endl;
+					cout << "An error occured, stall is skipped. Moving to the next stall." << endl;
 				}
 			}
 			else {
@@ -63,18 +83,21 @@ void stallAndOrderAssignment(Order * order) {
 			}
 		}
 
-		if (impossibleToAssignCount == stallCircularQueue.getMaxStalls()) {
-			cout << "All stalls are either closed or cannot prepare this food item." << endl;
-			cout << "Cannot assign this food item at this time." << endl;
-			cout << "Food item will be removed from order." << endl;
-			order->getFoodList()->getHead() = currentFood->next; // Remove the food item from the order
+		if (hasSuitableStall && !assigned) {
+			cout << "Final Verdict:" << endl;
+			cout << "Suitable stall found for food item: " << currentFood->name << endl;
+			cout << "But the stall is busy or closed." << endl;
+			cout << "Moving to unassigned waiting queue." << endl;
+			unassignedFoodQueue.insertRear(currentFood);
+
+			cout << "Current unassigned waiting queue:" << endl;
+			unassignedFoodQueue.displayAllFood();
 		}
 
-		if (!assigned) {
+		if (!hasSuitableStall && !assigned) {
 			cout << "All stalls are either closed or busy." << endl;
 			cout << "Cannot assign your food at this time." << endl;
 			cout << "Order will remain in waiting queue as pending." << endl;
-			break;
 		}
 
 		stallCircularQueue.displayQueue();

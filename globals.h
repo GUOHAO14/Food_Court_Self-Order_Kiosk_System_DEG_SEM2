@@ -12,5 +12,6 @@ inline int g_myGlobalVariable = 42;
 inline Stall_Linked_List stallList;
 inline Food_Linked_List foodList;
 inline Food_Stall_Map_Linked_List foodStallMapList;
+inline Food_Linked_List unassignedFoodQueue;
 
 #endif

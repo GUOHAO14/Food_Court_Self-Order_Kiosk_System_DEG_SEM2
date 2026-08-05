@@ -10,22 +10,22 @@ struct food {
     int id;
     string name;
     double price;
-    int quantity;
+	string status;
 	struct food* next; // pointer to next food item
 
     food(int id, string name, double price) {
         this->id = id;
         this->name = name;
         this->price = price;
-        this->quantity = 0;
+        this->status = "Pending";
         this->next = nullptr;
     }
 
-	food(int id, string name, double price, int quantity) {
+	food(int id, string name, double price, string status) {
 		this->id = id;
 		this->name = name;
 		this->price = price;
-		this->quantity = quantity;
+		this->status = status;
 		this->next = nullptr;
 	}
 };
@@ -58,8 +58,8 @@ public:
 		count++;
     }
 
-	void insertRear(int id, string name, double price, int quantity) {
-		struct food* newFood = new food(id, name, price, quantity);
+	void insertRear(int id, string name, double price, string status) {
+		struct food* newFood = new food(id, name, price, status);
 
 		if (head == nullptr) {
 			head = newFood;
@@ -88,6 +88,75 @@ public:
 		count++;
 	}
 
+	void insertRear(food* newFood) {
+		if (head == nullptr) {
+			head = newFood;
+			tail = newFood;
+		}
+		else {
+			tail->next = newFood;
+			tail = newFood;
+		}
+
+		count++;
+	}
+
+	void deleteById(int id) {
+		if (head == nullptr) {
+			cout << "Cannot delete from an empty list." << endl;
+		}
+
+		struct food* prev = nullptr, * deleteNode = head;
+
+		while (deleteNode != nullptr) {
+			if (deleteNode->id == id) {
+				break;
+			}
+			prev = deleteNode;
+			deleteNode = deleteNode->next; // deleteNode will be tail at the end of the loop
+		}
+
+		if (deleteNode == nullptr) { // reach end of list without finding the id
+			cout << "Food ID \"" << id << "\" is not found." << endl;
+		}
+		else {
+			if (deleteNode == head) {
+				head = head->next;
+
+				if (deleteNode == tail) { // if one node
+					tail = nullptr;
+				}
+			}
+			else if (deleteNode == tail) {
+				tail = prev;
+				tail->next = nullptr;
+			}
+			else {
+				prev->next = deleteNode->next;
+			}
+			count--;
+			delete deleteNode;
+		}
+	}
+
+	void detachFront() { // used for food waiting queue
+		if (head == nullptr) {
+			cout << "Cannot delete from an empty list." << endl;
+			return;
+		}
+		struct food* deleteNode = head;
+		string deletedId;
+
+		if (head->next == nullptr) { // one node
+			head = tail = nullptr;
+		}
+		else {
+			head = head->next;
+			deleteNode->next = nullptr;
+		}
+		count--;
+	}
+
 	int getCount() {
 		return count;
 	}
@@ -114,7 +183,7 @@ public:
 	}
 
 	// header for food display
-	void displayFoodHeader(bool withQuantity, int length) {
+	void displayFoodHeader(int length) {
 		cout << string(length, '=') << endl;
 		cout << "| ";
 		cout << left << setw(3) << "No.";
@@ -123,10 +192,6 @@ public:
 		cout << " | ";
 		cout << left << setw(30) << "Food Name";
 		cout << " | ";
-		if (withQuantity) {
-			cout << left << setw(8) << "Quantity";
-			cout << " | ";
-		}
 		cout << left << setw(10) << "Price (RM)";
 		cout << " | ";
 		cout << endl;
@@ -134,7 +199,7 @@ public:
 	}
 
 	// actual display for food data
-	void displayFoodFormat(int count, struct food* food, bool withQuantity) {
+	void displayFoodFormat(int count, struct food* food) {
 		cout << "| ";
 		cout << left << setw(3) << count;
 		cout << " | ";
@@ -142,30 +207,19 @@ public:
 		cout << " | ";
 		cout << left << setw(30) << food->name;
 		cout << " | ";
-		if (withQuantity) {
-			cout << left << setw(8) << food->quantity;
-			cout << " | ";
-			cout << left << setw(10) << food->price * food->quantity;
-			cout << " |" << endl;
-		}
-		else {
-			cout << left << setw(10) << food->price;
-			cout << " |" << endl;
-		}
+		cout << left << setw(10) << food->price;
+		cout << " |" << endl;
 	}
 
 	// display all food in a formatted table
-	void displayAllFood(bool withQuantity) {
+	void displayAllFood() {
 		int length = 64;
-		if (withQuantity) {
-			length = 75;
-		}
 		struct food* trav = head;
 		int count = 0;
-		displayFoodHeader(withQuantity, length);
+		displayFoodHeader(length);
 		while (trav != nullptr) {
 			count++;
-			displayFoodFormat(count, trav, withQuantity);
+			displayFoodFormat(count, trav);
 			trav = trav->next;
 		}
 		cout << string(length, '=') << endl << endl;
