@@ -8,6 +8,7 @@ class Order {
     private:
         int OrID;
         int StuID;
+        string orderStatus;
         string orderTime;
         Food_Linked_List foods;
 
@@ -17,28 +18,15 @@ class Order {
             OrID = 0;
             StuID = 0;
             orderTime = "";
+            orderStatus = "";
         }
 
-        Order(int OrID, int StuID, string orderTime)
+        Order(int OrID, int StuID, string orderTime, string orderStatus)
         {
             this->OrID = OrID;
             this->StuID = StuID;
             this->orderTime = orderTime;
-        }
-
-        int getOrderID()
-        {
-            return OrID;
-        }
-
-        int getStudentID()
-        {
-            return StuID;
-        }
-
-        string getOrderTime()
-        {
-            return orderTime;
+            this->orderStatus = orderStatus;
         }
 
         void addFood(food food)
@@ -46,10 +34,25 @@ class Order {
             foods.insertRear(food);
         }
 
-        Food_Linked_List& getFoodList()
-        {
-            return foods;
-        }
+		void displayOrder()
+		{
+			cout << "Order ID : " << OrID << endl;
+			cout << "Student  : " << StuID << endl;
+			cout << "Time     : " << orderTime << endl;
+			cout << "Status   : " << orderStatus << endl;
+			foods.displayAllFood(true);
+            cout << "------------------------" << endl;
+		}
+
+		int getOrderID()
+		{
+			return OrID;
+		}
+
+		Food_Linked_List* getFoodList()
+		{
+			return &foods;
+		}
 };
 
 struct Node {
@@ -137,11 +140,7 @@ class Queue {
             Node* currentNode = head;
             while (currentNode != nullptr)
             {
-                cout << "Order ID : " << currentNode->data.getOrderID() << endl;
-                cout << "Student  : " << currentNode->data.getStudentID() << endl;
-                cout << "Time     : " << currentNode->data.getOrderTime() << endl;
-                currentNode->data.getFoodList().displayAllFood(true);
-                cout << "------------------------" << endl;
+                currentNode->data.displayOrder();
                 currentNode = currentNode->next;
             }
         }

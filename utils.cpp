@@ -106,7 +106,7 @@ void loadFoodStallMapFromCSV(Food_Stall_Map_Linked_List* map, string fileName) {
 	file.close();
 };
 
-void loadOrderFromCSV(Queue* queue, Food_Linked_List* foodList, string orderFile, string mapfoodFile) {
+void loadOrderFromCSV(Queue* pending, Queue* completed, Food_Linked_List* foodList, string orderFile, string mapfoodFile) {
 	//Load Order Details
 	ifstream file(orderFile);
 	if (!file.is_open())
@@ -120,14 +120,18 @@ void loadOrderFromCSV(Queue* queue, Food_Linked_List* foodList, string orderFile
 	while (getline(file, line))
 	{
 		stringstream ss(line);
-		string order_id, stu_id, order_time;
+		string order_id, stu_id, order_time, order_status;
 		getline(ss, order_id, ',');
 		getline(ss, stu_id, ',');
 		getline(ss, order_time, ',');
+		getline(ss, order_status, ',');
 		int id = stoi(order_id);
 		int student_id = stoi(stu_id);
 
-		queue->addQueue(Order(id, student_id, order_time));
+		if (order_status == "Pending")
+			pending->addQueue(Order(id, student_id, order_time, order_status));
+		else if (order_status == "Completed")
+			completed->addQueue(Order(id, student_id, order_time, order_status));
 	}
 	file.close();
 
@@ -152,8 +156,13 @@ void loadOrderFromCSV(Queue* queue, Food_Linked_List* foodList, string orderFile
 		int f_id = stoi(food_id);
 
 		food* selectedFood = foodList->searchFoodById(f_id);
-		Order* selectedOrder = queue->searchOrderById(o_id);
-		selectedOrder->addFood(*selectedFood);
+		Order* selectedOrder = pending->searchOrderById(o_id);
+		if (!selectedOrder) {
+			selectedOrder = completed->searchOrderById(o_id);
+		}
+		if (selectedOrder) {
+			selectedOrder->addFood(*selectedFood);
+		}
 	}
 	newfile.close();
 };

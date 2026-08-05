@@ -13,7 +13,6 @@ void chooseStall() {
 	// function to identify which stall
 	int choice;
 
-	bool endLoop = false;
 	do {
 		cout << endl << "=============== Choose Stall ===============" << endl;
 		cout << "1. Western" << endl;
@@ -30,20 +29,19 @@ void chooseStall() {
 			cout << "Invalid input. Please try again." << endl;
 		}
 		else if (choice == 6) {
-			cout << "Returning to main menu." << endl;
 		}
 		else {
 			selectedStall = stallList.searchStallById(choice);
 			if (selectedStall != nullptr) {
-				endLoop = true;
-				cout << "You have chosen stall number " << selectedStall->id << "." << endl;
+				//cout << "You have chosen stall number " << selectedStall->id << "." << endl;
+
 				printManageStallInt();
 			}
 			else {
 				cout << "Stall not found." << endl;
 			}
 		}
-	} while (endLoop);
+	} while (choice != 6);
 }
 
 void printManageStallInt() {
@@ -99,7 +97,7 @@ void printSetStallStatusInt() {
 		cout << endl << "=============== Set Stall Status ===============" << endl;
 		cout << "1. Open Stall" << endl;
 		cout << "2. Close Stall" << endl;
-		cout << "3. Back" << endl;
+		cout << "4. Back" << endl;
 		cout << "Enter your choice (1 for Open, 2 for Close): ";
 		cin >> choice;
 

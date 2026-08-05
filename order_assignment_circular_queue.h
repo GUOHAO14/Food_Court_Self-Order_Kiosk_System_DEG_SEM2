@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include "stall.h"
+#include "globals.h"
 
 using namespace std;
 

@@ -19,17 +19,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="completed_order.csv" />
-    <None Include="completed_order_map_food.csv" />
     <None Include="food_stall_map.csv" />
     <None Include="food.csv" />
-    <None Include="pending_order.csv" />
-    <None Include="pending_order_map_food.csv" />
+    <None Include="order.csv" />
+    <None Include="order_map_food.csv" />
     <None Include="stall.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainProgram.cpp" />
     <ClCompile Include="order_interface.cpp" />
+    <ClCompile Include="self_order_interface.cpp" />
     <ClCompile Include="stall_assignment.cpp" />
     <ClCompile Include="stall_interface.cpp" />
     <ClCompile Include="task1.cpp" />
@@ -41,8 +40,9 @@
     <ClInclude Include="order_assignment_circular_queue.h" />
     <ClInclude Include="order_interface.h" />
     <ClInclude Include="order_session_stack.h" />
+    <ClInclude Include="self_order_interface.h" />
     <ClInclude Include="stall_assignment.h" />
-    <ClInclude Include="stall_orders_circular_queue.h" />
+    <ClInclude Include="stall_food_orders_circular_queue.h" />
     <ClInclude Include="stall_interface.h" />
     <ClInclude Include="queue.h" />
   </ItemGroup>
