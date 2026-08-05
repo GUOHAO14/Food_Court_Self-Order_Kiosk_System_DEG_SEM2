@@ -87,7 +87,7 @@ void printManageStallInt() {
 			cout << "Invalid input. Please try again." << endl;
 		}
 
-	} while (choice < 1 || choice > 7);
+	} while (choice != 7);
 }
 
 void printSetStallStatusInt() {
@@ -115,7 +115,7 @@ void printSetStallStatusInt() {
 			cout << "Invalid input. Please try again." << endl;
 		}
 
-	} while (choice < 1 || choice > 3);
+	} while (choice != 3);
 }
 
 void addMenuItem() {
