@@ -108,7 +108,7 @@ Order* orderInterface(Queue* pendingQueuePtr, Food_Linked_List* foodListPtr, Sta
 	while (ordering) {
 		cout << endl << "-------------------------------------------------" << endl;
 		cout << "Menu:" << endl;
-		foodListPtr->displayAllFood(true);
+		foodListPtr->displayAllFood();
 
 		if (itemCount > 0) {
 			cout << "Current Cart: " << buildCartString(sessionHistoryPtr, studentIdStr) << endl;
@@ -246,7 +246,7 @@ Order* orderInterface(Queue* pendingQueuePtr, Food_Linked_List* foodListPtr, Sta
 	int orderId = buildOrderId();
 	string orderTime = currentTimeString();
 
-	//Order newOrder(orderId, studentId, orderTime);
+	Order newOrder = Order(orderId, studentId, orderTime, "Pending");
 
 	// Rebuild the food list for this order from the student's still-open
 	// cart steps in the session history (this correctly skips over any

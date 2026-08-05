@@ -40,7 +40,7 @@ class Order {
 			cout << "Student  : " << StuID << endl;
 			cout << "Time     : " << orderTime << endl;
 			cout << "Status   : " << orderStatus << endl;
-			foods.displayAllFood(true);
+            foods.displayAllFood();
             cout << "------------------------" << endl;
 		}
 

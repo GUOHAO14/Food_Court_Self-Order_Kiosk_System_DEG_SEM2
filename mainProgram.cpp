@@ -33,6 +33,7 @@ int main(){
     stallList = Stall_Linked_List();
     foodList = Food_Linked_List();
     foodStallMapList = Food_Stall_Map_Linked_List();
+    unassignedFoodQueue = Food_Linked_List();
 
     loadStallFromCSV(&stallList, "stall.csv");
     loadFoodFromCSV(&foodList, "food.csv");
@@ -58,7 +59,6 @@ int main(){
         string currentTime = buffer;
         Order* hello;
 		struct food * selectedFood;
-		struct food * newFood;
         //remove above
         switch (choice) {
 		case 1:
@@ -72,7 +72,7 @@ int main(){
             // remove bottom
             hello = new Order(1, 123456, currentTime, "Pending");
             selectedFood = foodList.searchFoodById(1);
-            hello->addFood(food(selectedFood->id, selectedFood->name, selectedFood->price, 2));
+            hello->addFood(food(selectedFood->id, selectedFood->name, selectedFood->price));
 
             // go stall assignment cpp
             stallAndOrderAssignment(hello);

@@ -24,24 +24,24 @@ struct food {
     int id;
     string name;
     double price;
-    int quantity;
-    struct food* next; // pointer to next food item
+	string status;
+	struct food* next; // pointer to next food item
 
     food(int id, string name, double price) {
         this->id = id;
         this->name = name;
         this->price = price;
-        this->quantity = 0;
+        this->status = "Pending";
         this->next = nullptr;
     }
 
-    food(int id, string name, double price, int quantity) {
-        this->id = id;
-        this->name = name;
-        this->price = price;
-        this->quantity = quantity;
-        this->next = nullptr;
-    }
+	food(int id, string name, double price, string status) {
+		this->id = id;
+		this->name = name;
+		this->price = price;
+		this->status = status;
+		this->next = nullptr;
+	}
 };
 
 // Linked list to store chaining food items
@@ -73,8 +73,8 @@ public:
         count++;
     }
 
-    void insertRear(int id, string name, double price, int quantity) {
-        struct food* newFood = new food(id, name, price, quantity);
+	void insertRear(int id, string name, double price, string status) {
+		struct food* newFood = new food(id, name, price, status);
 
         if (head == nullptr) {
             head = newFood;
@@ -100,12 +100,81 @@ public:
             tail = newFood;
         }
 
-        count++;
-    }
+		count++;
+	}
 
-    int getCount() {
-        return count;
-    }
+	void insertRear(food* newFood) {
+		if (head == nullptr) {
+			head = newFood;
+			tail = newFood;
+		}
+		else {
+			tail->next = newFood;
+			tail = newFood;
+		}
+
+		count++;
+	}
+
+	void deleteById(int id) {
+		if (head == nullptr) {
+			cout << "Cannot delete from an empty list." << endl;
+		}
+
+		struct food* prev = nullptr, * deleteNode = head;
+
+		while (deleteNode != nullptr) {
+			if (deleteNode->id == id) {
+				break;
+			}
+			prev = deleteNode;
+			deleteNode = deleteNode->next; // deleteNode will be tail at the end of the loop
+		}
+
+		if (deleteNode == nullptr) { // reach end of list without finding the id
+			cout << "Food ID \"" << id << "\" is not found." << endl;
+		}
+		else {
+			if (deleteNode == head) {
+				head = head->next;
+
+				if (deleteNode == tail) { // if one node
+					tail = nullptr;
+				}
+			}
+			else if (deleteNode == tail) {
+				tail = prev;
+				tail->next = nullptr;
+			}
+			else {
+				prev->next = deleteNode->next;
+			}
+			count--;
+			delete deleteNode;
+		}
+	}
+
+	void detachFront() { // used for food waiting queue
+		if (head == nullptr) {
+			cout << "Cannot delete from an empty list." << endl;
+			return;
+		}
+		struct food* deleteNode = head;
+		string deletedId;
+
+		if (head->next == nullptr) { // one node
+			head = tail = nullptr;
+		}
+		else {
+			head = head->next;
+			deleteNode->next = nullptr;
+		}
+		count--;
+	}
+
+	int getCount() {
+		return count;
+	}
 
     struct food* getHead() {
         return head;
@@ -128,63 +197,48 @@ public:
         return nullptr;
     }
 
-    // Header for food display
-    void displayFoodHeader(bool withQuantity, int length) {
-        cout << string(length, '=') << endl;
-        cout << "| ";
-        cout << left << setw(3) << "No.";
-        cout << " | ";
-        cout << left << setw(8) << "Food ID";
-        cout << " | ";
-        cout << left << setw(30) << "Food Name";
-        cout << " | ";
-        if (withQuantity) {
-            cout << left << setw(8) << "Quantity";
-            cout << " | ";
-        }
-        cout << left << setw(10) << "Price (RM)";
-        cout << " | ";
-        cout << endl;
-        cout << string(length, '=') << endl;
-    }
+	// header for food display
+	void displayFoodHeader(int length) {
+		cout << string(length, '=') << endl;
+		cout << "| ";
+		cout << left << setw(3) << "No.";
+		cout << " | ";
+		cout << left << setw(8) << "Food ID";
+		cout << " | ";
+		cout << left << setw(30) << "Food Name";
+		cout << " | ";
+		cout << left << setw(10) << "Price (RM)";
+		cout << " | ";
+		cout << endl;
+		cout << string(length, '=') << endl;
+	}
 
-    // Actual display for food data
-    void displayFoodFormat(int count, struct food* food, bool withQuantity) {
-        cout << "| ";
-        cout << left << setw(3) << count;
-        cout << " | ";
-        cout << left << setw(8) << food->id;
-        cout << " | ";
-        cout << left << setw(30) << food->name;
-        cout << " | ";
-        if (withQuantity) {
-            cout << left << setw(8) << food->quantity;
-            cout << " | ";
-            cout << left << setw(10) << food->price * food->quantity;
-            cout << " |" << endl;
-        }
-        else {
-            cout << left << setw(10) << food->price;
-            cout << " |" << endl;
-        }
-    }
+	// actual display for food data
+	void displayFoodFormat(int count, struct food* food) {
+		cout << "| ";
+		cout << left << setw(3) << count;
+		cout << " | ";
+		cout << left << setw(8) << food->id;
+		cout << " | ";
+		cout << left << setw(30) << food->name;
+		cout << " | ";
+		cout << left << setw(10) << food->price;
+		cout << " |" << endl;
+	}
 
-    // Display all food in a formatted table
-    void displayAllFood(bool withQuantity) {
-        int length = 64;
-        if (withQuantity) {
-            length = 75;
-        }
-        struct food* trav = head;
-        int count = 0;
-        displayFoodHeader(withQuantity, length);
-        while (trav != nullptr) {
-            count++;
-            displayFoodFormat(count, trav, withQuantity);
-            trav = trav->next;
-        }
-        cout << string(length, '=') << endl << endl;
-    }
+	// display all food in a formatted table
+	void displayAllFood() {
+		int length = 64;
+		struct food* trav = head;
+		int count = 0;
+		displayFoodHeader(length);
+		while (trav != nullptr) {
+			count++;
+			displayFoodFormat(count, trav);
+			trav = trav->next;
+		}
+		cout << string(length, '=') << endl << endl;
+	}
 
     // --- MEMBER METHOD DECLARATIONS ---
     // (Implementations are in stall_interface.cpp where full Food_Stall_Map_Linked_List definition exists)
