@@ -9,10 +9,6 @@ using namespace std;
 // Global stall selection pointer
 struct stall* selectedStall = nullptr;
 
-// =========================================================
-// DEFINITIONS FOR Food_Linked_List MEMBER FUNCTIONS
-// =========================================================
-
 // Displays ONLY food items that belong to the specified stall ID
 int Food_Linked_List::displayFoodByStall(int stallId, Food_Stall_Map_Linked_List& mapList) {
     int length = 64;
@@ -52,10 +48,6 @@ int Food_Linked_List::displayAvailableExistingFood(int currentStallId, Food_Stal
     cout << string(length, '=') << endl << endl;
     return count;
 }
-
-// =========================================================
-// STALL MANAGEMENT USER INTERFACE FUNCTIONS
-// =========================================================
 
 void chooseStall() {
     int choice;
@@ -114,7 +106,7 @@ void printManageStallInt() {
             cout << "Invalid input. Please try again." << endl;
         }
 
-    } while (choice != 7);
+    } while (choice != 3);
 }
 
 void printSetStallStatusInt() {
