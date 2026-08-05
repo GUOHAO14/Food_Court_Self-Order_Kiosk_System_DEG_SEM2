@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
-#include "stall_orders_circular_queue.h"
+#include "stall_food_orders_circular_queue.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ struct stall {
 	bool isOpen; // stall status is open / close
 	bool isBusy; // stall status is busy / free (determined by order queue)
 	struct stall* next; // pointer to next stall
-	Stall_Orders_Circular_Queue orderQueue;
+	Stall_Food_Orders_Circular_Queue foodQueue;
 
     stall(int id, string name, bool isOpen) {
         this->id = id;
@@ -20,7 +20,7 @@ struct stall {
         this->isOpen = isOpen;
         this->isBusy = false;
         this->next = nullptr;
-        this->orderQueue = Stall_Orders_Circular_Queue();
+        this->foodQueue = Stall_Food_Orders_Circular_Queue();
     }
 };
 
@@ -87,9 +87,8 @@ public:
 		cout << " | ";
 		cout << left << setw(10) << "Status";
 		cout << " | ";
-		cout << left << setw(10) << "Availability";
-		cout << " | ";
-		cout << endl;
+		cout << left << setw(12) << "Availability";
+		cout << " |" << endl;
 		cout << string(length, '=') << endl;
 	}
 
@@ -103,14 +102,14 @@ public:
 		cout << left << setw(20) << stall->name;
 		cout << " | ";
 		cout << left << setw(10) << (stall->isOpen ? "Open" : "Closed");
-		cout << " |" << endl;
-		cout << left << setw(10) << (stall->orderQueue.isFull() ? "Busy" : "Not Busy");
+		cout << " | ";
+		cout << left << setw(12) << (stall->foodQueue.isFull() ? "Busy" : "Not Busy");
 		cout << " |" << endl;
 	}
 
 	// display all stalls in a formatted table
 	void displayAllStalls() {
-		int length = 68;
+		int length = 69;
 		struct stall* trav = head;
 		int count = 0;
 		displayStallsHeader(length);

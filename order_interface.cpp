@@ -108,7 +108,7 @@ Order* orderInterface(Queue* pendingQueuePtr, Food_Linked_List* foodListPtr, Sta
 	while (ordering) {
 		cout << endl << "-------------------------------------------------" << endl;
 		cout << "Menu:" << endl;
-		foodListPtr->displayAllFood();
+		foodListPtr->displayAllFood(true);
 
 		if (itemCount > 0) {
 			cout << "Current Cart: " << buildCartString(sessionHistoryPtr, studentIdStr) << endl;

@@ -6,3 +6,7 @@
 void chooseStall();
 void printManageStallInt();
 void printSetStallStatusInt();
+void addMenuItem();
+void removeMenuItem();
+void updateMenuItem();
+void searchMenuItem();	

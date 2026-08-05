@@ -8,35 +8,40 @@ using namespace std;
 // max orders intake is 6. So 6 orders in queue indicate that the stall is busy
 // this class also allows stall owner/staff to mark an order as complete
 // hence dequeueing and freeing up the stall for new orders
-class Stall_Orders_Circular_Queue {
+class Stall_Food_Orders_Circular_Queue {
 private:
-	Order* queue[6];
-	int maxOrders = 6, front = -1, rear = -1, count = 0;
+	food* queue[6];
+	int maxFoodOrder = 6, front = -1, rear = -1, count = 0;
 
 public:
 	bool isFull() {
-		if (count == maxOrders)
-			return true;
-		return false;
-	}
-	bool isEmpty()
-	{
-		if (front == -1 && rear == -1)
+		if (count == maxFoodOrder)
 			return true;
 		return false;
 	}
 
-	void enqueueOrder(Order* fullOrder)
+	bool isEmpty()
+	{
+		if (count == 0)
+			return true;
+		return false;
+	}
+
+	int getCount() {
+		return count;
+	}
+
+	void enqueueFood(food* foodOrder)
 	{
 		if (front == -1) {
 			front = 0; // front initialisation
 		}
-		rear = (rear + 1) % maxOrders; // flow back to front if rear reaches maxOrders
-		queue[rear] = fullOrder;
+		rear = (rear + 1) % maxFoodOrder; // flow back to front if rear reaches maxOrders
+		queue[rear] = foodOrder;
 		count++;
 	}
 
-	void dequeueOrder()
+	void dequeueFood()
 	{
 		if (isEmpty()) {
 			cout << "Queue is empty" << endl;
@@ -49,7 +54,7 @@ public:
 		}
 		else {
 			queue[front] = NULL; // remove element in the front
-			front = (front + 1) % maxOrders;
+			front = (front + 1) % maxFoodOrder;
 		}
 		count--;
 	}
@@ -86,23 +91,18 @@ public:
 	//}
 
 	// display all stalls in a formatted table
-	void displayAllStalls() {
-		displayOrderQueueHeader();
-		for (int i = 0; i < maxOrders; i++) {
-			cout << queue[i] << " ";
+	void displayAllOrders() {
+		if (isEmpty()) {
+			cout << "No orders to show. Circular queue is empty!" << endl;
+			return;
 		}
-		cout << string(54, '=') << endl << endl;
-	}
+		//for (int i = 0; i < count; i++) {
+		//	cout << "Order ID : " << queue[i]->getOrderID() << endl;
+		//	cout << "Student  : " << queue[i]->getStudentID() << endl;
+		//	cout << "Time     : " << queue[i]->getOrderTime() << endl;
 
-	void tempDisplay() {
-		for (int i = 0; i < maxOrders; i++) {
-			if (queue[i] != NULL) {
-				cout << "Order ID: " << queue[i]->getOrderID() << endl;
-				cout << "Student ID: " << queue[i]->getStudentID() << endl;
-				cout << "Order Time: " << queue[i]->getOrderTime() << endl;
-				queue[i]->getFoodList().displayAllFood(true);
-				cout << "------------------------" << endl;
-			}
-		}
+		//	queue[i]->getFoodList().displayAllFood(true);
+		//}
+		//cout << string(54, '=') << endl << endl;
 	}
 };

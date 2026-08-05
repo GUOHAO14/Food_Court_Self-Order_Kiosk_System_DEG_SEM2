@@ -48,6 +48,11 @@ class Order {
 		{
 			return OrID;
 		}
+
+		Food_Linked_List* getFoodList()
+		{
+			return &foods;
+		}
 };
 
 struct Node {

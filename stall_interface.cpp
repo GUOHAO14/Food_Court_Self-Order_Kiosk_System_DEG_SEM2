@@ -13,7 +13,6 @@ void chooseStall() {
 	// function to identify which stall
 	int choice;
 
-	bool endLoop = false;
 	do {
 		cout << endl << "=============== Choose Stall ===============" << endl;
 		cout << "1. Western" << endl;
@@ -30,20 +29,19 @@ void chooseStall() {
 			cout << "Invalid input. Please try again." << endl;
 		}
 		else if (choice == 6) {
-			cout << "Returning to main menu." << endl;
 		}
 		else {
 			selectedStall = stallList.searchStallById(choice);
 			if (selectedStall != nullptr) {
-				endLoop = true;
-				cout << "You have chosen stall number " << selectedStall->id << "." << endl;
+				//cout << "You have chosen stall number " << selectedStall->id << "." << endl;
+
 				printManageStallInt();
 			}
 			else {
 				cout << "Stall not found." << endl;
 			}
 		}
-	} while (endLoop);
+	} while (choice != 6);
 }
 
 void printManageStallInt() {
@@ -54,7 +52,11 @@ void printManageStallInt() {
 		cout << "Hello, you are stall " << selectedStall->name << " (ID: " << selectedStall->id << ")." << endl;
 		cout << "1. Set Stall Status" << endl;
 		cout << "2. Manage Order Status" << endl;
-		cout << "3. Back" << endl;
+		cout << "3. Add Menu Item" << endl;
+		cout << "4. Remove Menu Item" << endl;
+		cout << "5. Update Menu Item" << endl;
+		cout << "6. Search Menu Item" << endl;
+		cout << "7. Back" << endl;
 
 		cout << "Enter your choice (type integer): ";
 		cin >> choice;
@@ -67,13 +69,25 @@ void printManageStallInt() {
 			// Call function to manage order status
 			break;
 		case 3:
+			addMenuItem();
+			break;
+		case 4:
+			removeMenuItem();
+			break;
+		case 5:
+			updateMenuItem();
+			break;
+		case 6:
+			searchMenuItem();
+			break;
+		case 7:
 			// Return to main menu
 			break;
 		default: 
 			cout << "Invalid input. Please try again." << endl;
 		}
 
-	} while (choice < 1 || choice > 3);
+	} while (choice != 7);
 }
 
 void printSetStallStatusInt() {
@@ -83,7 +97,7 @@ void printSetStallStatusInt() {
 		cout << endl << "=============== Set Stall Status ===============" << endl;
 		cout << "1. Open Stall" << endl;
 		cout << "2. Close Stall" << endl;
-		cout << "3. Back" << endl;
+		cout << "4. Back" << endl;
 		cout << "Enter your choice (1 for Open, 2 for Close): ";
 		cin >> choice;
 
@@ -101,5 +115,9 @@ void printSetStallStatusInt() {
 			cout << "Invalid input. Please try again." << endl;
 		}
 
-	} while (choice < 1 || choice > 3);
+	} while (choice != 3);
+}
+
+void addMenuItem() {
+
 }
