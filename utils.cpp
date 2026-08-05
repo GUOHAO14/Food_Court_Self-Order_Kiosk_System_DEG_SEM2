@@ -166,3 +166,7 @@ void loadOrderFromCSV(Queue* pending, Queue* completed, Food_Linked_List* foodLi
 	}
 	newfile.close();
 };
+
+void saveOrderToCSV(Queue* pending, Queue* completed, Food_Linked_List* foodList, string orderFile, string mapfoodFile) {
+
+}
