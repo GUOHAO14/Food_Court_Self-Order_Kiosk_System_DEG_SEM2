@@ -62,7 +62,7 @@ public:
 	int getCurrentPage() { return currentPage; }
 	void setCurrentPage(int pageId) { this->currentPage = pageId; }
 
-	// --- Session Recording Methods ---
+	// Session Recording Methods 
 
 	void recordPageNavigation(int targetPage, string pageName) {
 		this->currentPage = targetPage;
@@ -81,12 +81,10 @@ public:
 		history.push(STEP_VIEW_STALLS, "Displayed stall status list", currentPage);
 	}
 
-	// NEW: Log viewing Circular Queue
 	void recordViewCircularQueue() {
 		history.push(STEP_VIEW_CIRCULAR_QUEUE, "Displayed circular queue status", currentPage);
 	}
 
-	// NEW: Log viewing System Order Queues
 	void recordViewOrderQueues() {
 		history.push(STEP_VIEW_ORDER_QUEUES, "Viewed all system order queues", currentPage);
 	}

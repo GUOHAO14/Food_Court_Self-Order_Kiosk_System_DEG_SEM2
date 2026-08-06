@@ -3,7 +3,6 @@
 #include "session.h"
 #include "stall_assignment.h"
 
-// Main Public Kiosk Entry Point
 void printSelfOrderInt(int stuId);
 
 // Kiosk Page Interfaces

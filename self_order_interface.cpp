@@ -32,14 +32,14 @@ int getValidIntInput();
 int getValidIntInput() {
     int value;
     while (!(cin >> value)) {
-        cin.clear(); // Reset cin error flag
+        cin.clear(); 
         while (cin.get() != '\n'); // Flush input stream buffer manually
         cout << "[Invalid Input] Please enter a valid number: ";
     }
     return value;
 }
 
-//  Display All Queues Directly From Global Memory
+//  Display All Queues Directly 
 void displayAllOrders() {
     cout << "\n=============================================" << endl;
     cout << "          ORDER QUEUES STATUS          " << endl;
@@ -71,7 +71,6 @@ void displayAllOrders() {
 
     cout << "=============================================" << endl;
 }
-
 
 // CSV Order ID Detection
 int getMaxOrderIdFromCSV(const char* filename) {
@@ -128,9 +127,7 @@ bool performUndo(Session* session) {
     }
 }
 
-// =================================================================
-// MAIN ENTRY POINT & STATE-DRIVEN DRIVER LOOP
-// =================================================================
+// MAIN ENTRY POINT 
 void printSelfOrderInt(int stuId) {
     if (nextOrderId == -1) {
         int highestId = getMaxOrderIdFromCSV("order.csv");
@@ -164,9 +161,6 @@ void printSelfOrderInt(int stuId) {
     }
 }
 
-// =================================================================
-// PAGE 1: Kiosk Landing / Main Hub
-// =================================================================
 void page1_MainHub(Session* session) {
     cout << "\n=============================================" << endl;
     cout << "        PAGE 1: KIOSK MAIN HUB                " << endl;
@@ -178,10 +172,10 @@ void page1_MainHub(Session* session) {
         cout << "Notice: You have " << pendingItems << "/" << MAX_ORDER_ITEMS << " item(s) currently in your cart." << endl;
     }
 
-    cout << "\n1. Start Ordering (Go to Food Menu)" << endl;
+    cout << "\n1. Start Ordering" << endl;
     cout << "2. Display Stall Status" << endl;
     cout << "3. Display Circular Queue" << endl;
-    cout << "4. View All System Queues (Pending, Processing, Completed)" << endl;
+    cout << "4. View All Order Queues (Pending, Processing, Completed)" << endl;
     cout << "5. View Kiosk Session History Log" << endl;
     cout << "6. Undo Last Action" << endl;
     cout << "7. Exit Session" << endl;
@@ -222,9 +216,6 @@ void page1_MainHub(Session* session) {
     }
 }
 
-// =================================================================
-// PAGE 2: Food Menu & Item Selection
-// =================================================================
 void page2_FoodMenu(Session* session) {
     cout << "\n=============================================" << endl;
     cout << "        PAGE 2: ORDER FOOD (MENU)              " << endl;
@@ -270,9 +261,6 @@ void page2_FoodMenu(Session* session) {
     }
 }
 
-// =================================================================
-// PAGE 3: Cart & Order Review
-// =================================================================
 void page3_CartReview(Session* session) {
     cout << "\n=============================================" << endl;
     cout << "        PAGE 3: CART REVIEW                    " << endl;
@@ -315,9 +303,6 @@ void page3_CartReview(Session* session) {
     }
 }
 
-// =================================================================
-// PAGE 4: Final Checkout & Order Confirmation
-// =================================================================
 void page4_CheckoutConfirmation(Session* session) {
     cout << "\n=============================================" << endl;
     cout << "        PAGE 4: CHECKOUT CONFIRMATION         " << endl;
@@ -349,10 +334,6 @@ void page4_CheckoutConfirmation(Session* session) {
         break;
     }
 }
-
-// =================================================================
-// ACTION FLOW HELPERS
-// =================================================================
 
 void addItemToOrderFlow(Session* session) {
     int currentCount = session->getCurrentOrderItemCount();
