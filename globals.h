@@ -13,11 +13,11 @@
 inline Stall_Linked_List stallList;
 inline Food_Linked_List foodList;
 inline Food_Stall_Map_Linked_List foodStallMapList;
-inline Food_Linked_List unassignedFoodQueue;
 inline Stall_Assignment_Circular_Queue stallCircularQueue;
 
-inline static Queue pendingOrdersQueue;
-inline static Queue processingOrdersQueue;
-inline static Queue completedOrdersQueue;
+inline Queue pendingOrdersQueue;
+inline Queue processingOrdersQueue;
+inline Queue completedOrdersQueue;
+//inline Food_For_Assignment_Linked_List unassignedFoodQueue;
 
 #endif

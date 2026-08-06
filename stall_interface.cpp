@@ -129,8 +129,9 @@ void printSetStallStatusInt() {
         case 1:
             stallList.setStallStatus(selectedStall, true);
 
-            // check whether food waiting queue can be resolved
-            checkAndAssignUnassignedFood();
+            // check pending queue again to be allocated to processing queue
+            // if possible
+            stallAndOrderAssignment();
 
             break;
         case 2:
@@ -148,20 +149,33 @@ void printSetStallStatusInt() {
 void markFoodAsComplete() {
     int choice;
     cout << endl << "===== Mark Food As Complete =====" << endl;
-    selectedStall->foodQueue.displayFoodQueue();
+    Stall_Internal_Food_Circular_Queue* foodQueue = &selectedStall->foodQueue;
+    foodQueue->displayFoodQueue();
         
     cout << "Choose food to mark as complete. Enter Number (based on No. column): ";
     cin >> choice;
-    selectedStall->foodQueue.markComplete(choice);
+    int index = choice - 1;
+    if (foodQueue->markComplete(index)) {
+        // locate order based on food ID
+        Order* order = foodQueue->getQueue()[index]->order;
 
-    // update processing queue
-    Node* order = processingOrdersQueue.getHead();
-    while (order != nullptr) {
-        order->data.updateOrderStatus();
-        order = order->next;
+        order->updateOrderStatus();
+
+        if (order->getOrderStatus() == "Completed") {
+            // dequeue from processing orders queue
+            bool removed = processingOrdersQueue.delQueue(order->getOrderID());
+
+            if (removed) {
+                // transfer order to completed orders queue
+                completedOrdersQueue.addQueue(order);
+
+                // save new update
+                saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+            }
+        }
     }
-    saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
 
-    // check whether food waiting queue can be resolved
-    checkAndAssignUnassignedFood();
+    // check pending queue again to be allocated to processing queue
+    // if possible
+    stallAndOrderAssignment();
 }

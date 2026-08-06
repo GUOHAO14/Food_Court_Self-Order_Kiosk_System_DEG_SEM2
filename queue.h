@@ -128,10 +128,10 @@ class Order {
 };
 
 struct Node {
-    Order data;
+    Order* data;
     Node* next;
 
-    Node(Order order)
+    Node(Order* order)
     {
         data = order;
         next = nullptr;
@@ -139,112 +139,174 @@ struct Node {
 };
 
 class Queue {
-    private:
-        Node* head;
-        Node* tail;
+private:
+    Node* head;
+    Node* tail;
 
-    public:
-        Queue()
+public:
+    Queue()
+    {
+        head = nullptr;
+        tail = nullptr;
+    }
+
+    Node* getHead() {
+        return head;
+    }
+
+    bool emptyList()
+    {
+        return head == nullptr;
+    }
+
+    void addQueue(Order* order)
+    {
+        Node* newNode = new Node(order);
+
+        if (emptyList())
         {
-            head = nullptr;
-            tail = nullptr;
+            head = newNode;
+            tail = newNode;
         }
-
-        Node* getHead() {
-            return head;
-        }
-
-        bool emptyList()
+        else
         {
-            return head == nullptr;
+            tail->next = newNode;
+            tail = newNode;
         }
+    }
 
-        void addQueue(Order order)
+    Order* delQueue()
+    {
+        if (emptyList())
         {
-            Node* newNode = new Node(order);
-            if (emptyList())
-            {
-                head = newNode;
-                tail = newNode;
-            }
-            else
-            {
-                tail->next = newNode;
-                tail = newNode;
-            }
-        }
-
-        Order delQueue()
-        {
-            if (emptyList())
-            {
-                cout << "The queue is curerntly empty";
-                return Order();
-            }
-
-            Node* temp = head;
-            head = head->next;
-            if (head == nullptr)
-            {
-                tail = nullptr;
-            }
-            Order order = temp->data;
-            delete temp;
-            return order;
-        }
-
-        Order* searchOrderById(int id) {
-            Node* currentNode = head;
-            while (currentNode != nullptr)
-            {
-                if (currentNode->data.getOrderID() == id) {
-                    return &currentNode->data;
-                }
-                currentNode = currentNode->next;
-            }
+            cout << "The queue is currently empty." << endl;
             return nullptr;
         }
 
-        void displayQueue()
-        {
-            if (emptyList())
-            {
-                cout << "The queue is currently empty, nothing to display.";
-                return;
-            }
+        Node* temp = head;
+        head = head->next;
 
-            Node* currentNode = head;
-            while (currentNode != nullptr)
-            {
-                currentNode->data.displayOrder();
-                currentNode = currentNode->next;
-            }
+        if (head == nullptr)
+        {
+            tail = nullptr;
         }
 
-        int queueNum()
-        {
-            int count = 0;
-            Node* currentNode = head;
-            while (currentNode != nullptr)
-            {
-                count++;
-                currentNode = currentNode->next;
-            }
-            return count;
+        Order* order = temp->data;
+        delete temp;
+
+        return order;
+    }
+
+    // used for processing queue
+    // breaks the rule of queue's FIFO convention
+    // BUT REQUIRED BY BUSINESS LOGIC: food processing speed by stalls differs
+    // UNABLE TO FORCE FIFO FOR processing -> completed
+    bool delQueue(int orderId)
+    {
+        if (emptyList()) {
+            cout << "The queue is currently empty." << endl;
+            return false;
         }
 
-        void saveOrders(ofstream& orderOut, ofstream& mapOut)
-        {
-            Node* currentNode = head;
-            while (currentNode != nullptr)
-            {
-                Order& order = currentNode->data;
+        Node* currentNode = head;
+        Node* prevNode = nullptr;
 
-                orderOut << order.getOrderID() << "," << order.getStudentID() << "," << order.getOrderTime() << "," << order.getOrderStatus() << endl;
+        while (currentNode != nullptr) {
+            if (currentNode->data->getOrderID() == orderId) {
+                // deleting head
+                if (prevNode == nullptr) {
+                    head = currentNode->next;
+                }
+                else {
+                    prevNode->next = currentNode->next;
+                }
 
-                order.getFoodList()->saveOrderMapFood(mapOut, order.getOrderID());
+                // deleting tail
+                if (currentNode == tail) {
+                    tail = prevNode;
+                }
 
-                currentNode = currentNode->next;
+                // queue becomes empty
+                if (head == nullptr) {
+                    tail = nullptr;
+                }
+
+                delete currentNode;
+                return true;
             }
+
+            prevNode = currentNode;
+            currentNode = currentNode->next;
         }
+
+        cout << "Order not found." << endl;
+        return false;
+    }
+
+    Order* searchOrderById(int id)
+    {
+        Node* currentNode = head;
+
+        while (currentNode != nullptr)
+        {
+            if (currentNode->data->getOrderID() == id)
+            {
+                return currentNode->data;
+            }
+
+            currentNode = currentNode->next;
+        }
+
+        return nullptr;
+    }
+
+    void displayQueue()
+    {
+        if (emptyList())
+        {
+            cout << "The queue is currently empty, nothing to display." << endl;
+            return;
+        }
+
+        Node* currentNode = head;
+
+        while (currentNode != nullptr)
+        {
+            currentNode->data->displayOrder();
+            currentNode = currentNode->next;
+        }
+    }
+
+    int queueNum()
+    {
+        int count = 0;
+        Node* currentNode = head;
+
+        while (currentNode != nullptr)
+        {
+            count++;
+            currentNode = currentNode->next;
+        }
+
+        return count;
+    }
+
+    void saveOrders(ofstream& orderOut, ofstream& mapOut)
+    {
+        Node* currentNode = head;
+
+        while (currentNode != nullptr)
+        {
+            Order* order = currentNode->data;
+
+            orderOut << order->getOrderID() << ","
+                << order->getStudentID() << ","
+                << order->getOrderTime() << ","
+                << order->getOrderStatus() << endl;
+
+            order->getFoodList()->saveOrderMapFood(mapOut, order->getOrderID());
+
+            currentNode = currentNode->next;
+        }
+    }
 };

@@ -141,7 +141,7 @@ public:
 		}
 
 		Food_Linked_List formatter;
-		int length = 75;
+		int length = 64;
 		formatter.displayFoodHeader(true, length);
 
 		int rowNum = 0;

@@ -39,8 +39,12 @@ int main(){
     stallList = Stall_Linked_List();
     foodList = Food_Linked_List();
     foodStallMapList = Food_Stall_Map_Linked_List();
-    unassignedFoodQueue = Food_Linked_List();
+    //unassignedFoodQueue = Food_Linked_List();
     stallCircularQueue = Stall_Assignment_Circular_Queue();
+
+    pendingOrdersQueue = Queue();
+    processingOrdersQueue = Queue();
+    completedOrdersQueue = Queue();
 
     loadStallFromCSV(&stallList, "stall.csv");
     loadFoodFromCSV(&foodList, "food.csv");
@@ -51,25 +55,11 @@ int main(){
         cout << "1. Enter Self-Order Kiosk" << endl;
         cout << "2. Stall Management Page" << endl;
         cout << "3. Admin Page" << endl;
-        cout << "4. TESTING ORDER ASSIGNMENT" << endl;
         cout << "5. Exit Program" << endl;
 
         cout << "Enter your choice (type integer): ";
         cin >> choice;
 
-        // remove bottom
-        time_t now = time(nullptr);
-
-        char buffer[26];
-
-        ctime_s(buffer, sizeof(buffer), &now);
-
-        string currentTime = buffer;
-		struct food * selectedFood;
-        Order hello = Order(1, 123456, currentTime, "Pending");
-        selectedFood = foodList.searchFoodById(1);
-        hello.addFood(food(selectedFood->id, selectedFood->name, selectedFood->price));
-        //remove above
         switch (choice) {
 		case 1: {
             // enter order page, Isaac part
@@ -87,13 +77,6 @@ int main(){
             adminPage();
             break;
         case 4: 
-            // remove bottom
-
-            // go stall assignment cpp
-            stallAndOrderAssignment(hello);
-            // remove above
-            break;
-        case 5: 
             return 0;
             break;
         default: 

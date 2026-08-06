@@ -306,7 +306,14 @@ void addItemToOrderFlow(Session* session) {
 
     // Add individual food steps up to requested quantity
     for (int i = 0; i < quantity; i++) {
-        session->addItemToOrder(selectedFood);
+
+        food* newFood = new food(
+            selectedFood->id,
+            selectedFood->name,
+            selectedFood->price
+        );
+
+        session->addItemToOrder(newFood);
     }
 
     cout << "\n[Added] " << quantity << "x \"" << selectedFood->name
@@ -328,15 +335,15 @@ void processFinalCheckout(Session* session) {
     cout << "=============================================" << endl;
     placedOrder->displayOrder();
 
-    Order order = *placedOrder; // create new copy of order, to be added into queue and assigned
-
-    pendingOrdersQueue.addQueue(order);
+    pendingOrdersQueue.addQueue(placedOrder);
+    cout << "After adding: "
+        << pendingOrdersQueue.queueNum()
+        << endl;
     
     // from pending queue, order will be transferred to stall assignment
-    stallAndOrderAssignment(order);
+    stallAndOrderAssignment();
 
-    saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
-    delete placedOrder;
+    //saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
 
     cout << "\nYour order has been placed into the system queue!" << endl;
     cout << "Total pending orders in queue: " << pendingOrdersQueue.queueNum() << endl;

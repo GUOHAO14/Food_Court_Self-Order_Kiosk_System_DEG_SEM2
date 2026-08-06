@@ -146,11 +146,11 @@ void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_
 		int student_id = stoi(stu_id);
 
 		if (order_status == "Pending")
-			pending->addQueue(Order(id, student_id, order_time, order_status));
+			pending->addQueue(new Order(id, student_id, order_time, order_status));
 		else if (order_status == "Processing")
-			processing->addQueue(Order(id, student_id, order_time, order_status));
+			processing->addQueue(new Order(id, student_id, order_time, order_status));
 		else if (order_status == "Completed")
-			completed->addQueue(Order(id, student_id, order_time, order_status));
+			completed->addQueue(new Order(id, student_id, order_time, order_status));
 	}
 	file.close();
 
@@ -168,9 +168,11 @@ void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_
 	{
 		stringstream ss(newline);
 
-		string order_id, food_id;
+		string order_id, food_id, status;
 		getline(ss, order_id, ',');
 		getline(ss, food_id, ',');
+		getline(ss, status, ',');
+
 		int o_id = stoi(order_id);
 		int f_id = stoi(food_id);
 
@@ -202,7 +204,7 @@ void saveOrderToCSV(Queue* pending, Queue* processing, Queue* completed, string 
 	}
 
 	orderOut << "order_id,student_id,order_time,order_status\n";
-	mapOut << "order_id,food_id\n";
+	mapOut << "order_id,food_id,status\n";
 
 	pending->saveOrders(orderOut, mapOut);
 	processing->saveOrders(orderOut, mapOut);

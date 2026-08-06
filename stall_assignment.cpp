@@ -1,38 +1,85 @@
 #include <iostream>
 #include "globals.h"
 #include "stall_assignment.h"
+#include "food_for_assignment.h"
 
 using namespace std;
 
-void stallAndOrderAssignment(Order order) {
+// check pending queue and assign food to stalls
+void stallAndOrderAssignment() {
 
-	struct food* currentFood = order.getFoodList()->getHead();
+	cout << "Num: " << pendingOrdersQueue.queueNum() << endl;
 
-	// process each food item in the order
-	for (int i = 0; i < order.getFoodList()->getCount(); i++) {
-		if (currentFood == nullptr) {
-			cout << "No food items in the order." << endl;
-			break;
+	Node* firstPendingOrder = pendingOrdersQueue.getHead();
+
+	while (firstPendingOrder != nullptr) {
+
+		// save next node first
+		Node* nextOrderNode = firstPendingOrder->next;
+
+		Order* order = firstPendingOrder->data;
+
+		cout << order->getOrderID() << endl;
+
+		iterateOrderFoodList(order);
+
+		order->displayOrder();
+
+		// move using saved pointer
+		firstPendingOrder = nextOrderNode;
+	}
+}
+
+// process each food item in the order
+void iterateOrderFoodList(Order* order) {
+	struct food* currentFood = order->getFoodList()->getHead();
+
+	if (currentFood == nullptr) {
+		cout << "No food items in the order." << endl;
+		return;
+	}
+
+	while (currentFood != nullptr) {
+
+		// business logic: one order can have many food
+		// EACH FOOD IN AN ORDER is allocated to stalls EVENLY
+		// which means: one order could be handled by multiple stalls
+		// ORDER STATUS is affected by FOOD STATUS
+		// status consists of Pending (in waiting queue), Processing (food/all food assigned to stall), Completed (all food marked as complete) 
+
+		// each food in an order is handled one by one
+		// then food status will also update order status
+		cout << order->getOrderID() << endl;
+		cout << currentFood->name << endl;
+
+		if (currentFood->status == "Pending") {
+			struct foodForAssignment* newSoloFoodOrder = new foodForAssignment(order, currentFood);
+			assignFoodToStall(newSoloFoodOrder);
+
+			stallCircularQueue.displayQueue();
 		}
-		
-		assignFoodToStall(currentFood);
-
-		stallCircularQueue.displayQueue();
 		currentFood = currentFood->next;
 	}
 
-	// refresh order status
-	order.updateOrderStatus();
-	order.displayOrder();
+	// update order status
+	order->updateOrderStatus();
 
-	if (order.getOrderStatus() == "Processing") {
-		swapPendingToProcessingQueue(&order);
+	if (order->getOrderStatus() == "Processing") {
+		swapPendingToProcessingQueue(order);
 	}
-};
 
-void assignFoodToStall(food* currentFood) {
+	// save new update
+	saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+}
+
+// MAIN STALL CIRCULAR QUEUE ASSIGNMENT LOGIC
+// handle one food
+void assignFoodToStall(foodForAssignment* soloFoodOrder) {
 	// if all stalls are either closed or cannot prepare the food, count as impossible to assign
 	// if all stalls impossible handle this food, this food will be dropped from order
+
+	food* currentFood = soloFoodOrder->food;
+	Order* currentOrder = soloFoodOrder->order;
 
 	// queue status
 	bool hasSuitableStall = false;
@@ -49,7 +96,8 @@ void assignFoodToStall(food* currentFood) {
 			// re-enqueue the stall to the end of the circular queue 
 			// to achieve rotate mechanism for load balancing
 			stallCircularQueue.enqueueStall(currentStall);
-
+			cout << currentOrder->getOrderID() << endl;
+			cout << currentFood->name << endl;
 			// stall not suitable for this food
 			if (!foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
 				continue;
@@ -67,13 +115,13 @@ void assignFoodToStall(food* currentFood) {
 				currentFood->status = "Processing";
 
 				// assign order to the stall
-				currentStall->foodQueue.enqueueFood(currentFood);
+				currentStall->foodQueue.enqueueFoodAssignment(soloFoodOrder);
 
 				// display the number of orders in the stall's queue
 				cout << "This stall is currently preparing " << currentStall->foodQueue.getCount() << " orders." << endl;
 
 				// display those specific orders
-				currentStall->foodQueue.displayFoodQueue(); 
+				currentStall->foodQueue.displayFoodQueue();
 
 				break; // Exit after assigning the order
 			}
@@ -84,10 +132,9 @@ void assignFoodToStall(food* currentFood) {
 				hasSuitableStall = true;
 				assigned = false;
 
-				cout << currentStall->name << " stall is busy or closed. Moving to unassigned waiting queue." << endl;
+				cout << currentStall->name << " stall is busy or closed. Order will remain in Pending Queue." << endl;
 
-				unassignedFoodQueue.insertRear(currentFood);
-
+				//unassignedFoodQueue.insertRear(soloFoodOrder);
 			}
 
 			else {
@@ -99,45 +146,50 @@ void assignFoodToStall(food* currentFood) {
 		}
 	}
 
-	if (hasSuitableStall && !assigned) {
-		cout << "Final Verdict:" << endl;
-		cout << "Suitable stall found for food item: " << currentFood->name << endl;
-		cout << "But the stall is busy or closed." << endl;
-		cout << "Moving to unassigned waiting queue." << endl;
-		unassignedFoodQueue.insertRear(currentFood);
+	//if (hasSuitableStall && !assigned) {
+	//	cout << "Final Verdict:" << endl;
+	//	cout << "Suitable stall found for food item: " << currentFood->name << endl;
+	//	cout << "But the stall is busy or closed." << endl;
+	//	cout << "Moving to unassigned waiting queue." << endl;
+	//	unassignedFoodQueue.insertRear(soloFoodOrder);
 
-		cout << "Current unassigned waiting queue:" << endl;
-		unassignedFoodQueue.displayAllFood();
-	}
+	//	cout << "Current unassigned waiting queue:" << endl;
+	//	unassignedFoodQueue.displayAllFoodAssignment();
+	//}
 
 	if (!hasSuitableStall && !assigned) {
-		cout << "All stalls are either closed or busy." << endl;
-		cout << "Cannot assign your food at this time." << endl;
-		cout << "Order will remain in waiting queue as pending." << endl;
+		cout << "An error occured, your food order will be dropped" << endl;
+		//pendingOrdersQueue.delQueue();
+		//delete soloFoodOrder;
 	}
 }
 
 // check if unassigned food in the waiting queue can be assigned
 // used when a stall mark food as done (free), or when a stall changes status to open
-void checkAndAssignUnassignedFood() {
-	if (unassignedFoodQueue.getCount() > 0) {
-		cout << "Checking unassigned food items in the waiting queue..." << endl;
-		struct food* currentFood = unassignedFoodQueue.getHead();
-		while (currentFood != nullptr) {
-			assignFoodToStall(currentFood);
-			currentFood = currentFood->next;
-		}
-	}
-	else {
-		cout << "No unassigned food items in the waiting queue." << endl;
-	}
-}
+//void checkAndAssignUnassignedFood() {
+//	if (unassignedFoodQueue.getCount() > 0) {
+//		cout << "Checking unassigned food items in the waiting queue..." << endl;
+//		struct foodForAssignment* soloFoodOrder = unassignedFoodQueue.getHead();
+//
+//		// go through the waiting queue and check again if they can now be assigned to any stall
+//		while (soloFoodOrder != nullptr) {
+//			assignFoodToStall(soloFoodOrder);
+//			soloFoodOrder = soloFoodOrder->next;
+//		}
+//	}
+//	else {
+//		cout << "No unassigned food items in the waiting queue." << endl;
+//	}
+//}
 
 void swapPendingToProcessingQueue(Order * order) {
 	if (order->getOrderStatus() == "Processing") {
-		Order temp = pendingOrdersQueue.delQueue();
+		Order* temp = pendingOrdersQueue.delQueue();
 
 		processingOrdersQueue.addQueue(temp);
+
+		// save new update
+		saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
 	}
 	else {
 		cout << "Swap failed. Order status does not indicate Processing." << endl;
@@ -146,9 +198,12 @@ void swapPendingToProcessingQueue(Order * order) {
 
 void swapProcessingToCompletedQueue(Order* order) {
 	if (order->getOrderStatus() == "Completed") {
-		Order temp = processingOrdersQueue.delQueue();
+		Order* temp = processingOrdersQueue.delQueue();
 
 		completedOrdersQueue.addQueue(temp);
+
+		// save new update
+		saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
 	}
 	else {
 		cout << "Swap failed. Order status does not indicate Completed." << endl;

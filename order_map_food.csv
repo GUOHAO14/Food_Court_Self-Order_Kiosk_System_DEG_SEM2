@@ -1,7 +1,2 @@
-﻿order_id,food_id,status
-6,8,Completed
-7,12,Completed
-8,10,Pending
-8,8,Completed
-9,3,Pending
-10,11,Pending
+order_id,food_id,status
+101,3,Completed

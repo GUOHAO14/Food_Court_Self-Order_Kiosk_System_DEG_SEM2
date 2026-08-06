@@ -46,6 +46,7 @@
     <ClInclude Include="stall_internal_food_circular_queue.h" />
     <ClInclude Include="stall_interface.h" />
     <ClInclude Include="queue.h" />
+    <ClInclude Include="food_for_assignment.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="food.h" />

@@ -3,6 +3,7 @@
 #include "queue.h"
 #include "food.h"
 #include "food_stall_map.h"
+#include "food_for_assignment.h"
 using namespace std;
 
 // different from order assignment
@@ -12,7 +13,7 @@ using namespace std;
 // hence dequeueing and freeing up the stall for new orders
 class Stall_Internal_Food_Circular_Queue {
 private:
-	food* queue[6];
+	foodForAssignment* queue[6];
 	int maxFoodOrder = 6, front = -1, rear = -1, count = 0;
 
 public:
@@ -33,7 +34,12 @@ public:
 		return count;
 	}
 
-	void enqueueFood(food* foodOrder)
+	foodForAssignment** getQueue()
+	{
+		return queue;
+	}
+
+	void enqueueFoodAssignment(foodForAssignment* foodOrder)
 	{
 		if (front == -1) {
 			front = 0; // front initialisation
@@ -43,7 +49,7 @@ public:
 		count++;
 	}
 
-	void dequeueFood()
+	void dequeueFoodAssignment()
 	{
 		if (isEmpty()) {
 			cout << "Queue is empty" << endl;
@@ -61,13 +67,17 @@ public:
 		count--;
 	}
 
-	void markComplete(int queueIndex) {
+	bool markComplete(int queueIndex) {
 		if (queueIndex < 0 || queueIndex > count) {
 			cout << "Invalid food. Index out of bound." << endl;
-			return;
+			return false;
 		}
-		queue[queueIndex]->status = "Completed";
+
+		queue[queueIndex]->food->status = "Completed";
+
 		cout << "Food marked as completed" << endl;
+
+		return true;
 	}
 
 	// display all stalls in a formatted table
@@ -76,10 +86,10 @@ public:
 			cout << "No orders to show. Circular queue is empty!" << endl;
 			return;
 		}
-		int length = 64;
-		Food_Linked_List().displayFoodHeader(length);
+		int length = 62;
+		Food_For_Assignment_Linked_List().displayFoodAssignmentHeader(length);
 		for (int i = 0; i < count; i++) {
-			Food_Linked_List().displayFoodFormat(i+1, queue[i]);
+			Food_For_Assignment_Linked_List().displayFoodAssignmentFormat(i+1, queue[i]);
 		}
 		cout << string(length, '=') << endl << endl;
 	}
