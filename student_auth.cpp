@@ -4,24 +4,37 @@
 
 using namespace std;
 
-string toUpperString(string str) {
-    for (size_t i = 0; i < str.length(); i++) {
+//Custom string comparison
+bool stringsEqual(const char* s1, const char* s2) {
+    int i = 0;
+    while (s1[i] != '\0' && s2[i] != '\0') {
+        if (s1[i] != s2[i]) return false;
+        i++;
+    }
+    return s1[i] == s2[i];
+}
+
+// In-place conversion to upper case
+void toUpperString(char* str) {
+    for (int i = 0; str[i] != '\0'; i++) {
         if (str[i] >= 'a' && str[i] <= 'z') {
             str[i] = str[i] - ('a' - 'A');
         }
     }
-    return str;
 }
 
-// Validate starts with 'TP' followed by 6 digits 
-bool isValidStudentIdFormat(const string& input) {
-    if (input.length() != 8) return false;
+// Validate starts with 'TP' followed by 6 digits
+bool isValidStudentIdFormat(const char* input) {
+    int len = 0;
+    while (input[len] != '\0') len++;
+
+    if (len != 8) return false;
 
     if ((input[0] != 'T' && input[0] != 't') || (input[1] != 'P' && input[1] != 'p')) {
         return false;
     }
 
-    for (size_t i = 2; i < input.length(); i++) {
+    for (int i = 2; i < 8; i++) {
         if (input[i] < '0' || input[i] > '9') {
             return false;
         }
@@ -29,48 +42,63 @@ bool isValidStudentIdFormat(const string& input) {
     return true;
 }
 
-int extractNumericId(const string& tpStr) {
+int extractNumericId(const char* tpStr) {
     int num = 0;
-    for (size_t i = 2; i < tpStr.length(); i++) {
-        num = num * 10 + (tpStr[i] - '0');
+    for (int i = 2; tpStr[i] != '\0'; i++) {
+        if (tpStr[i] >= '0' && tpStr[i] <= '9') {
+            num = num * 10 + (tpStr[i] - '0');
+        }
     }
     return num;
 }
 
-bool loadStudentFromCsv(const string& targetId, const string& filename) {
+bool loadStudentFromCsv(const char* targetId, const char* filename) {
     ifstream file(filename);
     if (!file.is_open()) {
-        return false; 
+        return false;
     }
 
-    string line;
-    while (getline(file, line)) {
-        if (line.empty()) continue;
+    char line[256];
+    while (file.getline(line, sizeof(line))) {
+        if (line[0] == '\0') continue;
 
-        
-        if (!line.empty() && line.back() == '\r') {
-            line.pop_back();
+        // Parse first column up to comma or line endings
+        char existingId[64];
+        int i = 0;
+        while (line[i] != '\0' && line[i] != ',' && line[i] != '\r' && line[i] != '\n') {
+            existingId[i] = line[i];
+            i++;
         }
+        existingId[i] = '\0';
 
-        size_t commaPos = line.find(',');
-        string existingId = (commaPos != string::npos) ? line.substr(0, commaPos) : line;
+        // Check against CSV header line
+        char upperExisting[64];
+        int j = 0;
+        for (; existingId[j] != '\0'; j++) {
+            if (existingId[j] >= 'a' && existingId[j] <= 'z') {
+                upperExisting[j] = existingId[j] - ('a' - 'A');
+            }
+            else {
+                upperExisting[j] = existingId[j];
+            }
+        }
+        upperExisting[j] = '\0';
 
-        if (toUpperString(existingId) == "STUDENT_ID") {
+        if (stringsEqual(upperExisting, "STUDENT_ID")) {
             continue;
         }
 
-        if (existingId == targetId) {
+        if (stringsEqual(existingId, targetId)) {
             file.close();
             return true; // Match found in CSV
         }
     }
 
     file.close();
-    return false; 
+    return false;
 }
 
-bool saveStudentToCsv(const string& studentId, const string& filename) {
-
+bool saveStudentToCsv(const char* studentId, const char* filename) {
     ifstream checkFile(filename, ios::ate | ios::binary);
     bool isFileEmpty = true;
     bool needsLeadingNewline = false;
@@ -97,7 +125,6 @@ bool saveStudentToCsv(const string& studentId, const string& filename) {
         return false;
     }
 
-
     if (isFileEmpty) {
         file << "student_id\n";
     }
@@ -110,9 +137,9 @@ bool saveStudentToCsv(const string& studentId, const string& filename) {
     return true;
 }
 
-//Prompts
+// Prompts
 void registerStudentPrompt() {
-    string inputId;
+    char inputId[64];
 
     cout << endl << "=============== Student Registration ===============" << endl;
 
@@ -120,12 +147,12 @@ void registerStudentPrompt() {
         cout << "Enter new Student ID (Format: TP000000, e.g., TP074123 or 0 to cancel): ";
         cin >> inputId;
 
-        if (inputId == "0") {
+        if (stringsEqual(inputId, "0")) {
             cout << "Registration cancelled." << endl;
             return;
         }
 
-        inputId = toUpperString(inputId);
+        toUpperString(inputId);
 
         if (!isValidStudentIdFormat(inputId)) {
             cout << "[Error] Invalid format! Student ID must be strictly 'TP' followed by 6 digits (e.g., TP074123)." << endl;
@@ -145,18 +172,18 @@ void registerStudentPrompt() {
 }
 
 int loginPrompt() {
-    string inputId;
+    char inputId[64];
 
     while (true) {
         cout << endl << "=============== Student Login ===============" << endl;
         cout << "Enter your Student ID (Format: TP000000) (0 to cancel): ";
         cin >> inputId;
 
-        if (inputId == "0") {
+        if (stringsEqual(inputId, "0")) {
             return -1;
         }
 
-        inputId = toUpperString(inputId);
+        toUpperString(inputId);
 
         if (!isValidStudentIdFormat(inputId)) {
             cout << "[Error] Invalid format! Must be TP followed by 6 digits (e.g., TP074123)." << endl;
