@@ -1,22 +1,19 @@
 #include "self_order_interface.h"
 #include "globals.h"
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include "utils.h"
+#include "session.h"
+#include "order_session_stack.h"
 
 using namespace std;
 
 // Maximum allowed food items in a single order
 const int MAX_ORDER_ITEMS = 8;
 
-// Static tracking for queue and order IDs
-//static Queue pendingOrdersQueue;
-//static Queue processingOrdersQueue;
-//static Queue completedOrdersQueue;
-
-// ^^ moved to globals file
-
-static int nextOrderId = 101;
+// Initialized to -1 so we can auto-detect the next ID from CSV on first run
+static int nextOrderId = -1;
 
 // Forward Declarations
 void page1_MainHub(Session* session);
@@ -27,10 +24,92 @@ void page4_CheckoutConfirmation(Session* session);
 void addItemToOrderFlow(Session* session);
 void processFinalCheckout(Session* session);
 bool performUndo(Session* session);
+int getMaxOrderIdFromCSV(const char* filename);
+void displayAllOrders();
+int getValidIntInput();
 
-// =================================================================
-// HELPER: Page-Aware Undo Handler
-// =================================================================
+// Raw Stream Input Validation 
+int getValidIntInput() {
+    int value;
+    while (!(cin >> value)) {
+        cin.clear(); // Reset cin error flag
+        while (cin.get() != '\n'); // Flush input stream buffer manually
+        cout << "[Invalid Input] Please enter a valid number: ";
+    }
+    return value;
+}
+
+//  Display All Queues Directly From Global Memory
+void displayAllOrders() {
+    cout << "\n=============================================" << endl;
+    cout << "          ORDER QUEUES STATUS          " << endl;
+    cout << "=============================================" << endl;
+
+    cout << "\n--- PENDING ORDERS QUEUE (" << pendingOrdersQueue.queueNum() << ") ---" << endl;
+    if (pendingOrdersQueue.queueNum() == 0) {
+        cout << "  (No pending orders in queue)" << endl;
+    }
+    else {
+        pendingOrdersQueue.displayQueue();
+    }
+
+    cout << "\n--- PROCESSING ORDERS QUEUE (" << processingOrdersQueue.queueNum() << ") ---" << endl;
+    if (processingOrdersQueue.queueNum() == 0) {
+        cout << "  (No processing orders in queue)" << endl;
+    }
+    else {
+        processingOrdersQueue.displayQueue();
+    }
+
+    cout << "\n--- COMPLETED ORDERS QUEUE (" << completedOrdersQueue.queueNum() << ") ---" << endl;
+    if (completedOrdersQueue.queueNum() == 0) {
+        cout << "  (No completed orders in queue)" << endl;
+    }
+    else {
+        completedOrdersQueue.displayQueue();
+    }
+
+    cout << "=============================================" << endl;
+}
+
+
+// CSV Order ID Detection
+int getMaxOrderIdFromCSV(const char* filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        return 100;
+    }
+
+    char line[256];
+    int maxId = 100;
+
+    while (file.getline(line, sizeof(line))) {
+        if (line[0] == '\0') continue;
+
+        // Skip header lines 
+        if (line[0] == 'o' || line[0] == 'O') continue;
+
+        int currentId = 0;
+        int i = 0;
+
+        // Parse first column integer up to comma or line break
+        while (line[i] != '\0' && line[i] != ',' && line[i] != '\r' && line[i] != '\n') {
+            if (line[i] >= '0' && line[i] <= '9') {
+                currentId = currentId * 10 + (line[i] - '0');
+            }
+            i++;
+        }
+
+        if (currentId > maxId) {
+            maxId = currentId;
+        }
+    }
+
+    file.close();
+    return maxId;
+}
+
+
 bool performUndo(Session* session) {
     string undoneMsg;
     int targetPage;
@@ -39,7 +118,7 @@ bool performUndo(Session* session) {
         cout << "\n=============================================" << endl;
         cout << "[UNDO SUCCESSFUL]" << endl;
         cout << "Reversed Action : \"" << undoneMsg << "\"" << endl;
-        cout << "Redirecting to  : Page " << targetPage << endl;
+        cout << "Redirecting to   : Page " << targetPage << endl;
         cout << "=============================================" << endl;
         return true;
     }
@@ -53,6 +132,11 @@ bool performUndo(Session* session) {
 // MAIN ENTRY POINT & STATE-DRIVEN DRIVER LOOP
 // =================================================================
 void printSelfOrderInt(int stuId) {
+    if (nextOrderId == -1) {
+        int highestId = getMaxOrderIdFromCSV("order.csv");
+        nextOrderId = (highestId >= 100) ? (highestId + 1) : 101;
+    }
+
     Session session(stuId);
 
     bool activeSession = true;
@@ -84,9 +168,8 @@ void printSelfOrderInt(int stuId) {
 // PAGE 1: Kiosk Landing / Main Hub
 // =================================================================
 void page1_MainHub(Session* session) {
-    int choice;
     cout << "\n=============================================" << endl;
-    cout << "       PAGE 1: KIOSK MAIN HUB                " << endl;
+    cout << "        PAGE 1: KIOSK MAIN HUB                " << endl;
     cout << "=============================================" << endl;
     cout << "Logged in as Student: TP" << session->getStudentId() << endl;
 
@@ -98,11 +181,13 @@ void page1_MainHub(Session* session) {
     cout << "\n1. Start Ordering (Go to Food Menu)" << endl;
     cout << "2. Display Stall Status" << endl;
     cout << "3. Display Circular Queue" << endl;
-    cout << "4. View Kiosk Session History Log" << endl;
-    cout << "5. Undo Last Action" << endl;
-    cout << "6. Exit Session" << endl;
+    cout << "4. View All System Queues (Pending, Processing, Completed)" << endl;
+    cout << "5. View Kiosk Session History Log" << endl;
+    cout << "6. Undo Last Action" << endl;
+    cout << "7. Exit Session" << endl;
     cout << "Choice: ";
-    cin >> choice;
+
+    int choice = getValidIntInput();
 
     switch (choice) {
     case 1:
@@ -113,16 +198,21 @@ void page1_MainHub(Session* session) {
         stallList.displayAllStalls();
         break;
     case 3:
+        session->recordViewCircularQueue();
         stallCircularQueue.displayQueue();
         break;
     case 4:
+        session->recordViewOrderQueues();
+        displayAllOrders();
+        break;
+    case 5:
         session->recordViewHistory();
         session->getHistory()->displayHistory();
         break;
-    case 5:
+    case 6:
         performUndo(session);
         break;
-    case 6:
+    case 7:
         cout << "\nExiting kiosk session. Goodbye!" << endl;
         session->setCurrentPage(0);
         break;
@@ -136,10 +226,12 @@ void page1_MainHub(Session* session) {
 // PAGE 2: Food Menu & Item Selection
 // =================================================================
 void page2_FoodMenu(Session* session) {
-    int choice;
     cout << "\n=============================================" << endl;
-    cout << "       PAGE 2: ORDER FOOD (MENU)             " << endl;
+    cout << "        PAGE 2: ORDER FOOD (MENU)              " << endl;
     cout << "=============================================" << endl;
+
+    // Record browsing food menu in session stack
+    session->recordViewMenu();
 
     foodList.displayAllFood(false);
 
@@ -151,7 +243,8 @@ void page2_FoodMenu(Session* session) {
     cout << "3. Undo Last Action" << endl;
     cout << "4. Back to Main Hub (Page 1)" << endl;
     cout << "Choice: ";
-    cin >> choice;
+
+    int choice = getValidIntInput();
 
     switch (choice) {
     case 1:
@@ -181,10 +274,12 @@ void page2_FoodMenu(Session* session) {
 // PAGE 3: Cart & Order Review
 // =================================================================
 void page3_CartReview(Session* session) {
-    int choice;
     cout << "\n=============================================" << endl;
-    cout << "       PAGE 3: CART REVIEW                   " << endl;
+    cout << "        PAGE 3: CART REVIEW                    " << endl;
     cout << "=============================================" << endl;
+
+    // Record viewing order cart in session stack
+    session->recordViewCart();
 
     session->displayCurrentOrder();
 
@@ -193,7 +288,8 @@ void page3_CartReview(Session* session) {
     cout << "3. Undo Last Action" << endl;
     cout << "4. Cancel & Return to Main Hub (Page 1)" << endl;
     cout << "Choice: ";
-    cin >> choice;
+
+    int choice = getValidIntInput();
 
     switch (choice) {
     case 1:
@@ -223,9 +319,8 @@ void page3_CartReview(Session* session) {
 // PAGE 4: Final Checkout & Order Confirmation
 // =================================================================
 void page4_CheckoutConfirmation(Session* session) {
-    int choice;
     cout << "\n=============================================" << endl;
-    cout << "       PAGE 4: CHECKOUT CONFIRMATION         " << endl;
+    cout << "        PAGE 4: CHECKOUT CONFIRMATION         " << endl;
     cout << "=============================================" << endl;
 
     cout << "Review your final order summary below:\n" << endl;
@@ -235,7 +330,8 @@ void page4_CheckoutConfirmation(Session* session) {
     cout << "2. Undo Last Action" << endl;
     cout << "3. Back to Cart Review (Page 3)" << endl;
     cout << "Choice: ";
-    cin >> choice;
+
+    int choice = getValidIntInput();
 
     switch (choice) {
     case 1:
@@ -269,9 +365,8 @@ void addItemToOrderFlow(Session* session) {
         return;
     }
 
-    int foodId;
     cout << "\nEnter Food ID to add (0 to cancel): ";
-    cin >> foodId;
+    int foodId = getValidIntInput();
 
     if (foodId == 0) {
         cout << "Action cancelled." << endl;
@@ -284,10 +379,9 @@ void addItemToOrderFlow(Session* session) {
         return;
     }
 
-    int quantity;
     cout << "Enter quantity for \"" << selectedFood->name << "\" (RM"
         << fixed << setprecision(2) << selectedFood->price << " each): ";
-    cin >> quantity;
+    int quantity = getValidIntInput();
 
     if (quantity <= 0) {
         cout << "Quantity must be at least 1." << endl;
@@ -306,7 +400,6 @@ void addItemToOrderFlow(Session* session) {
 
     // Add individual food steps up to requested quantity
     for (int i = 0; i < quantity; i++) {
-
         food* newFood = new food(
             selectedFood->id,
             selectedFood->name,
@@ -331,7 +424,7 @@ void processFinalCheckout(Session* session) {
     nextOrderId++;
 
     cout << "\n=============================================" << endl;
-    cout << "          ORDER CONFIRMED & PLACED           " << endl;
+    cout << "          ORDER CONFIRMED & PLACED            " << endl;
     cout << "=============================================" << endl;
     placedOrder->displayOrder();
 
@@ -339,11 +432,9 @@ void processFinalCheckout(Session* session) {
     cout << "After adding: "
         << pendingOrdersQueue.queueNum()
         << endl;
-    
-    // from pending queue, order will be transferred to stall assignment
-    stallAndOrderAssignment();
 
-    //saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+    // Transfer order to stall assignment from pending queue
+    stallAndOrderAssignment();
 
     cout << "\nYour order has been placed into the system queue!" << endl;
     cout << "Total pending orders in queue: " << pendingOrdersQueue.queueNum() << endl;

@@ -63,7 +63,7 @@ bool loadStudentFromCsv(const char* targetId, const char* filename) {
         if (line[0] == '\0') continue;
 
         // Parse first column up to comma or line endings
-        char existingId[64];
+        char existingId[64] = "";
         int i = 0;
         while (line[i] != '\0' && line[i] != ',' && line[i] != '\r' && line[i] != '\n') {
             existingId[i] = line[i];
@@ -72,7 +72,7 @@ bool loadStudentFromCsv(const char* targetId, const char* filename) {
         existingId[i] = '\0';
 
         // Check against CSV header line
-        char upperExisting[64];
+        char upperExisting[64] = "";
         int j = 0;
         for (; existingId[j] != '\0'; j++) {
             if (existingId[j] >= 'a' && existingId[j] <= 'z') {

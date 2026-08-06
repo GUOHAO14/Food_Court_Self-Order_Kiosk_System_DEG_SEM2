@@ -81,11 +81,20 @@ public:
 		history.push(STEP_VIEW_STALLS, "Displayed stall status list", currentPage);
 	}
 
+	// NEW: Log viewing Circular Queue
+	void recordViewCircularQueue() {
+		history.push(STEP_VIEW_CIRCULAR_QUEUE, "Displayed circular queue status", currentPage);
+	}
+
+	// NEW: Log viewing System Order Queues
+	void recordViewOrderQueues() {
+		history.push(STEP_VIEW_ORDER_QUEUES, "Viewed all system order queues", currentPage);
+	}
+
 	void recordViewHistory() {
 		history.push(STEP_VIEW_HISTORY, "Viewed session history log", currentPage);
 	}
 
-	// Adds ONE instance of selected food to stack history
 	void addItemToOrder(struct food* selectedFood) {
 		string desc = "Added 1x " + selectedFood->name + " to order";
 		history.pushItem(STEP_ADD_ITEM, desc, currentPage, selectedFood->id, selectedFood->name, selectedFood->price);
@@ -126,7 +135,7 @@ public:
 
 		double total = 0.0;
 		for (int i = 0; i < itemCount; i++) {
-			total += buffer[i]->price; // Each step represents 1 food item
+			total += buffer[i]->price;
 		}
 		return total;
 	}
@@ -147,7 +156,6 @@ public:
 		int rowNum = 0;
 		for (int i = itemCount - 1; i >= 0; i--) {
 			rowNum++;
-			// Each entry displays as 1 unit
 			food rowItem(buffer[i]->foodId, buffer[i]->foodName, buffer[i]->price);
 			formatter.displayFoodFormat(rowNum, &rowItem, true);
 		}
@@ -155,7 +163,6 @@ public:
 		cout << "Order Total: RM" << fixed << setprecision(2) << getCurrentOrderTotal() << endl << endl;
 	}
 
-	// Inserts each food item individually into Order object
 	Order* checkoutCurrentOrder(int orderId) {
 		struct SessionStep* buffer[200];
 		int itemCount = collectCurrentOrderSteps(buffer, 200);
@@ -175,7 +182,6 @@ public:
 		ordersCompletedThisSession++;
 
 		ostringstream oss;
-		// Updated string format from "item type(s)" to "item(s)"
 		oss << "Checked out order #" << orderId << " (" << itemCount << " item(s), Total: RM"
 			<< fixed << setprecision(2) << orderTotal << ")";
 
