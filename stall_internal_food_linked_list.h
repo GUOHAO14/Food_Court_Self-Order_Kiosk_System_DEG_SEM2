@@ -11,21 +11,21 @@ using namespace std;
 // this class also allows stall owner/staff to mark an order as complete
 // hence dequeueing and freeing up the stall for new orders
 
+struct foodForAssignNode {
+    foodForAssignment* data;
+    foodForAssignNode* next;
+
+    foodForAssignNode(foodForAssignment* foodOrder) {
+        data = foodOrder;
+        next = nullptr;
+    }
+};
+
 class Stall_Internal_Food_Linked_List {
 private:
 
-    struct Node {
-        foodForAssignment* data;
-        Node* next;
-
-        Node(foodForAssignment* foodOrder) {
-            data = foodOrder;
-            next = nullptr;
-        }
-    };
-
-    Node* head;
-    Node* tail;
+    foodForAssignNode* head;
+    foodForAssignNode* tail;
     int count;
     int maxFoodOrder = 6;
 
@@ -53,7 +53,7 @@ public:
         return maxFoodOrder;
     }
     
-    struct Node* getHead() {
+    struct foodForAssignNode* getHead() {
         return head;
     }
 
@@ -64,14 +64,14 @@ public:
             return;
         }
 
-        Node* newNode = new Node(foodOrder);
+        foodForAssignNode* newfoodForAssignNode = new foodForAssignNode(foodOrder);
 
         if (head == nullptr) {
-            head = tail = newNode;
+            head = tail = newfoodForAssignNode;
         }
         else {
-            tail->next = newNode;
-            tail = newNode;
+            tail->next = newfoodForAssignNode;
+            tail = newfoodForAssignNode;
         }
 
         count++;
@@ -84,8 +84,8 @@ public:
             return false;
         }
 
-        Node* current = head;
-        Node* previous = nullptr;
+        foodForAssignNode* current = head;
+        foodForAssignNode* previous = nullptr;
 
         for (int i = 0; i < displayIndex; i++) {
             previous = current;
@@ -119,7 +119,7 @@ public:
     // check whether this stall is currently handling a specific food under an order
     bool containsFoodAssignment(int orderId, int foodId) {
 
-        Node* current = head;
+        foodForAssignNode* current = head;
 
         while (current != nullptr) {
 
@@ -134,12 +134,33 @@ public:
         return false;
     }
 
+    int countFoodAssignment(int orderId, int foodId)
+    {
+        int count = 0;
+
+        foodForAssignNode* current = head;
+
+        while (current != nullptr)
+        {
+            if (current->data != nullptr &&
+                current->data->order->getOrderID() == orderId &&
+                current->data->food->id == foodId)
+            {
+                count++;
+            }
+
+            current = current->next;
+        }
+
+        return count;
+    }
+
     foodForAssignment* getFoodAssignment(int displayIndex) {
 
         if (displayIndex < 0 || displayIndex >= count)
             return nullptr;
 
-        Node* current = head;
+        foodForAssignNode* current = head;
 
         for (int i = 0; i < displayIndex; i++) {
             current = current->next;
@@ -159,7 +180,7 @@ public:
 
         Food_For_Assignment_Linked_List().displayFoodAssignmentHeader(length);
 
-        Node* current = head;
+        foodForAssignNode* current = head;
         int count = 1;
 
         while (current != nullptr) {

@@ -97,7 +97,7 @@ public:
         cout << " | ";
         cout << left << setw(10) << "Status";
         cout << " | ";
-        cout << left << setw(12) << "Availability";
+        cout << left << setw(17) << "Availability";
         cout << " |" << endl;
         cout << string(length, '=') << endl;
     }
@@ -113,13 +113,15 @@ public:
         cout << " | ";
         cout << left << setw(10) << (stall->isOpen ? "Open" : "Closed");
         cout << " | ";
-        cout << left << setw(12) << (stall->internalFoodList.isFull() ? "Busy" : "Not Busy");
+        string text = to_string(stall->internalFoodList.getCount()) + " / " + to_string(stall->internalFoodList.getMaxFoodOrder()) + " (" + (stall->internalFoodList.isFull() ? "Busy" : "Not Busy") + ")";
+        cout << left << setw(17) << text ;
         cout << " |" << endl;
     }
 
     // display all stalls in a formatted table
     void displayAllStalls() {
-        int length = 69;
+        cout << endl << "===== Stall Availability =====" << endl;
+        int length = 74;
         struct stall* trav = head;
         int count = 0;
         displayStallsHeader(length);

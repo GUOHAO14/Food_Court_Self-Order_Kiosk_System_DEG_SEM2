@@ -96,9 +96,11 @@ void printManageStallInt() {
         cout << endl << "=============== Stall Management ===============" << endl;
         cout << "Hello, you are stall " << selectedStall->name << " (ID: " << selectedStall->id << ")." << endl;
         cout << "1. Set Stall Status" << endl;
-        cout << "2. Display Processing Food Queue" << endl;
-        cout << "3. Mark Food as Complete" << endl;
-        cout << "4. Back" << endl;
+        cout << "2. Display All Stall Status" << endl;
+        cout << "3. Display Processing Food Queue" << endl;
+        cout << "4. Mark Food as Complete" << endl;
+        cout << "5. Back" << endl;
+        cout << "6. Display " << endl;
 
         cout << "Enter your choice (type integer): ";
 
@@ -115,13 +117,19 @@ void printManageStallInt() {
             printSetStallStatusInt();
             break;
         case 2:
+            stallList.displayAllStalls();
+            break;
+        case 3:
             cout << "===== Food To Be Prepared =====" << endl;
             selectedStall->internalFoodList.displayInternalFoodList();
             break;
-        case 3:
+        case 4:
             markFoodAsComplete();
             break;
-        case 4:
+        case 5:
+            break;
+        case 6:
+            displayStudentOrderStallAssignment(123456);
             break;
         default:
             cout << "Invalid input. Please try again." << endl;
