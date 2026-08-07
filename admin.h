@@ -25,7 +25,7 @@ class FoodBST {
 private:
     FoodTreeNode* root;
 
-    // Helper: Insert node into BST based on Food ID
+    // Insert node into BST
     FoodTreeNode* insertRecursive(FoodTreeNode* node, int id, const string& name, double price) {
         if (node == nullptr) {
             return new FoodTreeNode(id, name, price);
@@ -39,7 +39,7 @@ private:
         return node;
     }
 
-    // Helper: Clean up memory recursively
+    // Clean up memory recursively
     void clearTree(FoodTreeNode* node) {
         if (node != nullptr) {
             clearTree(node->left);
@@ -48,7 +48,7 @@ private:
         }
     }
 
-    // Helper: In-order traversal to search by partial food name
+    //In-order traversal to search food name
     void searchByNameRecursive(FoodTreeNode* node, const string& searchKeyword, int& matchCount) {
         if (node == nullptr) return;
 
@@ -65,13 +65,13 @@ private:
         searchByNameRecursive(node->right, searchKeyword, matchCount);
     }
 
-    // Helper: In-order traversal to search food items mapped to a specific Stall ID
+    //In-order traversal to search food items based on Stall ID
     void searchByStallIdRecursive(FoodTreeNode* node, int targetStallId, int& matchCount) {
         if (node == nullptr) return;
 
         searchByStallIdRecursive(node->left, targetStallId, matchCount);
 
-        // Check if current food item is mapped to targetStallId
+        // Check if food item is linked to targeted Stall ID
         if (foodStallMapList.checkFoodStallMapping(node->id, targetStallId)) {
             matchCount++;
             displayNodeRow(node);
@@ -80,13 +80,13 @@ private:
         searchByStallIdRecursive(node->right, targetStallId, matchCount);
     }
 
-    // Helper: In-order traversal to search food items mapped to a partial Stall Name
+    //In-order traversal to search food items based on Stall Name
     void searchByStallNameRecursive(FoodTreeNode* node, const string& stallNameKeyword, int& matchCount) {
         if (node == nullptr) return;
 
         searchByStallNameRecursive(node->left, stallNameKeyword, matchCount);
 
-        // Check all stall mappings for this food node
+        //check stall mappings
         bool isMatch = false;
         struct food_stall_map* currentMap = foodStallMapList.getHead();
         while (currentMap != nullptr) {
@@ -118,7 +118,7 @@ public:
     FoodBST() : root(nullptr) {}
     ~FoodBST() { clearTree(root); }
 
-    // Convert linked list -> BST
+    // Convert linked list to BST
     void populateFromLinkedList(struct food* head) {
         clearTree(root);
         root = nullptr;
@@ -130,7 +130,7 @@ public:
         }
     }
 
-    // O(log n) BST Lookup by ID
+    // BST Lookup by ID
     FoodTreeNode* searchById(int id) {
         FoodTreeNode* current = root;
         while (current != nullptr) {
@@ -147,17 +147,14 @@ public:
         return nullptr;
     }
 
-    // Search by partial food name
     void searchByName(const string& searchKeyword, int& matchCount) {
         searchByNameRecursive(root, searchKeyword, matchCount);
     }
 
-    // Search food items by Stall ID
     void searchByStallId(int stallId, int& matchCount) {
         searchByStallIdRecursive(root, stallId, matchCount);
     }
 
-    // Search food items by Stall Name
     void searchByStallName(const string& stallNameKeyword, int& matchCount) {
         searchByStallNameRecursive(root, stallNameKeyword, matchCount);
     }
