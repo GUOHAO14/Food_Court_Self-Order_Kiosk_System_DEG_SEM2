@@ -176,7 +176,7 @@ public:
             return;
         }
 
-        int length = 62;
+        int length = 92;
 
         Food_For_Assignment_Linked_List().displayFoodAssignmentHeader(length);
 

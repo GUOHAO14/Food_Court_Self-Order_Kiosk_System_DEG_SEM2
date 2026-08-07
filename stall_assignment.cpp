@@ -181,6 +181,7 @@ void displayOrderStallAssignment(Order* order) {
 		return;
 	}
 
+	int length = 91;
 	int orderId = order->getOrderID();
 
 	cout << endl;
@@ -190,7 +191,7 @@ void displayOrderStallAssignment(Order* order) {
 	cout << "Order Status: " << order->getOrderStatus() << endl;
 	cout << endl;
 
-	cout << string(75, '=') << endl;
+	cout << string(length, '=') << endl;
 
 	cout << "| ";
 	cout << left << setw(10) << "Food ID";
@@ -205,7 +206,7 @@ void displayOrderStallAssignment(Order* order) {
 	cout << " |" << endl;
 
 
-	cout << string(75, '-') << endl;
+	cout << string(length, '=') << endl;
 
 	food* currentFood = order->getFoodList()->getHead();
 
@@ -262,7 +263,7 @@ void displayOrderStallAssignment(Order* order) {
 		}
 		currentFood = currentFood->next;
 	}
-	cout << string(75, '=') << endl;
+	cout << string(length, '=') << endl;
 }
 
 

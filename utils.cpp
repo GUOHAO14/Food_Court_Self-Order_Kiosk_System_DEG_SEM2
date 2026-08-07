@@ -322,3 +322,48 @@ void saveStallCircularQueue(Stall_Linked_List* stallList, string fileName) {
 
     out.close();
 }
+
+bool verifyStallPassword(int stallId, string password, string fileName) {
+	ifstream file(fileName);
+
+	if (!file.is_open())
+	{
+		cout << "Failed to open \"" << fileName << "\"" << endl;
+		return false;
+	}
+
+	string line;
+
+	// skip header
+	getline(file, line);
+
+	while (getline(file, line))
+	{
+		stringstream ss(line);
+
+		string id;
+		string storedPassword;
+
+		getline(ss, id, ',');
+		getline(ss, storedPassword, ',');
+
+		int csvStallId = stoi(id);
+
+		if (csvStallId == stallId) {
+
+			file.close();
+
+			if (password == storedPassword) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
+	file.close();
+
+	// stall ID not found
+	return false;
+}
