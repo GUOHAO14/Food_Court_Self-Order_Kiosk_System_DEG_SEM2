@@ -14,3 +14,5 @@ void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_
 void saveOrderToCSV(Queue* pending, Queue* processing, Queue* completed, Stall_Linked_List* stallList, string orderFile, string mapfoodFile);
 void saveOrders(ofstream& orderOut, ofstream& mapOut, Queue* queue, Stall_Linked_List* stallList = nullptr);
 void saveOrderMapFood(ofstream& out, int orderId, Order* order, Stall_Linked_List* stallList = nullptr);
+void saveStallCircularQueue(Stall_Linked_List* stallList, string fileName);
+bool verifyStallPassword(int stallId, string password, string fileName);

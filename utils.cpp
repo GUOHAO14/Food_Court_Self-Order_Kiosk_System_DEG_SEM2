@@ -293,3 +293,77 @@ void saveOrderMapFood(ofstream& out, int orderId, Order* order, Stall_Linked_Lis
 		current = current->next;
 	}
 }
+
+void saveStallCircularQueue(Stall_Linked_List* stallList, string fileName) {
+    ofstream out(fileName);
+
+    out << "stall_id,stall_name,is_open,circular_queue_position\n";
+
+    stall* current = stallList->getHead();
+
+    while(current != nullptr)
+    {
+        string position = "null";
+
+        if(stallCircularQueue.getQueue()[stallCircularQueue.getFront()]->id == current->id) {
+            position = "front";
+        }
+        else if(stallCircularQueue.getQueue()[stallCircularQueue.getRear()]->id == current->id) {
+            position = "rear";
+        }
+
+        out << current->id << ","
+            << current->name << ","
+            << (current->isOpen ? "true" : "false") << ","
+            << position << endl;
+
+        current = current->next;
+    }
+
+    out.close();
+}
+
+bool verifyStallPassword(int stallId, string password, string fileName) {
+	ifstream file(fileName);
+
+	if (!file.is_open())
+	{
+		cout << "Failed to open \"" << fileName << "\"" << endl;
+		return false;
+	}
+
+	string line;
+
+	// skip header
+	getline(file, line);
+
+	while (getline(file, line))
+	{
+		stringstream ss(line);
+
+		string id;
+		string storedPassword;
+
+		getline(ss, id, ',');
+		getline(ss, storedPassword, ',');
+
+		int csvStallId = stoi(id);
+
+		if (csvStallId == stallId) {
+
+			file.close();
+
+			if (password == storedPassword) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	}
+
+	file.close();
+
+	// stall ID not found
+	return false;
+}

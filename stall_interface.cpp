@@ -76,13 +76,29 @@ void chooseStall() {
             cout << "Invalid input. Please try again." << endl;
         }
         else if (choice == 6) {
-            // Go back
+            // go back
         }
         else {
             selectedStall = stallList.searchStallById(choice);
+            
             if (selectedStall != nullptr) {
-                printManageStallInt();
+
+                string password;
+
+                cout << "Enter password for " << selectedStall->name << " stall: ";
+
+                cin >> password;
+
+                if (verifyStallPassword(selectedStall->id, password, "stall_credentials.csv")) {
+                    cout << "Login successful." << endl;
+
+                    printManageStallInt();
+                }
+                else {
+                    cout << "Incorrect password. Access denied." << endl;
+                }
             }
+
             else {
                 cout << "Stall not found." << endl;
             }
@@ -131,7 +147,7 @@ void printManageStallInt() {
             cout << "Invalid input. Please try again." << endl;
         }
 
-    } while (choice != 4);
+    } while (choice != 5);
 }
 
 void printSetStallStatusInt() {
