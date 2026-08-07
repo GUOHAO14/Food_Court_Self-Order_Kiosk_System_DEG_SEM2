@@ -14,11 +14,11 @@ order_id,food_id,status,stall
 106,2,Processing,2
 106,2,Processing,2
 107,1,Processing,3
-107,2,Processing,2
+107,2,Processing,3
 107,1,Processing,3
-107,2,Processing,2
+107,2,Processing,3
 107,1,Processing,3
-107,2,Processing,2
+107,2,Processing,3
 105,1,Completed,0
 105,1,Completed,0
 105,2,Completed,0
