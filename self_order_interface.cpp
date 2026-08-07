@@ -232,8 +232,6 @@ void page2_FoodMenu(Session* session) {
     cout << "        PAGE 2: ORDER FOOD (MENU)              " << endl;
     cout << "=============================================" << endl;
 
-    // REMOVED: session->recordViewMenu(); 
-    // Page navigation to Page 2 is already recorded when transitioning.
 
     foodList.displayAllFood(false);
 
