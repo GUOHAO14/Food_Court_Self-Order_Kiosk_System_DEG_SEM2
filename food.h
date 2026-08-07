@@ -312,13 +312,4 @@ public:
     // (Implemented in stall_interface.cpp)
     int displayFoodByStall(int stallId, Food_Stall_Map_Linked_List& mapList);
     int displayAvailableExistingFood(int currentStallId, Food_Stall_Map_Linked_List& mapList);
-
-
-    void saveOrderMapFood(ofstream& out, int orderID) {
-        food* current = head;
-        while (current != nullptr) {
-            out << orderID << "," << current->id << "," << current->status << endl;
-            current = current->next;
-        }
-    }
 };

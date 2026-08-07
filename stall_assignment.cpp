@@ -69,7 +69,7 @@ void iterateOrderFoodList(Order* order) {
 	}
 
 	// save new update
-	saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+	saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
 }
 
 // MAIN STALL CIRCULAR QUEUE ASSIGNMENT LOGIC
@@ -189,7 +189,7 @@ void swapPendingToProcessingQueue(Order * order) {
 		processingOrdersQueue.addQueue(temp);
 
 		// save new update
-		saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+		saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
 	}
 	else {
 		cout << "Swap failed. Order status does not indicate Processing." << endl;
@@ -203,7 +203,7 @@ void swapProcessingToCompletedQueue(Order* order) {
 		completedOrdersQueue.addQueue(temp);
 
 		// save new update
-		saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, "order.csv", "order_map_food.csv");
+		saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
 	}
 	else {
 		cout << "Swap failed. Order status does not indicate Completed." << endl;

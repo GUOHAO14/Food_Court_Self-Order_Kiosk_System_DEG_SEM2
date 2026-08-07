@@ -1,2 +1,2 @@
-order_id,food_id,status
-101,3,Completed
+order_id,food_id,status,stall
+101,3,Completed,0

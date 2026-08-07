@@ -29,7 +29,7 @@ class Order {
             this->orderStatus = orderStatus;
         }
 
-        void addFood(food food)
+        void addFood(food* food)
         {
             foods.insertRear(food);
         }
@@ -289,24 +289,5 @@ public:
         }
 
         return count;
-    }
-
-    void saveOrders(ofstream& orderOut, ofstream& mapOut)
-    {
-        Node* currentNode = head;
-
-        while (currentNode != nullptr)
-        {
-            Order* order = currentNode->data;
-
-            orderOut << order->getOrderID() << ","
-                << order->getStudentID() << ","
-                << order->getOrderTime() << ","
-                << order->getOrderStatus() << endl;
-
-            order->getFoodList()->saveOrderMapFood(mapOut, order->getOrderID());
-
-            currentNode = currentNode->next;
-        }
     }
 };

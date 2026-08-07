@@ -168,27 +168,42 @@ void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_
 	{
 		stringstream ss(newline);
 
-		string order_id, food_id, status;
+		string order_id, food_id, status, stall_id;
 		getline(ss, order_id, ',');
 		getline(ss, food_id, ',');
 		getline(ss, status, ',');
+		getline(ss, stall_id, ',');
 
 		int o_id = stoi(order_id);
 		int f_id = stoi(food_id);
+		int stallId = stoi(stall_id);
 
-		food* selectedFood = foodList->searchFoodById(f_id);
+		food* originalFood = foodList->searchFoodById(f_id);
+		food* selectedFood = new food(f_id, originalFood->name, originalFood->price, status);
 		Order* selectedOrder = pending->searchOrderById(o_id);
 		if (!selectedOrder) {
+			selectedOrder = processing->searchOrderById(o_id);
+		}
+		else {
 			selectedOrder = completed->searchOrderById(o_id);
 		}
+
 		if (selectedOrder) {
-			selectedOrder->addFood(*selectedFood);
+			selectedOrder->addFood(selectedFood);
+
+			if (stallId != 0 && selectedFood->status == "Processing") {
+				struct stall* stall = stallList.searchStallById(stallId);
+
+				struct foodForAssignment* newSoloFoodOrder = new foodForAssignment(selectedOrder, selectedFood);
+
+				stall->foodQueue.enqueueFoodAssignment(newSoloFoodOrder);
+			}
 		}
 	}
 	newfile.close();
 };
 
-void saveOrderToCSV(Queue* pending, Queue* processing, Queue* completed, string orderFile, string mapfoodFile) {
+void saveOrderToCSV(Queue* pending, Queue* processing, Queue* completed, Stall_Linked_List* stallList, string orderFile, string mapfoodFile) {
 	ofstream orderOut(orderFile);
 	ofstream mapOut(mapfoodFile);
 	if (!orderOut.is_open())
@@ -204,12 +219,84 @@ void saveOrderToCSV(Queue* pending, Queue* processing, Queue* completed, string 
 	}
 
 	orderOut << "order_id,student_id,order_time,order_status\n";
-	mapOut << "order_id,food_id,status\n";
+	mapOut << "order_id,food_id,status,stall\n";
 
-	pending->saveOrders(orderOut, mapOut);
-	processing->saveOrders(orderOut, mapOut);
-	completed->saveOrders(orderOut, mapOut);
+	//pending->saveOrders(queue, orderOut, mapOut);
+	//processing->saveOrders(orderOut, mapOut, stallList);
+	//completed->saveOrders(orderOut, mapOut);
+
+	saveOrders(orderOut, mapOut, pending);
+	saveOrders(orderOut, mapOut, processing, stallList);
+	saveOrders(orderOut, mapOut, completed);
 
 	orderOut.close();
 	mapOut.close();
+}
+// , Stall_Linked_List* stallList
+// for individual queue
+void saveOrders(ofstream& orderOut, ofstream& mapOut, Queue* queue, Stall_Linked_List* stallList)
+{
+	Node* currentNode = queue->getHead();
+
+	while (currentNode != nullptr)
+	{
+		Order* order = currentNode->data;
+
+		orderOut << order->getOrderID() << ","
+			<< order->getStudentID() << ","
+			<< order->getOrderTime() << ","
+			<< order->getOrderStatus() << endl;
+
+		saveOrderMapFood(mapOut, order->getOrderID(), order, stallList);
+
+		currentNode = currentNode->next;
+	}
+}
+
+void saveOrderMapFood(ofstream& out, int orderId, Order* order, Stall_Linked_List* stallList) {
+	struct food* current = order->getFoodList()->getHead();
+
+	int stallId = 0;
+
+	while (current != nullptr) {
+		// go through each food in an order
+		int foodId = current->id;
+
+		if (stallList != nullptr) {
+			stall* currentStall = stallList->getHead();
+			// go through each stall's food processing queue
+			// to find the order+food pair is handled by which stall
+			while (currentStall != nullptr) {
+				stallId = 0;
+				// individual stall's food queue, go through each food+order
+				int idx = currentStall->foodQueue.getFront();
+
+				for (int i = 0; i < currentStall->foodQueue.getCount(); i++) {
+					// search stall handling the food id and order id
+					int stallFoodId = currentStall->foodQueue.getQueue()[idx]->food->id;
+					int stallOrderId = currentStall->foodQueue.getQueue()[idx]->order->getOrderID();
+
+					if (stallFoodId == foodId && stallOrderId == orderId) {
+						// stall found, who is handling the food order
+						stallId = currentStall->id;
+						break;
+					}
+
+					idx = (idx + 1) % currentStall->foodQueue.getMaxFoodOrder();
+				}
+				// stall already found, no need to go through other stalls
+				if (stallId != 0) {
+					break;
+				}
+				currentStall = currentStall->next;
+			}
+		}
+
+		if (stallId != 0) 
+			out << orderId << "," << current->id << "," << current->status << "," << stallId << endl;
+		else
+			out << orderId << "," << current->id << "," << current->status << "," << 0 << endl;
+
+		current = current->next;
+	}
 }

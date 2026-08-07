@@ -34,9 +34,21 @@ public:
 		return count;
 	}
 
+	int getMaxFoodOrder() {
+		return maxFoodOrder;
+	}
+
 	foodForAssignment** getQueue()
 	{
 		return queue;
+	}
+
+	int getFront() {
+		return front;
+	}
+
+	int getRear() {
+		return rear;
 	}
 
 	void enqueueFoodAssignment(foodForAssignment* foodOrder)
@@ -74,6 +86,7 @@ public:
 		}
 
 		queue[queueIndex]->food->status = "Completed";
+		dequeueFoodAssignment();
 
 		cout << "Food marked as completed" << endl;
 

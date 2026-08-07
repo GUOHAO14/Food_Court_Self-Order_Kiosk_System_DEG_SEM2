@@ -16,30 +16,9 @@ using namespace std;
 
 int main(){
     int choice;
-    //Queue pending;
-    //Queue completed;
-
-    //pending.addQueue(Order("O001", "TP076357", "Chicken Rice"));
-    //pending.addQueue(Order("O002", "TP076358", "Nasi Lemak"));
-    //pending.addQueue(Order("O003", "TP076359", "Burger"));
-
-    //cout << "Pending Queue:\n";
-    //pending.displayQueue();
-
-    //cout << "\nQueue Size: " << pending.queueNum() << endl;
-
-    //cout << "\nDequeue one order...\n";
-    //completed.addQueue(pending.delQueue());
-    //pending.displayQueue();
-    //cout << "\nCompleted Queue:\n";
-    //completed.displayQueue();
-
-    // INITIALISATION OF GLOBAL VARIABLES
-    // USABLE BY ANY FILES, SINCE ALREADY DECLARED IN globals.h file
     stallList = Stall_Linked_List();
     foodList = Food_Linked_List();
     foodStallMapList = Food_Stall_Map_Linked_List();
-    //unassignedFoodQueue = Food_Linked_List();
     stallCircularQueue = Stall_Assignment_Circular_Queue();
 
     pendingOrdersQueue = Queue();
@@ -49,6 +28,7 @@ int main(){
     loadStallFromCSV(&stallList, "stall.csv");
     loadFoodFromCSV(&foodList, "food.csv");
     loadFoodStallMapFromCSV(&foodStallMapList, "food_stall_map.csv");
+    loadOrderFromCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &foodList, "order.csv", "order_map_food.csv");
 
     do {
         cout << endl << "===== Campus Self-Order System =====" << endl;

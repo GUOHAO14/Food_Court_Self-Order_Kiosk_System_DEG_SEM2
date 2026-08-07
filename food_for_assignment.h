@@ -81,6 +81,18 @@ public:
         return nullptr;
     }
 
+    bool foodOrderExist(int foodId, int orderId) {
+        struct foodForAssignment* trav = head;
+
+        while (trav != nullptr) {
+            if (trav->food->id == foodId && trav->order->getOrderID() == orderId) {
+                return true;
+            }
+            trav = trav->next;
+        }
+        return false;
+    }
+
     void displayFoodAssignmentHeader(int length) {
         cout << string(length, '=') << endl;
         cout << "| ";

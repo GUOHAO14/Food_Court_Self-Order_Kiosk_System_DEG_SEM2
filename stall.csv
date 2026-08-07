@@ -1,6 +1,6 @@
 ﻿stall_id,stall_name,is_open,circular_queue_position
-1,Western,true,front
-2,Asian,true,null
-3,Chinese,true,null
+1,Western,true,null
+2,Asian,true,rear
+3,Chinese,true,front
 4,Mamak,false,null
-5,Indian,true,rear
+5,Indian,true,null
