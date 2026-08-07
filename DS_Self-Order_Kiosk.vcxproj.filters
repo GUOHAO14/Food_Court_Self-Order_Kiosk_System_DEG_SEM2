@@ -21,7 +21,7 @@
     <None Include="order.csv" />
     <None Include="order_map_food.csv" />
     <None Include="students.csv" />
-    <None Include="..\..\..\Downloads\stall_credentials.csv" />
+    <None Include="stall_credentials.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.h">

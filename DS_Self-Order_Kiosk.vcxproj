@@ -19,12 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Downloads\stall_credentials.csv" />
     <None Include="food_stall_map.csv" />
     <None Include="food.csv" />
     <None Include="order.csv" />
     <None Include="order_map_food.csv" />
     <None Include="stall.csv" />
+    <None Include="stall_credentials.csv" />
     <None Include="students.csv" />
   </ItemGroup>
   <ItemGroup>
