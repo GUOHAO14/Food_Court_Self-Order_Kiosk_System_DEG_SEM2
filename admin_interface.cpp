@@ -16,13 +16,13 @@ using namespace std;
 extern struct stall* selectedStall;
 
 
-// Utility to safely flush residual characters
+// Used to remove residual characters
 static void clearInputBuffer() {
     cin.clear();
     cin.ignore(10000, '\n');
 }
 
-// Reusable function to display all menu items
+// Reusable function to display all the menu items
 void displayAllMenuItems() {
     struct food* head = foodList.getHead();
 
@@ -41,7 +41,6 @@ void displayAllMenuItems() {
 
     struct food* currentFood = head;
     while (currentFood != nullptr) {
-        // Collect the assigned stall IDs for the current food item
         string stallIdsStr = "";
         struct food_stall_map* currentMap = foodStallMapList.getHead();
         while (currentMap != nullptr) {
@@ -68,7 +67,7 @@ void displayAllMenuItems() {
     cout << string(length, '=') << endl;
 }
 
-// Reusable function to display all available stalls
+// Reusable function to display all the available stalls
 void displayAvailableStalls() {
     cout << "\n---------------- Available Stalls ----------------" << endl;
     cout << left << setw(10) << "Stall ID" << " | " << "Stall Name" << endl;
@@ -82,9 +81,10 @@ void displayAvailableStalls() {
     cout << "--------------------------------------------------" << endl;
 }
 
-// Rewrite memory data back to CSV files
+// Update the csv files
 void rewriteCSV() {
-    // Rewrite food.csv
+    
+    // food.csv
     ofstream foodFile("food.csv", ios::out | ios::trunc);
     if (foodFile.is_open()) {
         foodFile << "food_id,food_name,price\n";
@@ -99,7 +99,7 @@ void rewriteCSV() {
         cout << "Warning: Unable to update food.csv." << endl;
     }
 
-    // Rewrite food_stall_map.csv
+    // food_stall_map.csv
     ofstream mapFile("food_stall_map.csv", ios::out | ios::trunc);
     if (mapFile.is_open()) {
         mapFile << "food_id,stall_id\n";
@@ -115,7 +115,17 @@ void rewriteCSV() {
     }
 }
 
-//admin page load
+void printSearchTableHeader(int length = 75) {
+    cout << "\nSearch Results:" << endl;
+    cout << string(length, '=') << endl;
+    cout << "| " << left << setw(8) << "Food ID"
+        << " | " << left << setw(28) << "Food Name"
+        << " | " << left << setw(10) << "Price (RM)"
+        << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
+    cout << string(length, '=') << endl;
+}
+
+//Load Admin Page
 void adminPage() {
     int choice;
     do {
@@ -163,7 +173,7 @@ void addMenuItem() {
 
     clearInputBuffer();
 
-    // Prompt Food Name
+    //Food Name
     while (true) {
         cout << "Enter food name (or type 'c' to cancel): ";
         getline(cin, name);
@@ -180,13 +190,14 @@ void addMenuItem() {
 
         if (foodList.isFoodNameExists(name)) {
             cout << "A menu item with the name \"" << name << "\" already exists.\n" << endl;
+            continue;
         }
         else {
             break;
         }
     }
 
-    // Prompt Food Price
+    //Food Price
     cout << "Enter food price (RM) [or type 0 to cancel]: ";
     while (!(cin >> price) || price < 0) {
         cout << "Invalid price (or 0 to cancel): ";
@@ -209,108 +220,93 @@ void addMenuItem() {
     }
     int newFoodId = maxId + 1;
 
-    // Stall Assignment
+    // Assign Stall
     if (stallList.getHead() == nullptr) {
-        cout << "No stalls available" << endl;
+        cout << "No stalls available." << endl;
         return;
     }
 
     displayAvailableStalls();
 
     int assignedCount = 0;
-    string inputStr;
+    string input;
 
     while (true) {
         if (assignedCount == 0) {
-            cout << "\nEnter Stall ID to assign (c to cancel menu creation): ";
+            cout << "\nEnter Stall ID to assign (or 'c' to cancel): ";
         }
         else {
-            cout << "\nEnter Stall ID to assign (s to save, c to cancel menu creation): ";
+            cout << "\nEnter Stall ID to assign ('s' to save & finish, 'c' to cancel): ";
         }
 
-        if (!(cin >> inputStr)) {
-            cout << "Invalid input" << endl;
-            clearInputBuffer();
-            continue;
-        }
+        cin >> input;
 
-        // Handle string control keys
-        if (inputStr == "c" || inputStr == "C") {
+        // Process single-character controls
+        if (tolower(input[0]) == 'c' && input.length() == 1) {
             cout << "Menu creation cancelled." << endl;
             if (assignedCount > 0) {
-                foodStallMapList.deleteByFoodId(newFoodId); // Rollback changes
+                foodStallMapList.deleteByFoodId(newFoodId); // Rollback mappings
             }
             return;
         }
 
-        if (assignedCount > 0 && (inputStr == "s" || inputStr == "S")) {
+        if (assignedCount > 0 && tolower(input[0]) == 's' && input.length() == 1) {
             cout << "Stall assignment completed." << endl;
             break;
         }
 
-        // Convert string input to integer ID safely
-        int stallId;
+        // Convert string to numeric ID safely
+        int stallId = 0;
         try {
-            stallId = stoi(inputStr);
+            stallId = stoi(input);
         }
         catch (...) {
-            cout << "Invalid input" << endl;
+            cout << "Invalid input! Please enter a valid Stall ID or command." << endl;
             continue;
         }
 
-        // Validation checks
+        // Validate Stall Existence
         if (stallList.searchStallById(stallId) == nullptr) {
-            cout << "Error: Stall ID " << stallId << " does not exist. Please try again." << endl;
+            cout << "Error: Stall ID " << stallId << " does not exist." << endl;
             continue;
         }
 
+        // Check for duplicates
         if (foodStallMapList.checkFoodStallMapping(newFoodId, stallId)) {
-            cout << "This food item is already assigned to Stall ID " << stallId << "." << endl;
+            cout << "Food item is already assigned to Stall ID " << stallId << "." << endl;
             continue;
         }
 
-        // Successful Mapping
+        // Add mapping
         foodStallMapList.insertRear(newFoodId, stallId);
         assignedCount++;
         cout << "Assigned to Stall ID " << stallId << " successfully." << endl;
 
-        // Prompt user to continue or exit
+        // Ask whether to continue adding stalls
         char choice;
-        while (true) {
-            cout << "Assign to another stall? (y/n, c to cancel menu creation): ";
-            cin >> choice;
-            choice = tolower(choice);
+        cout << "Assign another stall? (y/n/c): ";
+        cin >> choice;
+        choice = tolower(choice);
 
-            if (choice == 'y' || choice == 'n' || choice == 'c') {
-                break; // Valid option entered, exit the choice loop
-            }
-
-            cout << "Invalid input." << endl;
-            clearInputBuffer(); // Clear lingering input
+        if (choice == 'c') {
+            cout << "Menu creation cancelled." << endl;
+            foodStallMapList.deleteByFoodId(newFoodId); // Rollback mappings
+            return;
         }
 
-        // Now process the valid choice
         if (choice == 'n') {
             cout << "Stall assignment completed." << endl;
-            break; // Exits the outer stall assignment loop
+            break;
         }
-        else if (choice == 'c') {
-            cout << "Menu creation cancelled." << endl;
-            if (assignedCount > 0) {
-                foodStallMapList.deleteByFoodId(newFoodId); // Rollback changes
-            }
-            return; // Exits the function completely
-        }
-        // If choice is 'y', the code naturally continues to the next iteration of the outer loop
-    }
 
-    // Final enforcement guard
+    } 
+
     if (assignedCount == 0) {
         cout << "No stalls assigned. Menu item creation aborted." << endl;
         return;
     }
 
-    // 5. Commit Changes to Linked Lists & Files
+    //Update csv
     foodList.insertRear(newFoodId, name, price);
     rewriteCSV();
 
@@ -377,7 +373,7 @@ void updateMenuItem() {
 
     cout << "\n================ Update Menu Item ================" << endl;
 
-    // Display menu table using shared helper
+    // Display menu table
     displayAllMenuItems();
 
     int targetId;
@@ -419,17 +415,17 @@ void updateMenuItem() {
         return;
     }
 
-    clearInputBuffer(); // Flush stream for string read
+    clearInputBuffer();
     bool modified = false;
 
-    // --- Option 1 & 4: Update Name ---
+    // Update name
     if (updateChoice == 1 || updateChoice == 4) {
         string newName;
         while (true) {
-            cout << "Enter new food name (Current: " << targetFood->name << ") [or '0' to keep current]: ";
+            cout << "Enter new food name (Current: " << targetFood->name << ") [Leave it empty to keep current]: ";
             getline(cin, newName);
 
-            if (newName == "0" || newName.empty() || newName == targetFood->name) {
+            if (newName.empty() || newName == targetFood->name) {
                 cout << "Food name left unchanged." << endl;
                 break;
             }
@@ -446,7 +442,7 @@ void updateMenuItem() {
         }
     }
 
-    // --- Option 2 & 4: Update Price ---
+    // Update price
     if (updateChoice == 2 || updateChoice == 4) {
         double newPrice;
         cout << "Enter new price RM (Current: " << fixed << setprecision(2) << targetFood->price << ") [or 0 to keep current]: ";
@@ -465,55 +461,101 @@ void updateMenuItem() {
         }
     }
 
-    // --- Option 3 & 4: Re-assign Stalls ---
+    // Re-assign Stalls
     if (updateChoice == 3 || updateChoice == 4) {
-        char reassignChoice;
-        cout << "Do you want to re-assign stalls for this item? (y/n): ";
-        cin >> reassignChoice;
+        if (stallList.getHead() == nullptr) {
+            cout << "No stalls available to assign." << endl;
+        }
+        else {
+            int origCount = 0;
+            struct food_stall_map* mNode = foodStallMapList.getHead();
+            while (mNode != nullptr) {
+                if (mNode->food_id == targetId) {
+                    origCount++;
+                }
+                mNode = mNode->next;
+            }
 
-        if (tolower(reassignChoice) == 'y') {
+            int* originalStalls = nullptr;
+            if (origCount > 0) {
+                originalStalls = new int[origCount];
+                int idx = 0;
+                mNode = foodStallMapList.getHead();
+                while (mNode != nullptr) {
+                    if (mNode->food_id == targetId) {
+                        originalStalls[idx++] = mNode->stall_id;
+                    }
+                    mNode = mNode->next;
+                }
+            }
+
             displayAvailableStalls();
 
-            // Clear existing mappings to build fresh entries
             foodStallMapList.deleteByFoodId(targetId);
 
             int assignedCount = 0;
-            char addMore = 'y';
+            string input;
 
-            while (tolower(addMore) == 'y') {
-                int stallId;
-                cout << "Enter Stall ID to assign (or 0 to skip/cancel entry): ";
-                if (!(cin >> stallId)) {
-                    cout << "Invalid input. Enter a numerical Stall ID." << endl;
-                    clearInputBuffer();
-                    continue;
-                }
-
-                if (stallId == 0) {
-                    cout << "Stall entry skipped." << endl;
-                }
-                else if (stallList.searchStallById(stallId) == nullptr) {
-                    cout << "Error: Stall ID " << stallId << " does not exist. Try again." << endl;
-                    continue;
-                }
-                else if (foodStallMapList.checkFoodStallMapping(targetId, stallId)) {
-                    cout << "This food item is already assigned to Stall ID " << stallId << "." << endl;
+            while (true) {
+                if (assignedCount == 0) {
+                    cout << "\nEnter Stall ID to assign (or 'c' to cancel re-assignment): ";
                 }
                 else {
-                    foodStallMapList.insertRear(targetId, stallId);
-                    assignedCount++;
-                    cout << "Assigned to Stall ID " << stallId << " successfully." << endl;
+                    cout << "\nEnter Stall ID to assign ('s' to save & finish, 'c' to cancel re-assignment): ";
                 }
 
-                cout << "Assign to another stall? (y/n): ";
-                cin >> addMore;
+                cin >> input;
+
+                if (tolower(input[0]) == 'c') {
+                    cout << "Stall re-assignment cancelled." << endl;
+
+                    foodStallMapList.deleteByFoodId(targetId);
+
+                    for (int i = 0; i < origCount; i++) {
+                        foodStallMapList.insertRear(targetId, originalStalls[i]);
+                    }
+
+                    assignedCount = 0;
+                    break;
+                }
+
+                if (tolower(input[0]) == 's') {
+                    if (assignedCount == 0) {
+                        cout << "Error: A menu item must be assigned to at least one stall before saving!" << endl;
+                        continue;
+                    }
+                    cout << "Stall assignment completed." << endl;
+                    break;
+                }
+
+                int stallId = 0;
+                try {
+                    stallId = stoi(input);
+                }
+                catch (...) {
+                    cout << "Invalid input" << endl;
+                    continue;
+                }
+
+                if (stallList.searchStallById(stallId) == nullptr) {
+                    cout << "Error: Stall ID " << stallId << " does not exist." << endl;
+                    continue;
+                }
+
+                if (foodStallMapList.checkFoodStallMapping(targetId, stallId)) {
+                    cout << "Food item is already assigned to Stall ID " << stallId << "." << endl;
+                    continue;
+                }
+
+                foodStallMapList.insertRear(targetId, stallId);
+                assignedCount++;
+                cout << "Assigned to Stall ID " << stallId << " successfully." << endl;
             }
+
+            delete[] originalStalls;
 
             if (assignedCount > 0) {
                 modified = true;
-            }
-            else {
-                cout << "Warning: No stalls assigned to this food item!" << endl;
             }
         }
     }
@@ -534,7 +576,7 @@ void searchMenuItem() {
         return;
     }
 
-    // Populate BST on demand from existing linked list
+    // Populate BST from existing linked list
     FoodBST foodTree;
     foodTree.populateFromLinkedList(foodList.getHead());
 
@@ -566,16 +608,8 @@ void searchMenuItem() {
             return;
         }
 
-        // Header formatting
-        cout << "\nSearch Results:" << endl;
-        cout << string(length, '=') << endl;
-        cout << "| " << left << setw(8) << "Food ID"
-            << " | " << left << setw(28) << "Food Name"
-            << " | " << left << setw(10) << "Price (RM)"
-            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
-        cout << string(length, '=') << endl;
+        printSearchTableHeader(length);
 
-        // Search in O(log n) time
         FoodTreeNode* result = foodTree.searchById(searchId);
         if (result != nullptr) {
             matchCount = 1;
@@ -592,14 +626,7 @@ void searchMenuItem() {
             return;
         }
 
-        // Header formatting
-        cout << "\nSearch Results:" << endl;
-        cout << string(length, '=') << endl;
-        cout << "| " << left << setw(8) << "Food ID"
-            << " | " << left << setw(28) << "Food Name"
-            << " | " << left << setw(10) << "Price (RM)"
-            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
-        cout << string(length, '=') << endl;
+        printSearchTableHeader(length);
 
         transform(searchKeyword.begin(), searchKeyword.end(), searchKeyword.begin(), ::tolower);
         foodTree.searchByName(searchKeyword, matchCount);
@@ -613,14 +640,7 @@ void searchMenuItem() {
             return;
         }
 
-        // Header formatting
-        cout << "\nSearch Results:" << endl;
-        cout << string(length, '=') << endl;
-        cout << "| " << left << setw(8) << "Food ID"
-            << " | " << left << setw(28) << "Food Name"
-            << " | " << left << setw(10) << "Price (RM)"
-            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
-        cout << string(length, '=') << endl;
+        printSearchTableHeader(length);
 
         foodTree.searchByStallId(stallId, matchCount);
     }
@@ -634,14 +654,7 @@ void searchMenuItem() {
             return;
         }
 
-        // Header formatting
-        cout << "\nSearch Results:" << endl;
-        cout << string(length, '=') << endl;
-        cout << "| " << left << setw(8) << "Food ID"
-            << " | " << left << setw(28) << "Food Name"
-            << " | " << left << setw(10) << "Price (RM)"
-            << " | " << left << setw(18) << "Assigned Stall ID(s)" << " |" << endl;
-        cout << string(length, '=') << endl;
+        printSearchTableHeader(length);
 
         transform(stallNameKeyword.begin(), stallNameKeyword.end(), stallNameKeyword.begin(), ::tolower);
         foodTree.searchByStallName(stallNameKeyword, matchCount);
