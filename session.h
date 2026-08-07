@@ -89,6 +89,14 @@ public:
 		history.push(STEP_VIEW_ORDER_QUEUES, "Viewed all system order queues", currentPage);
 	}
 
+	void recordViewMyStallAssignments() {
+		history.push(STEP_VIEW_MY_STALL_ASSIGNMENTS, "Viewed my orders", currentPage);
+	}
+
+	void recordViewOrderStallAssignment() {
+		history.push(STEP_VIEW_ORDER_STALL_ASSIGNMENT, "Viewed stall food assignment list", currentPage);
+	}
+
 	void recordViewHistory() {
 		history.push(STEP_VIEW_HISTORY, "Viewed session history log", currentPage);
 	}

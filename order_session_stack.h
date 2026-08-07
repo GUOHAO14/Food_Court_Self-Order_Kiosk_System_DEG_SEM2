@@ -1,20 +1,23 @@
 #pragma once
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 // Enumeration of all kiosk session actions
 enum StepType {
-	STEP_LOGIN,                 // Student logged into kiosk (Page 1 base)
-	STEP_NAVIGATE,              // Navigated between pages
-	STEP_VIEW_MENU,             // Opened food menu (Page 2)
-	STEP_ADD_ITEM,              // Added single food item to order
-	STEP_VIEW_CART,             // Viewed current order/cart (Page 3)
-	STEP_VIEW_STALLS,           // Viewed stall status list
-	STEP_VIEW_CIRCULAR_QUEUE,   // Viewed circular queue status
-	STEP_VIEW_ORDER_QUEUES,     // Viewed all system order queues
-	STEP_VIEW_HISTORY,          // Viewed kiosk session history log
-	STEP_CHECKOUT               // Completed order checkout (Page 4)
+	STEP_LOGIN,                       // Student logged into kiosk (Page 1 base)
+	STEP_NAVIGATE,                    // Navigated between pages
+	STEP_VIEW_MENU,                   // Opened food menu (Page 2)
+	STEP_ADD_ITEM,                    // Added single food item to order
+	STEP_VIEW_CART,                   // Viewed current order/cart (Page 3)
+	STEP_VIEW_STALLS,                 // Viewed stall status list
+	STEP_VIEW_CIRCULAR_QUEUE,         // Viewed circular queue status
+	STEP_VIEW_ORDER_QUEUES,           // Viewed all system order queues
+	STEP_VIEW_MY_STALL_ASSIGNMENTS,   // Viewed student's personal stall assignments
+	STEP_VIEW_ORDER_STALL_ASSIGNMENT, // Viewed all stall assignments across stalls
+	STEP_VIEW_HISTORY,                // Viewed kiosk session history log
+	STEP_CHECKOUT                     // Completed order checkout (Page 4)
 };
 
 // Represents a single action step on the history stack
