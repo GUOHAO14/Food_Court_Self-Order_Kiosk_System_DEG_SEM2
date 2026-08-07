@@ -155,9 +155,10 @@ void markFoodAsComplete() {
     cout << "Choose food to mark as complete. Enter Number (based on No. column): ";
     cin >> choice;
     int index = choice - 1;
+    // locate order based on food ID
+    Order* order = foodQueue->getQueue()[index]->order;
+
     if (foodQueue->markComplete(index)) {
-        // locate order based on food ID
-        Order* order = foodQueue->getQueue()[index]->order;
 
         order->updateOrderStatus();
 
@@ -170,7 +171,7 @@ void markFoodAsComplete() {
                 completedOrdersQueue.addQueue(order);
 
                 // save new update
-                //saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
+                saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
             }
         }
     }
