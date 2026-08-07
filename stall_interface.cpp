@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <limits>
 #include "globals.h"
 #include "stall_interface.h"
 
@@ -62,7 +63,14 @@ void chooseStall() {
         cout << "6. Back " << endl;
 
         cout << "Enter your choice (type integer): ";
-        cin >> choice;
+
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter an integer." << endl;
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
 
         if (choice < 1 || choice > 6) {
             cout << "Invalid input. Please try again." << endl;
@@ -93,7 +101,14 @@ void printManageStallInt() {
         cout << "4. Back" << endl;
 
         cout << "Enter your choice (type integer): ";
-        cin >> choice;
+
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter an integer." << endl;
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
 
         switch (choice) {
         case 1:
@@ -101,7 +116,7 @@ void printManageStallInt() {
             break;
         case 2:
             cout << "===== Food To Be Prepared =====" << endl;
-            selectedStall->foodQueue.displayFoodQueue();
+            selectedStall->internalFoodList.displayInternalFoodList();
             break;
         case 3:
             markFoodAsComplete();
@@ -122,8 +137,15 @@ void printSetStallStatusInt() {
         cout << "1. Open Stall" << endl;
         cout << "2. Close Stall" << endl;
         cout << "3. Back" << endl;
-        cout << "Enter your choice: ";
-        cin >> choice;
+        cout << "Enter your choice (type integer): ";
+
+        if (!(cin >> choice)) {
+            cout << "Invalid input. Please enter an integer." << endl;
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
 
         switch (choice) {
         case 1:
@@ -149,16 +171,41 @@ void printSetStallStatusInt() {
 void markFoodAsComplete() {
     int choice;
     cout << endl << "===== Mark Food As Complete =====" << endl;
-    Stall_Internal_Food_Circular_Queue* foodQueue = &selectedStall->foodQueue;
-    foodQueue->displayFoodQueue();
+    Stall_Internal_Food_Linked_List* internalFoodList = &selectedStall->internalFoodList;
+
+    internalFoodList->displayInternalFoodList();
         
-    cout << "Choose food to mark as complete. Enter Number (based on No. column): ";
-    cin >> choice;
+    cout << "Choose food to mark as complete. Enter Number (based on No. column). Enter to 0 to cancel: ";
+    if (!(cin >> choice)) {
+        cout << "Invalid input. Please enter an integer." << endl;
+
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return;
+    }
+
+    if (choice == 0) {
+        cout << "Action cancelled." << endl;
+        return;
+    }
+
+    if (choice < 1 || choice > internalFoodList->getCount()) {
+        cout << "Invalid selection. Please choose a valid food number." << endl;
+        return;
+    }
+
     int index = choice - 1;
     // locate order based on food ID
-    Order* order = foodQueue->getQueue()[index]->order;
+    foodForAssignment* assignment = internalFoodList->getFoodAssignment(index);
 
-    if (foodQueue->markComplete(index)) {
+    if (assignment == nullptr) {
+        cout << "Food assignment not found." << endl;
+        return;
+    }
+
+    if (internalFoodList->markComplete(index)) {
+
+        Order* order = assignment->order;
 
         order->updateOrderStatus();
 
@@ -175,8 +222,6 @@ void markFoodAsComplete() {
             }
         }
     }
-
     // check pending queue again to be allocated to processing queue
-    // if possible
     stallAndOrderAssignment();
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
-#include "stall_internal_food_circular_queue.h"
+#include "stall_internal_food_linked_list.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ struct stall {
     bool isOpen; // stall status is open / close
     bool isBusy; // stall status is busy / free (determined by order queue)
     struct stall* next; // pointer to next stall
-    Stall_Internal_Food_Circular_Queue foodQueue;
+    Stall_Internal_Food_Linked_List internalFoodList;
 
     stall(int id, string name, bool isOpen) {
         this->id = id;
@@ -20,7 +20,7 @@ struct stall {
         this->isOpen = isOpen;
         this->isBusy = false;
         this->next = nullptr;
-        this->foodQueue = Stall_Internal_Food_Circular_Queue();
+        this->internalFoodList = Stall_Internal_Food_Linked_List();
     }
 };
 
@@ -113,7 +113,7 @@ public:
         cout << " | ";
         cout << left << setw(10) << (stall->isOpen ? "Open" : "Closed");
         cout << " | ";
-        cout << left << setw(12) << (stall->foodQueue.isFull() ? "Busy" : "Not Busy");
+        cout << left << setw(12) << (stall->internalFoodList.isFull() ? "Busy" : "Not Busy");
         cout << " |" << endl;
     }
 

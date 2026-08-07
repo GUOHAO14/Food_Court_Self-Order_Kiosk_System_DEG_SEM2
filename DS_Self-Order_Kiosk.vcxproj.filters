@@ -59,7 +59,7 @@
     <ClInclude Include="self_order_interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stall_internal_food_circular_queue.h">
+    <ClInclude Include="stall_internal_food_linked_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="admin.h">
@@ -68,11 +68,11 @@
     <ClInclude Include="student_auth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="food_for_assignment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="task1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="mainProgram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -1,14 +1,11 @@
 #include <iostream>
 #include "globals.h"
 #include "stall_assignment.h"
-#include "food_for_assignment.h"
 
 using namespace std;
 
 // check pending queue and assign food to stalls
 void stallAndOrderAssignment() {
-
-	cout << "Num: " << pendingOrdersQueue.queueNum() << endl;
 
 	Node* firstPendingOrder = pendingOrdersQueue.getHead();
 
@@ -19,10 +16,9 @@ void stallAndOrderAssignment() {
 
 		Order* order = firstPendingOrder->data;
 
-		cout << order->getOrderID() << endl;
-
 		iterateOrderFoodList(order);
 
+		cout << endl;
 		order->displayOrder();
 
 		// move using saved pointer
@@ -49,14 +45,10 @@ void iterateOrderFoodList(Order* order) {
 
 		// each food in an order is handled one by one
 		// then food status will also update order status
-		cout << order->getOrderID() << endl;
-		cout << currentFood->name << endl;
 
 		if (currentFood->status == "Pending") {
 			struct foodForAssignment* newSoloFoodOrder = new foodForAssignment(order, currentFood);
 			assignFoodToStall(newSoloFoodOrder);
-
-			stallCircularQueue.displayQueue();
 		}
 		currentFood = currentFood->next;
 	}
@@ -96,15 +88,13 @@ void assignFoodToStall(foodForAssignment* soloFoodOrder) {
 			// re-enqueue the stall to the end of the circular queue 
 			// to achieve rotate mechanism for load balancing
 			stallCircularQueue.enqueueStall(currentStall);
-			cout << currentOrder->getOrderID() << endl;
-			cout << currentFood->name << endl;
 			// stall not suitable for this food
 			if (!foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
 				continue;
 			}
 
 			// suitable stall is open and free
-			else if (currentStall->isOpen && !currentStall->foodQueue.isFull() && foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
+			else if (currentStall->isOpen && !currentStall->internalFoodList.isFull() && foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id)) {
 
 				hasSuitableStall = true;
 				assigned = true;
@@ -115,19 +105,16 @@ void assignFoodToStall(foodForAssignment* soloFoodOrder) {
 				currentFood->status = "Processing";
 
 				// assign order to the stall
-				currentStall->foodQueue.enqueueFoodAssignment(soloFoodOrder);
+				currentStall->internalFoodList.insertRear(soloFoodOrder);
 
 				// display the number of orders in the stall's queue
-				cout << "This stall is currently preparing " << currentStall->foodQueue.getCount() << " orders." << endl;
-
-				// display those specific orders
-				currentStall->foodQueue.displayFoodQueue();
+				cout << "This stall is currently preparing " << currentStall->internalFoodList.getCount() << " orders." << endl;
 
 				break; // Exit after assigning the order
 			}
 
 			// suitable stall that is open but not free, or is closed
-			else if (foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id) && ((currentStall->isOpen && currentStall->foodQueue.isFull()) || !currentStall->isOpen)) {
+			else if (foodStallMapList.checkFoodStallMapping(currentFood->id, currentStall->id) && ((currentStall->isOpen && currentStall->internalFoodList.isFull()) || !currentStall->isOpen)) {
 
 				hasSuitableStall = true;
 				assigned = false;

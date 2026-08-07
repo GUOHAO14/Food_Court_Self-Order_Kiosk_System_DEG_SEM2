@@ -190,8 +190,7 @@ void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_
 		}
 
 		if (selectedOrder) {
-			cout << selectedOrder->getOrderID() << endl;
-			cout << selectedFood->status << endl;
+
 			selectedOrder->addFood(selectedFood);
 
 			if (stallId != 0 && selectedFood->status == "Processing") {
@@ -199,7 +198,7 @@ void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_
 
 				struct foodForAssignment* newSoloFoodOrder = new foodForAssignment(selectedOrder, selectedFood);
 
-				stall->foodQueue.enqueueFoodAssignment(newSoloFoodOrder);
+				stall->internalFoodList.insertRear(newSoloFoodOrder);
 			}
 		}
 	}
@@ -265,40 +264,31 @@ void saveOrderMapFood(ofstream& out, int orderId, Order* order, Stall_Linked_Lis
 		// go through each food in an order
 		int foodId = current->id;
 
+		// default means no stall is currently preparing this food
+		int stallId = 0;
+
 		if (stallList != nullptr) {
+
+			// go through every stall
 			stall* currentStall = stallList->getHead();
-			// go through each stall's food processing queue
-			// to find the order+food pair is handled by which stall
+
 			while (currentStall != nullptr) {
-				stallId = 0;
-				// individual stall's food queue, go through each food+order
-				int idx = currentStall->foodQueue.getFront();
 
-				for (int i = 0; i < currentStall->foodQueue.getCount(); i++) {
-					// search stall handling the food id and order id
-					int stallFoodId = currentStall->foodQueue.getQueue()[idx]->food->id;
-					int stallOrderId = currentStall->foodQueue.getQueue()[idx]->order->getOrderID();
+				// ask this stall whether it is currently handling
+				// this (order + food) assignment
+				if (currentStall->internalFoodList.containsFoodAssignment(orderId, foodId)) {
 
-					if (stallFoodId == foodId && stallOrderId == orderId) {
-						// stall found, who is handling the food order
-						stallId = currentStall->id;
-						break;
-					}
-
-					idx = (idx + 1) % currentStall->foodQueue.getMaxFoodOrder();
-				}
-				// stall already found, no need to go through other stalls
-				if (stallId != 0) {
+					// stall found
+					stallId = currentStall->id;
 					break;
 				}
+
 				currentStall = currentStall->next;
 			}
 		}
 
-		if (stallId != 0) 
-			out << orderId << "," << current->id << "," << current->status << "," << stallId << endl;
-		else
-			out << orderId << "," << current->id << "," << current->status << "," << 0 << endl;
+		// save into csv
+		out << orderId << "," << current->id << "," << current->status << "," << stallId << endl;
 
 		current = current->next;
 	}

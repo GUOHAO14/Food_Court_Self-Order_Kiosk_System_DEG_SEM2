@@ -410,9 +410,6 @@ void processFinalCheckout(Session* session) {
     placedOrder->displayOrder();
 
     pendingOrdersQueue.addQueue(placedOrder);
-    cout << "After adding: "
-        << pendingOrdersQueue.queueNum()
-        << endl;
 
     // Transfer order to stall assignment from pending queue
     stallAndOrderAssignment();
