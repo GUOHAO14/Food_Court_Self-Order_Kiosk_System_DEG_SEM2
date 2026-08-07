@@ -293,3 +293,32 @@ void saveOrderMapFood(ofstream& out, int orderId, Order* order, Stall_Linked_Lis
 		current = current->next;
 	}
 }
+
+void saveStallCircularQueue(Stall_Linked_List* stallList, string fileName) {
+    ofstream out(fileName);
+
+    out << "stall_id,stall_name,is_open,circular_queue_position\n";
+
+    stall* current = stallList->getHead();
+
+    while(current != nullptr)
+    {
+        string position = "null";
+
+        if(stallCircularQueue.getQueue()[stallCircularQueue.getFront()]->id == current->id) {
+            position = "front";
+        }
+        else if(stallCircularQueue.getQueue()[stallCircularQueue.getRear()]->id == current->id) {
+            position = "rear";
+        }
+
+        out << current->id << ","
+            << current->name << ","
+            << (current->isOpen ? "true" : "false") << ","
+            << position << endl;
+
+        current = current->next;
+    }
+
+    out.close();
+}

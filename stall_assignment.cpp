@@ -133,6 +133,8 @@ void assignFoodToStall(foodForAssignment* soloFoodOrder) {
 		}
 	}
 
+	saveStallCircularQueue(&stallList, "stall.csv");
+
 	if (!hasSuitableStall && !assigned) {
 		cout << "An error occured, your food order will be dropped" << endl;
 		pendingOrdersQueue.delQueue();
