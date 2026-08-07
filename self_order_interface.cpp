@@ -1,11 +1,13 @@
 #include "self_order_interface.h"
 #include "globals.h"
+#include "stall_assignment.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include "utils.h"
 #include "session.h"
 #include "order_session_stack.h"
+
 
 using namespace std;
 
@@ -32,14 +34,14 @@ int getValidIntInput();
 int getValidIntInput() {
     int value;
     while (!(cin >> value)) {
-        cin.clear(); 
+        cin.clear();
         while (cin.get() != '\n'); // Flush input stream buffer manually
         cout << "[Invalid Input] Please enter a valid number: ";
     }
     return value;
 }
 
-//  Display All Queues Directly 
+// Display All Queues Directly 
 void displayAllOrders() {
     cout << "\n=============================================" << endl;
     cout << "          ORDER QUEUES STATUS          " << endl;
@@ -108,7 +110,6 @@ int getMaxOrderIdFromCSV(const char* filename) {
     return maxId;
 }
 
-
 bool performUndo(Session* session) {
     string undoneMsg;
     int targetPage;
@@ -176,9 +177,11 @@ void page1_MainHub(Session* session) {
     cout << "2. Display Stall Status" << endl;
     cout << "3. Display Circular Queue" << endl;
     cout << "4. View All Order Queues (Pending, Processing, Completed)" << endl;
-    cout << "5. View Kiosk Session History Log" << endl;
-    cout << "6. Undo Last Action" << endl;
-    cout << "7. Exit Session" << endl;
+    cout << "5. View My Orders" << endl;
+    cout << "6. View Stall Food Assignment List" << endl;
+    cout << "7. View Kiosk Session History Log" << endl;
+    cout << "8. Undo Last Action" << endl;
+    cout << "9. Exit Session" << endl;
     cout << "Choice: ";
 
     int choice = getValidIntInput();
@@ -200,13 +203,21 @@ void page1_MainHub(Session* session) {
         displayAllOrders();
         break;
     case 5:
+        session->recordViewMyStallAssignments();
+        displayStudentOrderStallAssignment(session->getStudentId());
+        break;
+    case 6:
+        session->recordViewOrderStallAssignment();
+        stallList.displayAllStallAssignment();
+        break;
+    case 7:
         session->recordViewHistory();
         session->getHistory()->displayHistory();
         break;
-    case 6:
+    case 8:
         performUndo(session);
         break;
-    case 7:
+    case 9:
         cout << "\nExiting kiosk session. Goodbye!" << endl;
         session->setCurrentPage(0);
         break;
@@ -221,7 +232,6 @@ void page2_FoodMenu(Session* session) {
     cout << "        PAGE 2: ORDER FOOD (MENU)              " << endl;
     cout << "=============================================" << endl;
 
-    // Record browsing food menu in session stack
     session->recordViewMenu();
 
     foodList.displayAllFood(false);
@@ -266,7 +276,6 @@ void page3_CartReview(Session* session) {
     cout << "        PAGE 3: CART REVIEW                    " << endl;
     cout << "=============================================" << endl;
 
-    // Record viewing order cart in session stack
     session->recordViewCart();
 
     session->displayCurrentOrder();
@@ -338,7 +347,6 @@ void page4_CheckoutConfirmation(Session* session) {
 void addItemToOrderFlow(Session* session) {
     int currentCount = session->getCurrentOrderItemCount();
 
-    // Check if order limit is already reached
     if (currentCount >= MAX_ORDER_ITEMS) {
         cout << "\n[Order Limit Reached] Your cart already contains the maximum limit of "
             << MAX_ORDER_ITEMS << " items per order." << endl;
@@ -369,7 +377,6 @@ void addItemToOrderFlow(Session* session) {
         return;
     }
 
-    // Check if adding this quantity exceeds the 8-item cap
     if (currentCount + quantity > MAX_ORDER_ITEMS) {
         int spaceLeft = MAX_ORDER_ITEMS - currentCount;
         cout << "\n[Order Limit Exceeded] Cannot add " << quantity << " item(s)." << endl;
@@ -379,7 +386,6 @@ void addItemToOrderFlow(Session* session) {
         return;
     }
 
-    // Add individual food steps up to requested quantity
     for (int i = 0; i < quantity; i++) {
         food* newFood = new food(
             selectedFood->id,
@@ -411,7 +417,6 @@ void processFinalCheckout(Session* session) {
 
     pendingOrdersQueue.addQueue(placedOrder);
 
-    // Transfer order to stall assignment from pending queue
     stallAndOrderAssignment();
 
     cout << "\nYour order has been placed into the system queue!" << endl;
