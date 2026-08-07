@@ -102,9 +102,12 @@ public:
         cout << " | ";
         cout << left << setw(30) << "Food Name";
         cout << " | ";
+        cout << left << setw(12) << "Food Status";
+        cout << " | ";
         cout << left << setw(8) << "Order ID";
         cout << " | ";
-        cout << endl;
+        cout << left << setw(12) << "Order Status";
+        cout << " |" << endl;
         cout << string(length, '=') << endl;
     }
 
@@ -116,12 +119,16 @@ public:
         cout << " | ";
         cout << left << setw(30) << foodOrder->food->name;
         cout << " | ";
+        cout << left << setw(12) << foodOrder->food->status;
+        cout << " | ";
         cout << left << setw(8) << foodOrder->order->getOrderID();
+        cout << " | ";
+        cout << left << setw(12) << foodOrder->order->getOrderStatus();
         cout << " |" << endl;
     }
 
     void displayAllFoodAssignment() {
-        int length = 62;
+        int length = 92;
         struct foodForAssignment* trav = head;
         int count = 0;
         displayFoodAssignmentHeader(length);

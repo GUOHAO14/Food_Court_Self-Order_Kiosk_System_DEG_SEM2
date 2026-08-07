@@ -132,4 +132,21 @@ public:
         }
         cout << string(length, '=') << endl << endl;
     }
+
+    void displayAllStallAssignment() {
+        struct stall* stall = head;
+
+        cout << endl;
+
+        while (stall != nullptr) {
+
+            cout << "=====" << stall->name << "=====" << endl;
+
+            stall->internalFoodList.displayInternalFoodList();
+
+            cout << endl;
+
+            stall = stall->next;
+        }
+    }
 };

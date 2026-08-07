@@ -129,7 +129,7 @@ void printManageStallInt() {
         case 5:
             break;
         case 6:
-            displayStudentOrderStallAssignment(123456);
+            stallList.displayAllStallAssignment();
             break;
         default:
             cout << "Invalid input. Please try again." << endl;

@@ -184,6 +184,8 @@ void displayOrderStallAssignment(Order* order) {
 	cout << endl;
 	cout << "====== Order Stall Assignment =====" << endl;
 	cout << "Order ID: " << orderId << endl;
+	cout << "Order Time: " << order->getOrderTime() << endl;
+	cout << "Order Status: " << order->getOrderStatus() << endl;
 	cout << endl;
 
 	cout << string(75, '=') << endl;
