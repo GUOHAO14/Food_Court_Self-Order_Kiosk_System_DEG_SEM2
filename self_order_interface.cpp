@@ -232,7 +232,8 @@ void page2_FoodMenu(Session* session) {
     cout << "        PAGE 2: ORDER FOOD (MENU)              " << endl;
     cout << "=============================================" << endl;
 
-    session->recordViewMenu();
+    // REMOVED: session->recordViewMenu(); 
+    // Page navigation to Page 2 is already recorded when transitioning.
 
     foodList.displayAllFood(false);
 
@@ -275,8 +276,6 @@ void page3_CartReview(Session* session) {
     cout << "\n=============================================" << endl;
     cout << "        PAGE 3: CART REVIEW                    " << endl;
     cout << "=============================================" << endl;
-
-    session->recordViewCart();
 
     session->displayCurrentOrder();
 
