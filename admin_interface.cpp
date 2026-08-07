@@ -276,24 +276,32 @@ void addMenuItem() {
 
         // Prompt user to continue or exit
         char choice;
-        cout << "Assign to another stall? (y/n, c to cancel menu creation): ";
-        cin >> choice;
+        while (true) {
+            cout << "Assign to another stall? (y/n, c to cancel menu creation): ";
+            cin >> choice;
+            choice = tolower(choice);
 
-        if (tolower(choice) == 'n') {
-            cout << "Stall assignment completed." << endl;
-            break;
+            if (choice == 'y' || choice == 'n' || choice == 'c') {
+                break; // Valid option entered, exit the choice loop
+            }
+
+            cout << "Invalid input." << endl;
+            clearInputBuffer(); // Clear lingering input
         }
-        else if (tolower(choice) == 'c') {
+
+        // Now process the valid choice
+        if (choice == 'n') {
+            cout << "Stall assignment completed." << endl;
+            break; // Exits the outer stall assignment loop
+        }
+        else if (choice == 'c') {
             cout << "Menu creation cancelled." << endl;
             if (assignedCount > 0) {
                 foodStallMapList.deleteByFoodId(newFoodId); // Rollback changes
             }
-            return;
+            return; // Exits the function completely
         }
-        else if (tolower(choice) != 'y') {
-            cout << "Invalid choice. Saving stall assignments..." << endl;
-            break;
-        }
+        // If choice is 'y', the code naturally continues to the next iteration of the outer loop
     }
 
     // Final enforcement guard
