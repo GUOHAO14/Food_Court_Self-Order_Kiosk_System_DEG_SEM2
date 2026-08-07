@@ -1,4 +1,4 @@
-﻿stall_id,stall_name,is_open,circular_queue_position
+stall_id,stall_name,is_open,circular_queue_position
 1,Western,true,null
 2,Asian,true,rear
 3,Chinese,true,front
