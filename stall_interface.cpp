@@ -170,7 +170,7 @@ void markFoodAsComplete() {
                 completedOrdersQueue.addQueue(order);
 
                 // save new update
-                saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
+                //saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
             }
         }
     }

@@ -183,12 +183,15 @@ void loadOrderFromCSV(Queue* pending, Queue* processing, Queue* completed, Food_
 		Order* selectedOrder = pending->searchOrderById(o_id);
 		if (!selectedOrder) {
 			selectedOrder = processing->searchOrderById(o_id);
-		}
-		else {
-			selectedOrder = completed->searchOrderById(o_id);
+
+			if (!selectedOrder) {
+				selectedOrder = completed->searchOrderById(o_id);
+			}
 		}
 
 		if (selectedOrder) {
+			cout << selectedOrder->getOrderID() << endl;
+			cout << selectedFood->status << endl;
 			selectedOrder->addFood(selectedFood);
 
 			if (stallId != 0 && selectedFood->status == "Processing") {

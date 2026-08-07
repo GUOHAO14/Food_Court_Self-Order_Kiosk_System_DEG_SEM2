@@ -146,41 +146,12 @@ void assignFoodToStall(foodForAssignment* soloFoodOrder) {
 		}
 	}
 
-	//if (hasSuitableStall && !assigned) {
-	//	cout << "Final Verdict:" << endl;
-	//	cout << "Suitable stall found for food item: " << currentFood->name << endl;
-	//	cout << "But the stall is busy or closed." << endl;
-	//	cout << "Moving to unassigned waiting queue." << endl;
-	//	unassignedFoodQueue.insertRear(soloFoodOrder);
-
-	//	cout << "Current unassigned waiting queue:" << endl;
-	//	unassignedFoodQueue.displayAllFoodAssignment();
-	//}
-
 	if (!hasSuitableStall && !assigned) {
 		cout << "An error occured, your food order will be dropped" << endl;
-		//pendingOrdersQueue.delQueue();
-		//delete soloFoodOrder;
+		pendingOrdersQueue.delQueue();
+		delete soloFoodOrder;
 	}
 }
-
-// check if unassigned food in the waiting queue can be assigned
-// used when a stall mark food as done (free), or when a stall changes status to open
-//void checkAndAssignUnassignedFood() {
-//	if (unassignedFoodQueue.getCount() > 0) {
-//		cout << "Checking unassigned food items in the waiting queue..." << endl;
-//		struct foodForAssignment* soloFoodOrder = unassignedFoodQueue.getHead();
-//
-//		// go through the waiting queue and check again if they can now be assigned to any stall
-//		while (soloFoodOrder != nullptr) {
-//			assignFoodToStall(soloFoodOrder);
-//			soloFoodOrder = soloFoodOrder->next;
-//		}
-//	}
-//	else {
-//		cout << "No unassigned food items in the waiting queue." << endl;
-//	}
-//}
 
 void swapPendingToProcessingQueue(Order * order) {
 	if (order->getOrderStatus() == "Processing") {
