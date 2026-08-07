@@ -1,4 +1,5 @@
 order_id,food_id,status,stall
+105,4,Pending,0
 101,2,Completed,2
 101,2,Processing,2
 101,2,Processing,2
@@ -7,10 +8,10 @@ order_id,food_id,status,stall
 101,2,Processing,2
 101,2,Processing,2
 101,2,Processing,2
-103,2,Processing,2
-103,2,Processing,2
-103,2,Processing,2
-103,2,Processing,2
+103,2,Processing,0
+103,2,Processing,0
+103,2,Processing,0
+103,2,Processing,0
 104,2,Processing,3
 102,4,Completed,0
 102,4,Completed,0
