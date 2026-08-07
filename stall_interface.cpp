@@ -100,7 +100,6 @@ void printManageStallInt() {
         cout << "3. Display Processing Food Queue" << endl;
         cout << "4. Mark Food as Complete" << endl;
         cout << "5. Back" << endl;
-        cout << "6. Display " << endl;
 
         cout << "Enter your choice (type integer): ";
 
@@ -127,9 +126,6 @@ void printManageStallInt() {
             markFoodAsComplete();
             break;
         case 5:
-            break;
-        case 6:
-            stallList.displayAllStallAssignment();
             break;
         default:
             cout << "Invalid input. Please try again." << endl;
