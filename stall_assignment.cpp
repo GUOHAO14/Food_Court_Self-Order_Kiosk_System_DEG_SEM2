@@ -142,12 +142,16 @@ void assignFoodToStall(foodForAssignment* soloFoodOrder) {
 
 void swapPendingToProcessingQueue(Order * order) {
 	if (order->getOrderStatus() == "Processing") {
-		Order* temp = pendingOrdersQueue.delQueue();
 
-		processingOrdersQueue.addQueue(temp);
+		bool removed = pendingOrdersQueue.delQueue(order->getOrderID());
 
-		// save new update
-		saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
+		if (removed) {
+			// transfer order to completed orders queue
+			processingOrdersQueue.addQueue(order);
+
+			// save new update
+			saveOrderToCSV(&pendingOrdersQueue, &processingOrdersQueue, &completedOrdersQueue, &stallList, "order.csv", "order_map_food.csv");
+		}
 	}
 	else {
 		cout << "Swap failed. Order status does not indicate Processing." << endl;
@@ -165,5 +169,157 @@ void swapProcessingToCompletedQueue(Order* order) {
 	}
 	else {
 		cout << "Swap failed. Order status does not indicate Completed." << endl;
+	}
+}
+
+void displayOrderStallAssignment(Order* order) {
+	if (order == nullptr)
+	{
+		cout << "Invalid order." << endl;
+		return;
+	}
+
+	int orderId = order->getOrderID();
+
+	cout << endl;
+	cout << "====== Order Stall Assignment =====" << endl;
+	cout << "Order ID: " << orderId << endl;
+	cout << endl;
+
+	cout << string(75, '=') << endl;
+
+	cout << "| ";
+	cout << left << setw(10) << "Food ID";
+	cout << " | ";
+	cout << setw(25) << "Food Name";
+	cout << " | ";
+	cout << setw(10) << "Price";
+	cout << " | ";
+	cout << setw(15) << "Status";
+	cout << " | ";
+	cout << setw(15) << "Assigned Stall";
+	cout << " |" << endl;
+
+
+	cout << string(75, '-') << endl;
+
+	food* currentFood = order->getFoodList()->getHead();
+
+	while (currentFood != nullptr) {
+
+		cout << "| ";
+		cout << left << setw(10) << currentFood->id;
+		cout << " | ";
+		cout << setw(25) << currentFood->name;
+		cout << " | ";
+		cout << setw(10) << currentFood->price;
+		cout << " | ";
+		cout << setw(15) << currentFood->status;
+
+		if (currentFood->status != "Processing") {
+			cout << " | ";
+			cout << setw(15) << "N/A";
+			cout << " |" << endl;
+		}
+		else {
+			string assignedStall = "Unknown";
+
+			stall* currentStall = stallList.getHead();
+
+			while (currentStall != nullptr)
+			{
+				foodForAssignNode* currentAssignment =
+					currentStall->internalFoodList.getHead();
+
+				while (currentAssignment != nullptr)
+				{
+					foodForAssignment* assignment =
+						currentAssignment->data;
+
+					if (assignment->order == order &&
+						assignment->food == currentFood)
+					{
+						assignedStall = currentStall->name;
+						break;
+					}
+
+					currentAssignment = currentAssignment->next;
+				}
+
+				if (assignedStall != "Unknown")
+					break;
+
+				currentStall = currentStall->next;
+			}
+
+			cout << " | ";
+			cout << setw(15) << assignedStall;
+			cout << " |" << endl;
+		}
+		currentFood = currentFood->next;
+	}
+	cout << string(75, '=') << endl;
+}
+
+
+void displayStudentOrderStallAssignment(int studentId) {
+	cout << endl;
+	cout << "===== Student Order Stall Assignment =====" << endl;
+	cout << "Student ID: " << studentId << endl;
+
+
+	// pending orders
+	cout << endl << "===== Pending Orders =====" << endl;
+
+	Node* currentPending = pendingOrdersQueue.getHead();
+
+	while (currentPending != nullptr)
+	{
+		Order* order = currentPending->data;
+
+		if (order->getStudentID() == studentId)
+		{
+			displayOrderStallAssignment(order);
+		}
+
+		currentPending = currentPending->next;
+	}
+
+
+
+	// processing orders
+	cout << endl << "===== Processing Orders =====" << endl;
+
+	Node* currentProcessing = processingOrdersQueue.getHead();
+
+	while (currentProcessing != nullptr)
+	{
+		Order* order = currentProcessing->data;
+
+		if (order->getStudentID() == studentId)
+		{
+			displayOrderStallAssignment(order);
+		}
+
+		currentProcessing = currentProcessing->next;
+	}
+
+
+
+	// completed orders
+	cout << endl << "===== Completed Orders =====" << endl;
+
+	Node* currentCompleted = completedOrdersQueue.getHead();
+
+	while (currentCompleted != nullptr)
+	{
+		Order* order = currentCompleted->data;
+
+		if (order->getStudentID() == studentId)
+		{
+			displayOrderStallAssignment(order);
+		}
+
+		currentCompleted = currentCompleted->next;
 	}
 }

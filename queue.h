@@ -110,14 +110,14 @@ class Order {
                 currentFood = currentFood->next;
             }
 
-            if (pending == 0 && processing == 0 && completed > 0) {
-                this->orderStatus = "Completed";
+            if (pending > 0) {
+                this->orderStatus = "Pending";
             }
-            else if (processing > 0) {
+            else if (pending == 0 && processing > 0) {
                 this->orderStatus = "Processing";
             }
-            else if (processing == 0 && completed == 0 && pending > 0) {
-                this->orderStatus = "Pending";
+            else if (pending == 0 && processing == 0 && completed > 0) {
+                this->orderStatus = "Completed";
             }
             else {
                 this->orderStatus = "Pending";
